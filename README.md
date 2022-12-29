@@ -1,9 +1,10 @@
 # PayU Payment Gateway MEA for Magento v2.4+ extension #
 
-This guide details how to install the PayU Payment Gateway for Magento v2.4+ extension. Plugin tested on Magento v2.4 and above
+This guide details how to install the PayU MEA Payment Gateway Magento v2.4 extension. Plugin tested on Magento v2.4.4 and above
 
 ## Prerequisites
-* Magento 2.4+ application
+* Magento 2.4.4 and above application
+* PHP 8.1
 * SSH access to server hosting Magento application
 
 ## Dependencies
