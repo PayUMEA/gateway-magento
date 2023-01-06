@@ -1,0 +1,18 @@
+<?php
+/**
+ * Copyright © 2022 PayU Financial Services. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/**
+ * @var \PayU\Gateway\Block\Adminhtml\System\Config\Fieldset\Hint $block
+ */
+$helpLink = $block->escapeUrl($block->getHelpLink());
+?>
+<?php if ($helpLink) : ?>
+    <div class="paypal-payment-notice">
+        <?= $block->escapeHtml(__('Not sure what PayU payment method to use? Click ')) ?>
+        <a href="<?= /* @noEscape */ $helpLink; ?>" target="_blank"><?= $block->escapeHtml(__('here')) ?></a>
+        <?= $block->escapeHtml(__(' to learn more.')) ?>
+    </div>
+<?php endif; ?>
