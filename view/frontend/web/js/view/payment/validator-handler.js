@@ -20,8 +20,6 @@ define([
          * Inits list of validators
          */
         initialize: function () {
-            const config = this.getConfig();
-
             if (this.initialized) {
                 return;
             }
