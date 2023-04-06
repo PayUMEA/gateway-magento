@@ -9,18 +9,21 @@
     ],
     "type": "magento2-module",
     "version": "0.1.0",
-    "homepage": "https://payu.co.za/",
+    "homepage": "https://southafrica.payu.com/",
     "license": [
         "OSL-3.0",
         "AFL-3.0"
     ],
     "require": {
+        "magento/module-payment": "100.1.*",
+        "magento/module-checkout": "100.1.*",
+        "magento/module-sales": "100.1.*",
         "payu-mea/payu-mea-sdk-php": ">=2.0"
     },
     "authors": [
         {
             "name": "Kenneth Onah",
-            "homepage": "https://github.com/onahkenneth/module-payu-mea-gateway/contributors"
+            "homepage": "https://github.com/onahkenneth"
         }
     ],
     "autoload": {
