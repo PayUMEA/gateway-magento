@@ -7,8 +7,9 @@
 -->
 <mapping xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Payment:etc/error_mapping.xsd">
     <message_list>
-        <message code="999" translate="true">PayU Timeout</message>
+        <message code="999">PayU Timeout</message>
         <message code="P022">Transaction is not in the correct state.</message>
         <message code="301">Invalid API parameter</message>
+        <message code="P015">User canceled payment transaction</message>
     </message_list>
 </mapping>
