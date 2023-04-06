@@ -1,8 +1,10 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Copyright © 2022 PayU Financial Services. All rights reserved.
  * See COPYING.txt for license details.
  */
+
+declare(strict_types=1);
 
 namespace PayU\Gateway\Gateway\Http\Client;
 
@@ -18,10 +20,10 @@ class TransactionCapture extends AbstractTransaction
      */
     protected function process(array $data): mixed
     {
-        $storeId = $data['store_id'] ?? null;
+        $storeId = (int)$data['store_id'] ?? null;
         // not sending store id
         unset($data['store_id']);
 
-        return $this->adapterFactory->create((int)$storeId)->capture($data);
+        return $this->adapterFactory->create($storeId)->capture($data);
     }
 }

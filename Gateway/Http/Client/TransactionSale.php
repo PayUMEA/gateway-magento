@@ -1,10 +1,14 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Copyright © 2022 PayU Financial Services. All rights reserved.
  * See COPYING.txt for license details.
  */
 
+declare(strict_types=1);
+
 namespace PayU\Gateway\Gateway\Http\Client;
+
+use PayU\Resource;
 
 /**
  * class TransactionSale
@@ -15,9 +19,9 @@ class TransactionSale extends AbstractTransaction
     /**
      * @inheritdoc
      */
-    protected function process(array $data): mixed
+    protected function process(array $data): Resource
     {
-        $storeId = $data['store_id'] ?? null;
+        $storeId = (int)$data['store_id'] ?? null;
         // not sending store id
         unset($data['store_id']);
 
