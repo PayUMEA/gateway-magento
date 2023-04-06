@@ -8,6 +8,9 @@
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
     <event name="payment_method_assign_data_payu_gateway_creditcard">
-        <observer name="payu_gateway_data_assign" instance="PayU\Gateway\Observer\DataAssignObserver" />
+        <observer name="payu_gateway_payment_data" instance="PayU\Gateway\Observer\PaymentDataAssignObserver" />
+    </event>
+    <event name="sales_order_payment_place_end">
+        <observer name="payu_gateway_order_status" instance="PayU\Gateway\Observer\OrderStatusUpdateObserver" />
     </event>
 </config>
