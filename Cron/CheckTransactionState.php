@@ -1,8 +1,10 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Copyright © 2022 PayU Financial Services. All rights reserved.
  * See COPYING.txt for license details.
  */
+
+declare(strict_types=1);
 
 namespace PayU\Gateway\Cron;
 
@@ -15,6 +17,7 @@ use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Phrase;
 use Magento\Framework\Registry;
+use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Config;
@@ -38,7 +41,7 @@ use Psr\Log\LoggerInterface;
 class CheckTransactionState
 {
     private const CONFIG_PATTERN = 'payment/%s/%s';
-    private const CRON_CONFIG_PATTERN = 'payment/payu_gateway_cron/%';
+    private const CRON_CONFIG_PATTERN = 'payment/payu_gateway_cron/%s';
 
     /**
      * @var string
@@ -185,14 +188,13 @@ class CheckTransactionState
     }
 
     /**
-     * @param $data
-     * @param Order $order
+     * @param array $data
+     * @param OrderInterface $order
      * @return void
      * @throws LocalizedException
      */
-    public function processReturn($data, Order $order): void
+    public function processReturn(array $data, OrderInterface $order): void
     {
-        $data = (array)$data;
         $data['basket'] = [$data['basket']];
 
         $transactionNotes = "<strong>-----PAYU STATUS CHECKED ---</strong><br />";
@@ -261,7 +263,7 @@ class CheckTransactionState
         $bypass_payu_cron = $this->getCRONConfigData('bypass_payu_cron');
 
         if ('1' ===  $bypass_payu_cron) {
-            $this->logger->info("PayU CRON DISABLED");
+            $this->logger->info("PayU Gateway CRON DISABLED");
 
             return;
         }
@@ -269,7 +271,7 @@ class CheckTransactionState
         $processId = uniqid();
         $this->processId = $processId;
 
-        $this->logger->info("PayU CRON Started, PID: $processId");
+        $this->logger->info("PayU Gateway CRON Started, PID: $processId");
 
         $orders = $this->getOrderCollection();
 
@@ -281,7 +283,7 @@ class CheckTransactionState
             $id = $order->getEntityId();
             $this->logger->info("($processId) Checking: $id");
 
-            if (!str_contains($code, 'payumea')) {
+            if (!str_contains($code, 'payu_gateway')) {
                 $this->logger->info("($processId) Not PayU");
 
                 continue;
@@ -328,8 +330,6 @@ class CheckTransactionState
 
                     $result = $this->payUAdapter->search($this->_payUReference);
 
-                    $return = $result->getReturn();
-
                     $order = $this->orderRepository->get($order->getId());
 
                     if ($order->getState() == \Magento\Sales\Model\Order::STATE_PROCESSING) {
@@ -343,10 +343,10 @@ class CheckTransactionState
                     }
 
                     try {
-                        $this->processReturn($return, $order);
+                        $this->processReturn($result->toArray(), $order);
                     } catch (Exception $exception) {
                         $this->logger->info($exception->getMessage());
-                        $this->logger->info(json_encode($return));
+                        $this->logger->info($result->toJSON());
                     }
 
                     $order->setUpdatedAt(null);
@@ -356,7 +356,7 @@ class CheckTransactionState
         }
 
         // Do your Stuff
-        $this->logger->info("PayU CRON Ended, PID: $processId");
+        $this->logger->info("PayU Gateway CRON Ended, PID: $processId");
     }
 
     /**
