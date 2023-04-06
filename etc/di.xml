@@ -365,7 +365,7 @@
         <arguments>
             <argument name="validators" xsi:type="array">
                 <item name="country" xsi:type="string">PayUGatewayCountryValidator</item>
-                <item name="credential" xsi:type="string">PayU\Gateway\Gateway\Validator\CredentialValidator</item>
+                <item name="availability" xsi:type="string">PayU\Gateway\Gateway\Validator\CredentialValidator</item>
             </argument>
         </arguments>
     </virtualType>
