@@ -1,8 +1,10 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Copyright © 2022 PayU Financial Services. All rights reserved.
  * See COPYING.txt for license details.
  */
+
+declare(strict_types=1);
 
 namespace PayU\Gateway\Gateway\Http\Client;
 
@@ -21,21 +23,6 @@ use Psr\Log\LoggerInterface;
 abstract class AbstractTransaction implements ClientInterface
 {
     /**
-     * @var LoggerInterface
-     */
-    protected LoggerInterface $logger;
-
-    /**
-     * @var Logger
-     */
-    protected Logger $customLogger;
-
-    /**
-     * @var PayUAdapterFactory
-     */
-    protected PayUAdapterFactory $adapterFactory;
-
-    /**
      * Constructor
      *
      * @param LoggerInterface $logger
@@ -43,13 +30,10 @@ abstract class AbstractTransaction implements ClientInterface
      * @param PayUAdapterFactory $adapterFactory
      */
     public function __construct(
-        LoggerInterface $logger,
-        Logger $customLogger,
-        PayUAdapterFactory $adapterFactory
+        protected LoggerInterface $logger,
+        protected Logger $customLogger,
+        protected PayUAdapterFactory $adapterFactory
     ) {
-        $this->logger = $logger;
-        $this->customLogger = $customLogger;
-        $this->adapterFactory = $adapterFactory;
     }
 
     /**
