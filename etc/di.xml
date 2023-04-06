@@ -8,6 +8,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <!-- Payment Methods Facade configuration -->
+    <!-- Credit card Facade configuration -->
     <virtualType name="PayUGatewayCreditCardFacade" type="Magento\Payment\Model\Method\Adapter">
         <arguments>
             <argument name="code" xsi:type="const">PayU\Gateway\Model\Ui\ConfigProvider::CREDIT_CARD_CODE</argument>
@@ -18,6 +19,8 @@
             <argument name="commandPool" xsi:type="object">PayUGatewayCommandPool</argument>
         </arguments>
     </virtualType>
+    <!-- END Credit card Facade configuration -->
+    <!-- END Payment Methods Facade configuration -->
 
     <!-- Configuration reader -->
     <type name="PayU\Gateway\Gateway\Config\Config">
@@ -25,32 +28,42 @@
             <argument name="methodCode" xsi:type="const">PayU\Gateway\Model\Ui\ConfigProvider::CREDIT_CARD_CODE</argument>
         </arguments>
     </type>
+    <type name="PayU\Gateway\Model\Payment\Operations\CreateInvoiceOperation">
+        <arguments>
+            <argument name="logger" xsi:type="object">PayUGatewayLogger</argument>
+        </arguments>
+    </type>
     <!-- END Configuration reader -->
 
     <!-- Logger, initialized with PayUGatewayConfig -->
-    <virtualType name="PayUGatewayLoggerForTransactionSale" type="Magento\Payment\Model\Method\Logger">
+    <virtualType name="PayUGatewayLogger" type="Magento\Payment\Model\Method\Logger">
         <arguments>
             <argument name="config" xsi:type="object">PayU\Gateway\Gateway\Config\Config</argument>
         </arguments>
     </virtualType>
+    <type name="PayU\Gateway\Gateway\Http\Client\TransactionOrder">
+        <arguments>
+            <argument name="customLogger" xsi:type="object">PayUGatewayLogger</argument>
+        </arguments>
+    </type>
     <type name="PayU\Gateway\Gateway\Http\Client\TransactionSale">
         <arguments>
-            <argument name="customLogger" xsi:type="object">PayUGatewayLoggerForTransactionSale</argument>
+            <argument name="customLogger" xsi:type="object">PayUGatewayLogger</argument>
         </arguments>
     </type>
     <type name="PayU\Gateway\Gateway\Http\Client\TransactionCapture">
         <arguments>
-            <argument name="customLogger" xsi:type="object">PayUGatewayLoggerForTransactionSale</argument>
+            <argument name="customLogger" xsi:type="object">PayUGatewayLogger</argument>
         </arguments>
     </type>
     <type name="PayU\Gateway\Gateway\Http\Client\TransactionRefund">
         <arguments>
-            <argument name="customLogger" xsi:type="object">PayUGatewayLoggerForTransactionSale</argument>
+            <argument name="customLogger" xsi:type="object">PayUGatewayLogger</argument>
         </arguments>
     </type>
     <type name="PayU\Gateway\Gateway\Http\Client\TransactionVoid">
         <arguments>
-            <argument name="customLogger" xsi:type="object">PayUGatewayLoggerForTransactionSale</argument>
+            <argument name="customLogger" xsi:type="object">PayUGatewayLogger</argument>
         </arguments>
     </type>
     <!-- END Logger, initialized with PayUGatewayConfig -->
@@ -61,8 +74,15 @@
             <argument name="commands" xsi:type="array">
                 <item name="authorize" xsi:type="string">PayUGatewayAuthorizeCommand</item>
                 <item name="sale" xsi:type="string">PayUGatewaySaleCommand</item>
+                <item name="order" xsi:type="string">PayUGatewayOrderCommand</item>
                 <item name="capture" xsi:type="string">PayUGatewayCaptureStrategyCommand</item>
                 <item name="settlement" xsi:type="string">PayUGatewayCaptureCommand</item>
+                <item name="void" xsi:type="string">PayUGatewayVoidCommand</item>
+                <item name="refund" xsi:type="string">PayUGatewayRefundCommand</item>
+                <item name="cancel" xsi:type="string">PayUGatewayCancelCommand</item>
+                <item name="deny_payment" xsi:type="string">PayUGatewayDenyPaymentCommand</item>
+                <item name="accept_payment" xsi:type="string">PayUGatewayAcceptPaymentCommand</item>
+                <item name="fetch_transaction_information" xsi:type="string">PayUGatewayTransactionInfoCommand</item>
             </argument>
         </arguments>
     </virtualType>
@@ -80,12 +100,13 @@
             <argument name="builders" xsi:type="array">
                 <item name="customer" xsi:type="string">PayU\Gateway\Gateway\Request\CustomerDataBuilder</item>
                 <item name="basket" xsi:type="string">PayU\Gateway\Gateway\Request\BasketDataBuilder</item>
-                <item name="payment_details" xsi:type="string">PayU\Gateway\Gateway\Request\PaymentDetailsDataBuilder</item>
+                <item name="card_details" xsi:type="string">PayU\Gateway\Gateway\Request\PaymentCardDetailsDataBuilder</item>
                 <item name="payment_url" xsi:type="string">PayU\Gateway\Gateway\Request\PaymentUrlDataBuilder</item>
                 <item name="address" xsi:type="string">PayU\Gateway\Gateway\Request\AddressDataBuilder</item>
                 <item name="store" xsi:type="string">PayU\Gateway\Gateway\Request\StoreConfigBuilder</item>
                 <item name="txn_type" xsi:type="string">PayU\Gateway\Gateway\Request\TransactionTypeBuilder</item>
                 <item name="additional_info" xsi:type="string">PayU\Gateway\Gateway\Request\AdditionalInfoDataBuilder</item>
+                <item name="fraud_management" xsi:type="string">PayU\Gateway\Gateway\Request\FraudDataBuilder</item>
             </argument>
         </arguments>
     </virtualType>
@@ -96,7 +117,6 @@
                 <item name="txn_id" xsi:type="string">Payu\Gateway\Gateway\Response\TransactionIdHandler</item>
                 <item name="card_details" xsi:type="string">Payu\Gateway\Gateway\Response\CardDetailsHandler</item>
                 <item name="3d_secure" xsi:type="string">Payu\Gateway\Gateway\Response\ThreeDSecureDetailsHandler</item>
-                <item name="url" xsi:type="string">Payu\Gateway\Gateway\Response\RedirectUrlHandler</item>
             </argument>
         </arguments>
     </virtualType>
@@ -111,21 +131,54 @@
         </arguments>
     </virtualType>
     <!-- END Authorization command  -->
-    <!-- Authorization&Capture command  -->
+
+    <!-- Sale (Authorization & Capture) command  -->
+    <virtualType name="PayUGatewaySaleRequest" type="Magento\Payment\Gateway\Request\BuilderComposite">
+        <arguments>
+            <argument name="builders" xsi:type="array">
+                <item name="authorize" xsi:type="string">PayUGatewayAuthorizeRequest</item>
+            </argument>
+        </arguments>
+    </virtualType>
     <virtualType name="PayUGatewaySaleCommand" type="PayUGatewayAuthorizeCommand">
         <arguments>
             <argument name="requestBuilder" xsi:type="object">PayUGatewaySaleRequest</argument>
         </arguments>
     </virtualType>
-    <virtualType name="PayUGatewaySaleRequest" type="Magento\Payment\Gateway\Request\BuilderComposite">
+    <!-- END Sale (Authorization & Capture) command  -->
+
+    <!-- Order command  -->
+    <virtualType name="PayUGatewayOrderHandler" type="Magento\Payment\Gateway\Response\HandlerChain">
         <arguments>
-            <argument name="builders" xsi:type="array">
-                <item name="authorize" xsi:type="string">PayUGatewayAuthorizeRequest</item>
-                <item name="settlement" xsi:type="string">PayU\Gateway\Gateway\Request\SettlementDataBuilder</item>
+            <argument name="handlers" xsi:type="array">
+                <item name="txn_id" xsi:type="string">Payu\Gateway\Gateway\Response\TransactionIdHandler</item>
+                <item name="url" xsi:type="string">Payu\Gateway\Gateway\Response\RedirectUrlHandler</item>
             </argument>
         </arguments>
     </virtualType>
-    <!-- END Authorization&Capture command  -->
+    <virtualType name="PayUGatewayOrderRequest" type="Magento\Payment\Gateway\Request\BuilderComposite">
+        <arguments>
+            <argument name="builders" xsi:type="array">
+                <item name="customer" xsi:type="string">PayU\Gateway\Gateway\Request\CustomerDataBuilder</item>
+                <item name="basket" xsi:type="string">PayU\Gateway\Gateway\Request\BasketDataBuilder</item>
+                <item name="payment_url" xsi:type="string">PayU\Gateway\Gateway\Request\PaymentUrlDataBuilder</item>
+                <item name="address" xsi:type="string">PayU\Gateway\Gateway\Request\AddressDataBuilder</item>
+                <item name="store" xsi:type="string">PayU\Gateway\Gateway\Request\StoreConfigBuilder</item>
+                <item name="txn_type" xsi:type="string">PayU\Gateway\Gateway\Request\TransactionTypeBuilder</item>
+                <item name="additional_info" xsi:type="string">PayU\Gateway\Gateway\Request\AdditionalInfoDataBuilder</item>
+                <item name="fraud_management" xsi:type="string">PayU\Gateway\Gateway\Request\FraudDataBuilder</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayOrderCommand" type="PayUGatewaySaleCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">PayUGatewayOrderRequest</argument>
+            <argument name="handler" xsi:type="object">PayUGatewayOrderHandler</argument>
+            <argument name="client" xsi:type="object">PayU\Gateway\Gateway\Http\Client\TransactionOrder</argument>
+        </arguments>
+    </virtualType>
+    <!-- END Order command  -->
+
     <!-- Capture commands  -->
     <virtualType name="PayUGatewayCaptureCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
         <arguments>
@@ -147,6 +200,122 @@
         </arguments>
     </virtualType>
     <!-- END Capture commands  -->
+
+    <!-- Void Command -->
+    <virtualType name="PayUGatewayVoidCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="client" xsi:type="object">PayU\Gateway\Gateway\Http\Client\TransactionVoid</argument>
+            <argument name="requestBuilder" xsi:type="object">PayUGatewayVoidRequestBuilder</argument>
+            <argument name="handler" xsi:type="object">PayU\Gateway\Gateway\Response\VoidHandler</argument>
+            <argument name="validator" xsi:type="object">PayU\Gateway\Gateway\Validator\ResponseValidator</argument>
+            <argument name="transferFactory" xsi:type="object">PayU\Gateway\Gateway\Http\TransferFactory</argument>
+            <argument name="errorMessageMapper" xsi:type="object">PayU\Gateway\Gateway\ErrorMapper\VirtualErrorMessageMapper</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayVoidRequestBuilder" type="Magento\Payment\Gateway\Request\BuilderComposite">
+        <arguments>
+            <argument name="builders" xsi:type="array">
+                <item name="void" xsi:type="string">PayU\Gateway\Gateway\Request\VoidDataBuilder</item>
+                <item name="store" xsi:type="string">PayU\Gateway\Gateway\Request\StoreConfigBuilder</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- END Void Command -->
+
+    <!-- Cancel Command -->
+    <virtualType name="PayUGatewayCancelRequestBuilder" type="Magento\Payment\Gateway\Request\BuilderComposite">
+        <arguments>
+            <argument name="builders" xsi:type="array">
+                <item name="cancel" xsi:type="string">PayU\Gateway\Gateway\Request\CancelDataBuilder</item>
+                <item name="store" xsi:type="string">PayU\Gateway\Gateway\Request\StoreConfigBuilder</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayCancelCommand" type="PayUGatewayVoidCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">PayUGatewayCancelRequestBuilder</argument>
+            <argument name="client" xsi:type="object">PayU\Gateway\Gateway\Http\Client\TransactionCancel</argument>
+            <argument name="handler" xsi:type="object">PayU\Gateway\Gateway\Response\CancelHandler</argument>
+            <argument name="validator" xsi:type="object">PayU\Gateway\Gateway\Validator\CancelResponseValidator</argument>
+        </arguments>
+    </virtualType>
+    <!-- END Cancel Command -->
+
+    <!-- Refund Command -->
+    <virtualType name="PayUGatewayRefundCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="client" xsi:type="object">PayU\Gateway\Gateway\Http\Client\TransactionRefund</argument>
+            <argument name="requestBuilder" xsi:type="object">PayUGatewayRefundBuilder</argument>
+            <argument name="validator" xsi:type="object">PayU\Gateway\Gateway\Validator\ResponseValidator</argument>
+            <argument name="handler" xsi:type="object">PayU\Gateway\Gateway\Response\RefundHandler</argument>
+            <argument name="transferFactory" xsi:type="object">PayU\Gateway\Gateway\Http\TransferFactory</argument>
+            <argument name="errorMessageMapper" xsi:type="object">PayU\Gateway\Gateway\ErrorMapper\VirtualErrorMessageMapper</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayRefundBuilder" type="Magento\Payment\Gateway\Request\BuilderComposite">
+        <arguments>
+            <argument name="builders" xsi:type="array">
+                <item name="refund" xsi:type="string">PayU\Gateway\Gateway\Request\RefundDataBuilder</item>
+                <item name="store" xsi:type="string">PayU\Gateway\Gateway\Request\StoreConfigBuilder</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- END Refund Command -->
+
+    <!-- Fetch Transaction Information Command -->
+    <virtualType name="PayUGatewayTransactionInfoCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="client" xsi:type="object">PayU\Gateway\Gateway\Http\Client\TransactionInfo</argument>
+            <argument name="requestBuilder" xsi:type="object">PayUGatewayTransactionInfoBuilder</argument>
+            <argument name="handler" xsi:type="object">PayU\Gateway\Gateway\Response\TransactionInfoHandler</argument>
+            <argument name="transferFactory" xsi:type="object">PayU\Gateway\Gateway\Http\TransferFactory</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayTransactionInfoBuilder" type="Magento\Payment\Gateway\Request\BuilderComposite">
+        <arguments>
+            <argument name="builders" xsi:type="array">
+                <item name="txn_info" xsi:type="string">PayU\Gateway\Gateway\Request\TransactionInfoDataBuilder</item>
+                <item name="store" xsi:type="string">PayU\Gateway\Gateway\Request\StoreConfigBuilder</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- END Fetch Transaction Information Command -->
+
+    <!-- Deny Payment Command -->
+    <virtualType name="PayUGatewayDenyPaymentCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="client" xsi:type="object">PayU\Gateway\Gateway\Http\Client\DenyPayment</argument>
+            <argument name="requestBuilder" xsi:type="object">PayUGatewayDenyPaymentBuilder</argument>
+            <argument name="transferFactory" xsi:type="object">PayU\Gateway\Gateway\Http\TransferFactory</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayDenyPaymentBuilder" type="Magento\Payment\Gateway\Request\BuilderComposite">
+        <arguments>
+            <argument name="builders" xsi:type="array">
+                <item name="store" xsi:type="string">PayU\Gateway\Gateway\Request\StoreConfigBuilder</item>
+                <item name="sale" xsi:type="string">PayU\Gateway\Gateway\Request\SaleDataBuilder</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- END Deny Payment Command -->
+
+    <!-- Accept Payment Command -->
+    <virtualType name="PayUGatewayAcceptPaymentCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="client" xsi:type="object">PayU\Gateway\Gateway\Http\Client\AcceptPayment</argument>
+            <argument name="requestBuilder" xsi:type="object">PayUGatewayAcceptPaymentBuilder</argument>
+            <argument name="transferFactory" xsi:type="object">PayU\Gateway\Gateway\Http\TransferFactory</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayAcceptPaymentBuilder" type="Magento\Payment\Gateway\Request\BuilderComposite">
+        <arguments>
+            <argument name="builders" xsi:type="array">
+                <item name="store" xsi:type="string">PayU\Gateway\Gateway\Request\StoreConfigBuilder</item>
+                <item name="sale" xsi:type="string">PayU\Gateway\Gateway\Request\SaleDataBuilder</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- END Accept Payment Command -->
     <!-- END PayU Gateway commands  -->
 
     <!-- PayU Gateway error mapping  -->
@@ -168,20 +337,6 @@
     </virtualType>
     <!-- END PayU Gateway error mapping  -->
 
-    <!-- Authorization&Capture command  -->
-    <virtualType name="PayUGatewaySaleCommand" type="PayUGatewayAuthorizeCommand">
-        <arguments>
-            <argument name="requestBuilder" xsi:type="object">PayUGatewaySaleRequest</argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="PayUGatewaySaleRequest" type="Magento\Payment\Gateway\Request\BuilderComposite">
-        <arguments>
-            <argument name="builders" xsi:type="array">
-                <item name="authorize" xsi:type="string">PayUGatewayAuthorizeRequest</item>
-            </argument>
-        </arguments>
-    </virtualType>
-
     <!-- Value handlers infrastructure -->
     <virtualType name="PayUGatewayValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
         <arguments>
@@ -189,6 +344,7 @@
                 <item name="default" xsi:type="string">PayUGatewayConfigValueHandler</item>
                 <item name="can_void" xsi:type="string">PayU\Gateway\Gateway\Config\CanVoidHandler</item>
                 <item name="can_cancel" xsi:type="string">PayU\Gateway\Gateway\Config\CanVoidHandler</item>
+                <item name="can_capture" xsi:type="string">PayU\Gateway\Gateway\Config\CanVoidHandler</item>
             </argument>
         </arguments>
     </virtualType>
