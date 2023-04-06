@@ -15,4 +15,5 @@ namespace PayU\Gateway\Model\Payment\Method;
 class AbstractMethod
 {
     public const CODE = 'no_code';
+    public const STATE_PENDING = 'pending';
 }

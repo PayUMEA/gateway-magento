@@ -18,6 +18,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Phrase;
 use Magento\Sales\Model\Order;
 use PayU\Gateway\Controller\AbstractAction;
+use PayU\Gateway\Model\Payment\Method\AbstractMethod;
 
 /**
  * class Response
@@ -78,7 +79,14 @@ class Response extends AbstractAction implements HttpGetActionInterface, HttpPos
                 }
 
                 // Or still pending
-                if ($orderState == Order::STATE_PENDING_PAYMENT) {
+                if (in_array(
+                    $orderState,
+                    [
+                        Order::STATE_NEW,
+                        AbstractMethod::STATE_PENDING,
+                        Order::STATE_PENDING_PAYMENT
+                    ]
+                )) {
                     $this->logger->info("($processId) ($incrementId) PayU $processString Order status pending");
 
                     return $this->sendPendingPage($order);
