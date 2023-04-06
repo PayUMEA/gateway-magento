@@ -36,18 +36,16 @@ class CredentialValidator extends DefaultResponseValidator
     /**
      * @param array $validationSubject
      * @return ResultInterface
-     * @throws LocalizedException
      */
     public function validate(array $validationSubject): ResultInterface
     {
         $isValid = false;
         $paymentDO = $this->subjectReader->readPayment($validationSubject);
-        $orderPayment = $paymentDO->getPayment();
-        $method = $orderPayment->getMethodInstance();
+        $order = $paymentDO->getOrder();
 
-        $safeKey = $this->config->getSafeKey($method->getStoreId());
-        $username = $this->config->getApiUsername($method->getStoreId());
-        $password = $this->config->getApiPassword($method->getStoreId());
+        $safeKey = $this->config->getSafeKey($order->getStoreId());
+        $username = $this->config->getApiUsername($order->getStoreId());
+        $password = $this->config->getApiPassword($order->getStoreId());
 
         if (isset($safeKey, $username, $password)) {
             $isValid = true;
