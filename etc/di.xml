@@ -151,8 +151,8 @@
     <virtualType name="PayUGatewayOrderHandler" type="Magento\Payment\Gateway\Response\HandlerChain">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="txn_id" xsi:type="string">Payu\Gateway\Gateway\Response\TransactionIdHandler</item>
-                <item name="url" xsi:type="string">Payu\Gateway\Gateway\Response\RedirectUrlHandler</item>
+                <item name="txn_id" xsi:type="string">PayU\Gateway\Gateway\Response\TransactionIdHandler</item>
+                <item name="url" xsi:type="string">PayU\Gateway\Gateway\Response\RedirectUrlHandler</item>
             </argument>
         </arguments>
     </virtualType>
