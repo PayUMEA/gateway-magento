@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace PayU\Gateway\Gateway\Validator;
 
-use Magento\Framework\Exception\LocalizedException;
+use Magento\Payment\Gateway\Validator\AbstractValidator;
 use Magento\Payment\Gateway\Validator\ResultInterface;
 use Magento\Payment\Gateway\Validator\ResultInterfaceFactory;
 use PayU\Gateway\Gateway\Config\Config;
@@ -18,7 +18,7 @@ use PayU\Gateway\Gateway\SubjectReader;
  * class CredentialValidator
  * @package PayU\Gateway\Gateway\Validator
  */
-class CredentialValidator extends DefaultResponseValidator
+class CredentialValidator extends AbstractValidator
 {
     /**
      * @param ResultInterfaceFactory $resultFactory
@@ -27,10 +27,10 @@ class CredentialValidator extends DefaultResponseValidator
      */
     public function __construct(
         ResultInterfaceFactory $resultFactory,
-        SubjectReader $subjectReader,
+        private readonly SubjectReader $subjectReader,
         private readonly Config $config
     ) {
-        parent::__construct($resultFactory, $subjectReader);
+        parent::__construct($resultFactory);
     }
 
     /**
@@ -39,18 +39,24 @@ class CredentialValidator extends DefaultResponseValidator
      */
     public function validate(array $validationSubject): ResultInterface
     {
-        $isValid = false;
         $paymentDO = $this->subjectReader->readPayment($validationSubject);
         $order = $paymentDO->getOrder();
 
-        $safeKey = $this->config->getSafeKey($order->getStoreId());
-        $username = $this->config->getApiUsername($order->getStoreId());
-        $password = $this->config->getApiPassword($order->getStoreId());
+        $isValid = $this->checkCredentials($order->getStoreId());
 
-        if (isset($safeKey, $username, $password)) {
-            $isValid = true;
-        }
+        return $this->createResult($isValid[0], $isValid[1]);
+    }
 
-        return $this->createResult($isValid);
+    /**
+     * @param int $storeId
+     * @return array
+     */
+    private function checkCredentials(int $storeId): array
+    {
+        $safeKey = $this->config->getSafeKey($storeId);
+        $username = $this->config->getApiUsername($storeId);
+        $password = $this->config->getApiPassword($storeId);
+
+        return [isset($safeKey, $username, $password), ['Payment method not available. Contact merchant.']];
     }
 }
