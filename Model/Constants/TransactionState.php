@@ -14,6 +14,7 @@ namespace PayU\Gateway\Model\Constants;
  */
 enum TransactionState: string
 {
+    case NEW = 'NEW';
     case PROCESSING = 'PROCESSING';
     case SUCCESSFUL = 'SUCCESSFUL';
     case FAILED = 'FAILED';
