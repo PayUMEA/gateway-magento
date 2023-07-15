@@ -64,7 +64,7 @@ class Data extends AbstractHelper
      * @return string
      * @throws NoSuchEntityException
      */
-    public function withBaseUrl(string $url, int|string $storeId = null): string
+    public function withBaseUrl(string $url = '', int|string $storeId = null): string
     {
         $baseUrl = $this->storeManager->getStore($storeId)
             ->getBaseUrl(UrlInterface::URL_TYPE_LINK);
