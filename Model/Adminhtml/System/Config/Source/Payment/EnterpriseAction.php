@@ -12,18 +12,17 @@ use Magento\Framework\Data\OptionSourceInterface;
 use Magento\Payment\Model\MethodInterface;
 
 /**
- * class Action
+ * class EnterpriseAction
  * @package PayU\Gateway\Model\Adminhtml\System\Config\Source\Payment
  */
-class Action implements OptionSourceInterface
+class EnterpriseAction implements OptionSourceInterface
 {
     /**
      * @var array
      */
     protected array $actions = [
         MethodInterface::ACTION_AUTHORIZE => 'Authorize',
-        MethodInterface::ACTION_AUTHORIZE_CAPTURE => 'Authorize & Capture',
-        MethodInterface::ACTION_ORDER => 'Order'
+        MethodInterface::ACTION_AUTHORIZE_CAPTURE => 'Authorize & Capture'
     ];
 
     /**
