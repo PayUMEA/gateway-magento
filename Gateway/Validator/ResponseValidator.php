@@ -23,10 +23,11 @@ class ResponseValidator extends DefaultResponseValidator
             parent::getResponseValidators(),
             [
                 function ($response) {
+                    $isValid = $response->getSuccessful() === true;
                     return [
-                        $response->getReturn() &&
-                        $response->getReturn()->getSuccessful() === true,
-                        [__($response->getReturn()->getResultCode() ?? 'Transaction unsuccessful')]
+                        $isValid,
+                        [__(!$isValid ? $response->getDisplayMessage() : 'Transaction unsuccessful')],
+                        [__(!$isValid ? $response->getResultCode() : 'Transaction unsuccessful')]
                     ];
                 }
             ]

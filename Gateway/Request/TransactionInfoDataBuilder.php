@@ -35,8 +35,11 @@ class TransactionInfoDataBuilder implements BuilderInterface
      */
     public function build(array $buildSubject): array
     {
+        $paymentDO = $this->subjectReader->readPayment($buildSubject);
+        $orderPayment = $paymentDO->getPayment();
+
         return [
-            self::PAYU_REFERENCE => $this->subjectReader->readTransactionId($buildSubject)
+            self::PAYU_REFERENCE => $orderPayment->getLastTransId()
         ];
     }
 }

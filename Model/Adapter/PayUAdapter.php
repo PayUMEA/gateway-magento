@@ -11,16 +11,18 @@ namespace PayU\Gateway\Model\Adapter;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Exception\LocalizedException;
-use PayU\Api\LookupTransaction;
-use PayU\Api\Payment;
-use PayU\Api\Redirect;
-use PayU\Api\Refund;
-use PayU\Api\Reserve;
-use PayU\Api\Response;
-use PayU\Api\Transaction;
-use PayU\Api\TransactionBase;
-use PayU\Api\VoidTransaction;
-use PayU\Auth\BasicAuth;
+use PayU\Api\Data\TransactionInterface;
+use PayU\Api\ResponseInterface;
+use PayU\Framework\Action\Capture;
+use PayU\Framework\Action\Redirect;
+use PayU\Framework\Action\Refund;
+use PayU\Framework\Action\Sale;
+use PayU\Framework\Action\Search;
+use PayU\Framework\Action\VoidAuthorize;
+use PayU\Framework\Authentication;
+use PayU\Framework\Processor;
+use PayU\Framework\Response;
+use PayU\Framework\Soap\Context;
 use PayU\Gateway\Gateway\Request\AdditionalInfoDataBuilder;
 use PayU\Gateway\Gateway\Request\AddressDataBuilder;
 use PayU\Gateway\Gateway\Request\BasketDataBuilder;
@@ -32,8 +34,9 @@ use PayU\Gateway\Gateway\Request\PaymentUrlDataBuilder;
 use PayU\Gateway\Gateway\Request\RefundDataBuilder;
 use PayU\Gateway\Gateway\Request\TransactionInfoDataBuilder;
 use PayU\Gateway\Gateway\Request\TransactionTypeBuilder;
-use PayU\Resource;
-use PayU\Soap\ApiContext;
+use PayU\Gateway\Gateway\Request\VoidDataBuilder;
+use PayU\Model\Cart;
+use PayU\Model\Transaction;
 
 /**
  * class PayUAdapter
@@ -42,9 +45,9 @@ use PayU\Soap\ApiContext;
 class PayUAdapter
 {
     /**
-     * @var ?ApiContext
+     * @var ?Context
      */
-    protected ?ApiContext $apiContext = null;
+    protected ?Context $apiContext = null;
 
     /**
      * @param string $safeKey
@@ -73,8 +76,8 @@ class PayUAdapter
     private function initApi(): void
     {
         if (!$this->apiContext) {
-            $this->apiContext = new ApiContext(
-                new BasicAuth(
+            $this->apiContext = new Context(
+                new Authentication(
                     $this->username,
                     $this->password,
                     $this->safeKey
@@ -102,16 +105,16 @@ class PayUAdapter
         $this->apiContext->setAccountId('default_account')
             ->setIntegration(
                 $this->enterprise ?
-                    ApiContext::ENTERPRISE :
-                    ApiContext::REDIRECT
+                    Context::ENTERPRISE :
+                    Context::REDIRECT
             );
     }
 
     /**
      * @param array $attributes
-     * @return Resource
+     * @return ResponseInterface
      */
-    public function sale(array $attributes): Resource
+    public function sale(array $attributes): ResponseInterface
     {
         return match ($this->enterprise) {
             true => $this->doEnterprise($attributes),
@@ -123,7 +126,7 @@ class PayUAdapter
      * @param array $attributes
      * @return Resource
      */
-    public function order(array $attributes): Resource
+    public function order(array $attributes): ResponseInterface
     {
         return $this->doRedirect($attributes);
     }
@@ -133,15 +136,19 @@ class PayUAdapter
      * @return Response
      * @throws LocalizedException
      */
-    public function search($reference): Response
+    public function search($reference): ResponseInterface
     {
-        $response = LookupTransaction::get($reference, $this->apiContext);
+        $search = new Search();
+        $search->setContext($this->apiContext)
+            ->setPayUReference($reference);
 
-        if (!$response->getReturn()) {
+        $response = Processor::processAction('search', $search);
+
+        if (!$response->getResultCode()) {
             throw new LocalizedException(__('PayU Gateway error encountered.'));
         }
 
-        return $response->getReturn();
+        return $response;
     }
 
     /**
@@ -164,57 +171,61 @@ class PayUAdapter
 
     /**
      * @param array $attributes
-     * @return Resource
+     * @return ResponseInterface
      */
-    public function capture(array $attributes): Resource
+    public function capture(array $attributes): ResponseInterface
     {
-        $reserve = new Reserve();
-        $reserve->setIntent(TransactionBase::TYPE_FINALIZE)
+        $capture = new Capture();
+        $capture->setContext($this->apiContext)
+            ->setTransactionType(TransactionInterface::TYPE_FINALIZE)
             ->setCustomer($attributes[CaptureDataBuilder::CUSTOMER])
             ->setTransaction($attributes[CaptureDataBuilder::TRANSACTION])
             ->setPayUReference($attributes[CaptureDataBuilder::PAYU_REFERENCE])
             ->setMerchantReference($attributes[CaptureDataBuilder::MERCHANT_REFERENCE]);
 
-        return $reserve->capture($this->apiContext);
+        return Processor::processAction('capture', $capture);
     }
 
     /**
      * @param array $attributes
-     * @return Resource
+     * @return ResponseInterface
      */
-    public function refund(array $attributes): Resource
+    public function refund(array $attributes): ResponseInterface
     {
         $refund = new Refund();
-        $refund->setIntent(TransactionBase::TYPE_CREDIT)
+        $refund->setContext($this->apiContext)
+            ->setTransactionType(TransactionInterface::TYPE_CREDIT)
             ->setTransaction($attributes[RefundDataBuilder::TRANSACTION])
             ->setPayUReference($attributes[RefundDataBuilder::PAYU_REFERENCE])
             ->setMerchantReference($attributes[RefundDataBuilder::MERCHANT_REFERENCE]);
 
-        return $refund->refund($this->apiContext);
+        return Processor::processAction('refund', $refund);
     }
 
     /**
      * @param array $attributes
-     * @return Resource
+     * @return ResponseInterface
      */
-    public function void(array $attributes): Resource
+    public function void(array $attributes): ResponseInterface
     {
-        $void = new VoidTransaction();
-        $void->setIntent(TransactionBase::TYPE_RESERVE_CANCEL)
-            ->setTransaction($attributes[RefundDataBuilder::TRANSACTION])
-            ->setPayUReference($attributes[RefundDataBuilder::PAYU_REFERENCE])
-            ->setMerchantReference($attributes[RefundDataBuilder::MERCHANT_REFERENCE]);
+        $void = new VoidAuthorize();
+        $void->setContext($this->apiContext)
+            ->setTransactionType(TransactionInterface::TYPE_RESERVE_CANCEL)
+            ->setTransaction($attributes[VoidDataBuilder::TRANSACTION])
+            ->setPayUReference($attributes[VoidDataBuilder::PAYU_REFERENCE])
+            ->setMerchantReference($attributes[VoidDataBuilder::MERCHANT_REFERENCE]);
 
-        return $void->void($this->apiContext);
+        return Processor::processAction('void', $void);
     }
 
     /**
      * @param array $attributes
-     * @return Resource
+     * @return ResponseInterface
      */
-    private function doEnterprise(array $attributes): Resource
+    private function doEnterprise(array $attributes): ResponseInterface
     {
-        $payment = new Payment();
+        $cart = new Cart();
+        $sale = new Sale();
         $transaction = new Transaction();
 
         $basket = $attributes[BasketDataBuilder::BASKET];
@@ -232,60 +243,63 @@ class PayUAdapter
         }
 
         if ($fraudManagement && $itemList) {
-            $transaction->setItemList($itemList);
-            $transaction->setFraudManagement($fraudManagement);
+            $cart->setItems($itemList);
+            $cart->setTotal((float)$basket[BasketDataBuilder::AMOUNT]->getAmount());
+            $transaction->setFraudService($fraudManagement);
         }
 
-        $transaction->setAmount($basket[BasketDataBuilder::AMOUNT])
+        $transaction->setTotal($basket[BasketDataBuilder::AMOUNT])
             ->setDescription($basket[BasketDataBuilder::DESCRIPTION])
-            ->setReferenceId($basket[BasketDataBuilder::MERCHANT_REFERENCE])
-            ->setShowBudget(false);
+            ->setReference($basket[BasketDataBuilder::MERCHANT_REFERENCE]);
 
         if ($shippingInfo) {
             $transaction->setShippingInfo($shippingInfo);
         }
 
-        $payment->setIntent($attributes[TransactionTypeBuilder::TRANSACTION_TYPE])
+        $sale->setContext($this->apiContext)
+            ->setTransactionType($attributes[TransactionTypeBuilder::TRANSACTION_TYPE])
             ->setCustomer($customer)
             ->setTransaction($transaction)
-            ->setRedirectUrls($attributes[PaymentUrlDataBuilder::PAYMENT_URLS]);
+            ->setTransactionUrl($attributes[PaymentUrlDataBuilder::PAYMENT_URLS]);
 
-        return $payment->create($this->apiContext);
+        return Processor::processAction('sale', $sale);
     }
 
     /**
      * @param array $attributes
-     * @return Redirect
+     * @return ResponseInterface
      */
-    private function doRedirect(array $attributes): Redirect
+    private function doRedirect(array $attributes): ResponseInterface
     {
+        $cart = new Cart();
         $redirect = new Redirect();
         $transaction = new Transaction();
 
         $basket = $attributes[BasketDataBuilder::BASKET];
         $itemList = $attributes[FraudDataBuilder::ITEM_LIST];
-        $fraudManagement = $attributes[FraudDataBuilder::FRAUD];
+        $fraudService = $attributes[FraudDataBuilder::FRAUD];
         $shippingInfo = $attributes[AddressDataBuilder::SHIPPING_INFO];
 
-        if ($fraudManagement && $itemList) {
-            $transaction->setItemList($itemList);
-            $transaction->setFraudManagement($fraudManagement);
+        if ($fraudService && $itemList) {
+            $cart->setItems($itemList);
+            $cart->setTotal((float)$basket[BasketDataBuilder::AMOUNT]->getAmount());
+            $transaction->setFraudService($fraudService);
         }
 
-        $transaction->setAmount($basket[BasketDataBuilder::AMOUNT])
+        $transaction->setTotal($basket[BasketDataBuilder::AMOUNT])
             ->setDescription($basket[BasketDataBuilder::DESCRIPTION])
-            ->setReferenceId($basket[BasketDataBuilder::MERCHANT_REFERENCE])
-            ->setShowBudget(false);
+            ->setReference($basket[BasketDataBuilder::MERCHANT_REFERENCE]);
 
         if ($shippingInfo) {
             $transaction->setShippingInfo($shippingInfo);
         }
 
-        $redirect->setIntent($attributes[TransactionTypeBuilder::TRANSACTION_TYPE])
+        $redirect->setContext($this->apiContext)
+            ->setTransactionType($attributes[TransactionTypeBuilder::TRANSACTION_TYPE])
             ->setCustomer($attributes[CustomerDataBuilder::CUSTOMER])
             ->setTransaction($transaction)
-            ->setRedirectUrls($attributes[PaymentUrlDataBuilder::PAYMENT_URLS]);
+            ->setTransactionUrl($attributes[PaymentUrlDataBuilder::PAYMENT_URLS]);
 
-        return $redirect->setup($this->apiContext);
+        return Processor::processAction('setup', $redirect);
     }
 }

@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace PayU\Gateway\Gateway\Http\Client;
 
 use Magento\Framework\Exception\LocalizedException;
-use PayU\Api\Response;
+use PayU\Api\ResponseInterface;
 
 /**
  * class TransactionInfo
@@ -21,7 +21,7 @@ class TransactionInfo extends AbstractTransaction
      * @inheritdoc
      * @throws LocalizedException
      */
-    protected function process(array $data): Response
+    protected function process(array $data): ResponseInterface
     {
         $storeId = (int)$data['store_id'] ?? null;
         // not sending store id

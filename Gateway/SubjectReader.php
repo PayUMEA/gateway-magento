@@ -11,8 +11,7 @@ namespace PayU\Gateway\Gateway;
 use InvalidArgumentException;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Payment\Gateway\Helper;
-use PayU\Api\Response;
-use PayU\Resource;
+use PayU\Api\ResponseInterface;
 
 /**
  * class SubjectReader
@@ -51,16 +50,16 @@ class SubjectReader
      * Reads transaction from the subject.
      *
      * @param array $subject
-     * @return Response
+     * @return ResponseInterface
      * @throws InvalidArgumentException if the subject doesn't contain transaction details.
      */
-    public function readTransaction(array $subject): Response
+    public function readResponse(array $subject): ResponseInterface
     {
         if (!isset($subject['object']) || !is_object($subject['object'])) {
             throw new InvalidArgumentException('Response object does not exist.');
         }
 
-        return $subject['object']->return ?? $subject['object'];
+        return $subject['object'];
     }
 
     /**
@@ -97,27 +96,7 @@ class SubjectReader
      */
     public function readStoreId(array $subject): ?int
     {
-        return $subject['store_id'] ?? null;
-    }
-
-    /**
-     * Reads transaction from the subject.
-     *
-     * @param array $subject
-     * @return Resource
-     * @throws InvalidArgumentException if the subject doesn't contain transaction details.
-     */
-    public function readRedirect(array $subject): Resource
-    {
-        if (!isset($subject['object']) || !is_object($subject['object'])) {
-            throw new InvalidArgumentException('Response object does not exist.');
-        }
-
-        if (!$subject['object'] instanceof Resource) {
-            throw new InvalidArgumentException('The object is not a class of \PayU\Resource.');
-        }
-
-        return $subject['object'];
+        return $subject['store_id'] ?? $subject['storeId'] ?? null;
     }
 
     /**

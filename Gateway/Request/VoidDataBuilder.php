@@ -10,10 +10,10 @@ namespace PayU\Gateway\Gateway\Request;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Gateway\Request\BuilderInterface;
-use Magento\Sales\Model\Order\Payment;
-use PayU\Api\Amount;
-use PayU\Api\Transaction;
 use PayU\Gateway\Gateway\SubjectReader;
+use PayU\Model\Currency;
+use PayU\Model\Total;
+use PayU\Model\Transaction;
 
 /**
  * class VoidDataBuilder
@@ -47,15 +47,16 @@ class VoidDataBuilder implements BuilderInterface
         $transactionId = $payment->getCcTransId() ?? $payment->getTransactionId();
 
         if (!$transactionId) {
-            throw new LocalizedException(__('No authorization/capture transaction to void.'));
+            throw new LocalizedException(__('No authorize transaction to void.'));
         }
 
-        $amount = new Amount();
-        $amount->setCurrency($order->getCurrencyCode())
-            ->setTotal($this->subjectReader->readAmount($buildSubject));
+        $currency = new Currency(['code' => $order->getCurrencyCode()]);
+        $total = new Total();
+        $total->setCurrency($currency)
+            ->setAmount((float)$payment->getAmountAuthorized());
 
         $transaction = new Transaction();
-        $transaction->setAmount($amount);
+        $transaction->setTotal($total);
 
         return [
             self::TRANSACTION => $transaction,

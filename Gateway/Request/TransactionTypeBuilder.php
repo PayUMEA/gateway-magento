@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace PayU\Gateway\Gateway\Request;
 
 use Magento\Payment\Gateway\Request\BuilderInterface;
-use PayU\Api\TransactionBase;
+use PayU\Api\Data\TransactionInterface;
 use PayU\Gateway\Gateway\Config\Config;
 use PayU\Gateway\Gateway\SubjectReader;
 
@@ -47,8 +47,8 @@ class TransactionTypeBuilder implements BuilderInterface
 
         $transactionType = $this->config->getTransactionType((int)$order->getStoreId());
         $type = match ($transactionType) {
-            'authorize' => TransactionBase::TYPE_RESERVE,
-            'authorize_capture', 'order' => TransactionBase::TYPE_PAYMENT
+            'authorize' => TransactionInterface::TYPE_RESERVE,
+            'authorize_capture', 'order' => TransactionInterface::TYPE_PAYMENT
         };
 
         return [

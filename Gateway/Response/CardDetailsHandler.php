@@ -18,6 +18,7 @@ use PayU\Gateway\Gateway\SubjectReader;
  */
 class CardDetailsHandler implements HandlerInterface
 {
+    private const TOKEN = 'pmId';
     private const AMOUNT_IN_CENTS = 'amountInCents';
     private const CARD_EXPIRY = 'cardExpiry';
     private const CARD_NUMBER = 'cardNumber';
@@ -29,6 +30,7 @@ class CardDetailsHandler implements HandlerInterface
      * @var array
      */
     protected array $additionalInformationMapping = [
+        self::TOKEN,
         self::AMOUNT_IN_CENTS,
         self::CARD_EXPIRY,
         self::CARD_NUMBER,
@@ -53,20 +55,19 @@ class CardDetailsHandler implements HandlerInterface
     public function handle(array $handlingSubject, array $response): void
     {
         $paymentDO = $this->subjectReader->readPayment($handlingSubject);
-        $transaction = $this->subjectReader->readTransaction($response);
+        $responseObj = $this->subjectReader->readResponse($response);
 
         $payment = $paymentDO->getPayment();
         ContextHelper::assertOrderPayment($payment);
 
         foreach ($this->additionalInformationMapping as $item) {
-            $cardDetails = $transaction->getPaymentMethodsUsed();
+            $cardDetails = $responseObj->getPaymentMethodsUsed();
 
-            if (!$cardDetails || ($cardDetails && !isset($cardDetails->$item))) {
+            if (!$cardDetails || ($cardDetails && !$cardDetails->getData($item))) {
                 continue;
             }
 
-            $payment->setTransactionAdditionalInfo($item, $cardDetails->$item);
-            $payment->setAdditionalInformation($item, $cardDetails->$item);
+            $payment->setAdditionalInformation($item, $cardDetails->getData($item));
         }
     }
 }

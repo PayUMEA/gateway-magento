@@ -10,10 +10,10 @@ namespace PayU\Gateway\Gateway\Request;
 
 use Magento\Payment\Gateway\Request\BuilderInterface;
 use Magento\Quote\Api\Data\PaymentInterface;
-use PayU\Api\FundingInstrument;
-use PayU\Api\PaymentCard;
 use PayU\Gateway\Gateway\Config\Config;
 use PayU\Gateway\Gateway\SubjectReader;
+use PayU\Model\CreditCard;
+use PayU\Model\FundingInstrument;
 
 /**
  * class PaymentCardDetailsDataBuilder
@@ -53,27 +53,38 @@ class PaymentCardDetailsDataBuilder implements BuilderInterface
         $cardData = $payment->getAdditionalInformation(PaymentInterface::KEY_ADDITIONAL_DATA);
 
         if ($cardData) {
-            $card = new PaymentCard();
+            $card = new CreditCard();
             $card->setType(
                 str_replace('-', '', strtoupper(array_flip($cardTypeMapper)[$cardData['cc_type']]))
             )
                 ->setNumber($cardData['cc_number'])
-                ->setExpireMonth($cardData['cc_exp_month'])
-                ->setExpireYear($cardData['cc_exp_year'])
-                ->setCvv2($cardData['cc_cid'])
-                ->setFirstName($billingAddress->getFirstname())
-                ->setBillingCountry($billingAddress->getCountryId())
-                ->setLastName($billingAddress->getLastname())
-                ->setShowBudget($this->config->isBudgetAllowed((int)$storeId))
+                ->setExpiryMonth($this->addZeroPrefix($cardData['cc_exp_month']))
+                ->setExpiryYear($cardData['cc_exp_year'])
+                ->setCvv($cardData['cc_cid'])
+                ->setNameOnCard(join(' ', [$billingAddress->getFirstname(), $billingAddress->getLastname()]))
+                ->setBudget($this->config->isBudgetAllowed((int)$storeId))
                 ->setSecure3D($this->config->isSecure3ds((int)$storeId));
 
-            $fi = new FundingInstrument();
-            $fi->setPaymentCard($card)
-                ->setStoreCard(true);
+            $funding = new FundingInstrument();
+            $funding->setCreditCard($card)
+                ->setSaveCard(true);
 
-            $result[self::CARD] = $fi;
+            $result[self::CARD] = $funding;
         }
 
         return $result;
+    }
+
+    /**
+     * @param string $month
+     * @return string
+     */
+    private function addZeroPrefix(string $month): string
+    {
+        if (!str_starts_with($month, '1')) {
+            $month = '0' . $month;
+        }
+
+        return $month;
     }
 }

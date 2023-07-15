@@ -10,10 +10,10 @@ namespace PayU\Gateway\Gateway\Request;
 
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Payment\Gateway\Request\BuilderInterface;
-use PayU\Api\RedirectUrls;
 use PayU\Gateway\Gateway\Config\Config;
 use PayU\Gateway\Gateway\SubjectReader;
 use PayU\Gateway\Helper\Data;
+use PayU\Model\TransactionUrl;
 
 /**
  * class PaymentUrlDataBuilder
@@ -39,7 +39,7 @@ class PaymentUrlDataBuilder implements BuilderInterface
 
     /**
      * @param array $buildSubject
-     * @return RedirectUrls[]
+     * @return array
      * @throws NoSuchEntityException
      */
     public function build(array $buildSubject): array
@@ -50,9 +50,9 @@ class PaymentUrlDataBuilder implements BuilderInterface
         $returnUrl = $this->config->getReturnUrl($storeId);
         $notifyUrl = $this->config->getNotifyUrl($storeId);
 
-        $redirectUrls = new RedirectUrls();
-        $redirectUrls->setNotifyUrl('https://468d-105-247-43-172.ngrok.io/' . $notifyUrl)
-            ->setReturnUrl($this->helper->withBaseUrl($returnUrl))
+        $redirectUrls = new TransactionUrl();
+        $redirectUrls->setNotificationUrl('https://468d-105-247-43-172.ngrok.io/' . $notifyUrl)
+            ->setResponseUrl($this->helper->withBaseUrl($returnUrl))
             ->setCancelUrl($this->helper->withBaseUrl($cancelUrl));
 
         return [

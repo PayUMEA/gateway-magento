@@ -37,8 +37,8 @@ class TransactionInfoHandler implements HandlerInterface
     public function handle(array $handlingSubject, array $response): void
     {
         $paymentDO = $this->subjectReader->readPayment($handlingSubject);
-        $transaction = $this->subjectReader->readTransaction($response);
-        $transferObject = $this->transferFactory->create(['data' => $transaction->toArray()]);
+        $responseObj = $this->subjectReader->readResponse($response);
+        $transferObject = $this->transferFactory->create(['data' => $responseObj->toArray()]);
         $payment = $paymentDO->getPayment();
 
         $transferObject->importTransactionInfo($payment);

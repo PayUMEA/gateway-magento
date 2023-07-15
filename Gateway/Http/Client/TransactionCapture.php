@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace PayU\Gateway\Gateway\Http\Client;
 
+use PayU\Api\ResponseInterface;
+
 /**
  * class TransactionCapture
  * @package PayU\Gateway\Gateway\Http\Client
@@ -16,9 +18,9 @@ class TransactionCapture extends AbstractTransaction
 {
     /**
      * @param array $data
-     * @return mixed
+     * @return ResponseInterface
      */
-    protected function process(array $data): mixed
+    protected function process(array $data): ResponseInterface
     {
         $storeId = (int)$data['store_id'] ?? null;
         // not sending store id

@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace PayU\Gateway\Gateway\Http\Client;
 
-use PayU\Resource;
+use PayU\Api\ResponseInterface;
 
 /**
  * class TransactionSale
@@ -19,7 +19,7 @@ class TransactionSale extends AbstractTransaction
     /**
      * @inheritdoc
      */
-    protected function process(array $data): Resource
+    protected function process(array $data): ResponseInterface
     {
         $storeId = (int)$data['store_id'] ?? null;
         // not sending store id

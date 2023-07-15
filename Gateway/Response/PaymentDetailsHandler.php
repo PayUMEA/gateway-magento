@@ -35,11 +35,11 @@ class PaymentDetailsHandler implements HandlerInterface
     public function handle(array $handlingSubject, array $response): void
     {
         $paymentDO = $this->subjectReader->readPayment($handlingSubject);
-        $transaction = $this->subjectReader->readTransaction($response);
+        $responseObj = $this->subjectReader->readResponse($response);
         /** @var OrderPaymentInterface $payment */
         $payment = $paymentDO->getPayment();
 
-        $payment->setCcTransId($transaction->getPayUReference());
-        $payment->setLastTransId($transaction->getPayUReference());
+        $payment->setCcTransId($responseObj->getPayUReference());
+        $payment->setLastTransId($responseObj->getPayUReference());
     }
 }

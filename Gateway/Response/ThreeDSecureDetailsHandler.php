@@ -44,7 +44,7 @@ class ThreeDSecureDetailsHandler implements HandlerInterface
         $payment = $paymentDO->getPayment();
         ContextHelper::assertOrderPayment($payment);
 
-        $transaction = $this->subjectReader->readTransaction($response);
+        $responseObj = $this->subjectReader->readResponse($response);
 
         if ($payment->hasAdditionalInformation(self::SECURE_3D_ID)) {
             // remove 3d secure details for reorder
@@ -52,12 +52,13 @@ class ThreeDSecureDetailsHandler implements HandlerInterface
             $payment->unsAdditionalInformation(self::RESULT_CODE);
         }
 
-        if (empty($transaction->getSecure3D())) {
+        $secure3d = $responseObj->getSecure3D();
+
+        if ($secure3d->isEmpty()) {
             return;
         }
 
-        $info = $transaction->getSecure3D();
-        $payment->setAdditionalInformation(self::SECURE_3D_ID, $info->getSecure3DId());
-        $payment->setAdditionalInformation(self::RESULT_CODE, $transaction->getResultCode());
+        $payment->setAdditionalInformation(self::SECURE_3D_ID, $secure3d->getSecure3DId());
+        $payment->setAdditionalInformation(self::RESULT_CODE, $responseObj->getResultCode());
     }
 }

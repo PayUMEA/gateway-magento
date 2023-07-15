@@ -10,9 +10,10 @@ namespace PayU\Gateway\Gateway\Validator;
 
 use Magento\Payment\Gateway\Validator\AbstractValidator;
 use Magento\Payment\Gateway\Validator\ResultInterface;
-use PayU\Api\Response;
-use PayU\Gateway\Gateway\SubjectReader;
 use Magento\Payment\Gateway\Validator\ResultInterfaceFactory;
+use PayU\Api\Response;
+use PayU\Api\ResponseInterface;
+use PayU\Gateway\Gateway\SubjectReader;
 use PayU\Resource;
 
 /**
@@ -47,6 +48,7 @@ class DefaultResponseValidator extends AbstractValidator
         $response = $this->subjectReader->readResponseObject($validationSubject);
 
         $isValid = true;
+        $errorCodes = [];
         $errorMessages = [];
 
         foreach ($this->getResponseValidators() as $validator) {
@@ -55,10 +57,11 @@ class DefaultResponseValidator extends AbstractValidator
             if (!$validationResult[0]) {
                 $isValid = $validationResult[0];
                 $errorMessages = array_merge($errorMessages, $validationResult[1]);
+                $errorCodes = array_merge($errorCodes, $validationResult[2]);
             }
         }
 
-        return $this->createResult($isValid, $errorMessages);
+        return $this->createResult($isValid, $errorMessages, $errorCodes);
     }
 
     /**
@@ -69,9 +72,9 @@ class DefaultResponseValidator extends AbstractValidator
         return [
             function ($response) {
                 return [
-                    $response instanceof Resource
-                    || $response instanceof Response,
-                    [__('PayU Gateway error. No response!')]
+                    $response instanceof ResponseInterface,
+                    [__('PayU Gateway error. No response!')],
+                    [997]
                 ];
             }
         ];

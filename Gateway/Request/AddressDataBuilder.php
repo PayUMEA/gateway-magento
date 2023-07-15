@@ -9,10 +9,10 @@ declare(strict_types=1);
 namespace PayU\Gateway\Gateway\Request;
 
 use Magento\Payment\Gateway\Request\BuilderInterface;
-use Magento\Sales\Model\OrderFactory;
-use PayU\Api\ShippingAddress;
-use PayU\Api\ShippingInfo;
 use PayU\Gateway\Gateway\SubjectReader;
+use PayU\Model\Address;
+use PayU\Model\Phone;
+use PayU\Model\ShippingAddress;
 
 /**
  * class AddressDataBuilder
@@ -23,13 +23,10 @@ class AddressDataBuilder implements BuilderInterface
     public const SHIPPING_INFO = 'shipping_info';
 
     /**
-     * @param OrderFactory $orderFactory
      * @param SubjectReader $subjectReader
      */
-    public function __construct(
-        private readonly OrderFactory $orderFactory,
-        private readonly SubjectReader $subjectReader
-    ) {
+    public function __construct(private readonly SubjectReader $subjectReader)
+    {
     }
 
     /**
@@ -47,8 +44,7 @@ class AddressDataBuilder implements BuilderInterface
         $shippingAddress = $order->getShippingAddress();
 
         if ($shippingAddress) {
-            $shippingInfo = new ShippingInfo();
-            $addressShipping = new ShippingAddress();
+            $addressShipping = new Address();
             $addressShipping->setLine1($shippingAddress->getStreetLine1())
                 ->setLine2($shippingAddress->getStreetLine2())
                 ->setCity($shippingAddress->getCity())
@@ -56,13 +52,13 @@ class AddressDataBuilder implements BuilderInterface
                 ->setPostalCode($shippingAddress->getPostcode())
                 ->setCountryCode($shippingAddress->getCountryId());
 
-            $shippingInfo->setId($payment->getOrder()->getShippingMethod())
-                ->setFirstName($shippingAddress->getFirstname())
-                ->setLastName($shippingAddress->getLastname())
+            $phone = new Phone(['national_number' => $shippingAddress->getTelephone()]);
+            $shippingInfo = new ShippingAddress($addressShipping->toArray());
+            $shippingInfo->setShippingId($payment->getOrder()->getShippingMethod())
+                ->setPhone($phone)
                 ->setEmail($shippingAddress->getEmail())
-                ->setPhone($shippingAddress->getTelephone())
-                ->setMethod($payment->getOrder()->getShippingDescription())
-                ->setShippingAddress($addressShipping);
+                ->setRecipientName(join(' ', [$shippingAddress->getFirstname(), $shippingAddress->getLastname()]))
+                ->setShippingMethod($payment->getOrder()->getShippingDescription());
         }
 
         return [

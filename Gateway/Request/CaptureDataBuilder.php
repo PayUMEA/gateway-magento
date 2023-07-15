@@ -10,11 +10,12 @@ namespace PayU\Gateway\Gateway\Request;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Gateway\Request\BuilderInterface;
-use PayU\Api\Amount;
-use PayU\Api\Customer;
-use PayU\Api\PaymentMethod;
-use PayU\Api\Transaction;
 use PayU\Gateway\Gateway\SubjectReader;
+use PayU\Model\Currency;
+use PayU\Model\Customer;
+use PayU\Model\PaymentMethod;
+use PayU\Model\Total;
+use PayU\Model\Transaction;
 
 /**
  * class CaptureDataBuilder
@@ -56,12 +57,13 @@ class CaptureDataBuilder implements BuilderInterface
         $customer = new Customer();
         $customer->setPaymentMethod(PaymentMethod::TYPE_CREDITCARD);
 
-        $amount = new Amount();
-        $amount->setCurrency($order->getCurrencyCode())
-            ->setTotal($this->subjectReader->readAmount($buildSubject));
+        $currency = new Currency(['code' => $order->getCurrencyCode()]);
+        $total = new Total();
+        $total->setCurrency($currency)
+            ->setAmount((float)$this->subjectReader->readAmount($buildSubject));
 
         $transaction = new Transaction();
-        $transaction->setAmount($amount);
+        $transaction->setTotal($total);
 
         return [
             self::CUSTOMER => $customer,

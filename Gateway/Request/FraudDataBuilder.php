@@ -10,12 +10,12 @@ namespace PayU\Gateway\Gateway\Request;
 
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Payment\Gateway\Request\BuilderInterface;
-use PayU\Api\FmDetails;
-use PayU\Api\Item;
-use PayU\Api\ItemList;
 use PayU\Gateway\Gateway\Config\Config;
 use PayU\Gateway\Gateway\SubjectReader;
 use PayU\Gateway\Helper\Data;
+use PayU\Model\FraudService;
+use PayU\Model\Item;
+use PayU\Model\ItemList;
 
 /**
  * class PaymentCardDetailsDataBuilder
@@ -59,17 +59,18 @@ class FraudDataBuilder implements BuilderInterface
 
             foreach ($orderItems as $orderItem) {
                 $item = new Item();
-                $item->setDescription($orderItem->getName())
+                $item->setName($orderItem->getName())
                     ->setSku($orderItem->getSku())
-                    ->setQuantity($orderItem->getQtyOrdered())
-                    ->setPrice($orderItem->getPrice());
+                    ->setQuantity((int)$orderItem->getQtyOrdered())
+                    ->setPrice($orderItem->getPrice())
+                    ->setCostPrice((int)$orderItem->getBasePrice());
 
                 $itemList->addItem($item);
             }
 
-            $fraudDetails = new FmDetails();
-            $fraudDetails->setCheckFraudOverride(false)
-                ->setMerchantWebsite($this->helper->withBaseUrl('/'))
+            $fraudDetails = new FraudService();
+            $fraudDetails->setCheckFraudOverride('false')
+                ->setMerchantWebsite($this->helper->withBaseUrl())
                 ->setPcFingerPrint($this->getFingerPrint());
         }
 

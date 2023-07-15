@@ -9,10 +9,11 @@ declare(strict_types=1);
 namespace PayU\Gateway\Gateway\Request;
 
 use Magento\Payment\Gateway\Request\BuilderInterface;
-use PayU\Api\Address;
-use PayU\Api\Customer;
-use PayU\Api\CustomerInfo;
 use PayU\Gateway\Gateway\SubjectReader;
+use PayU\Model\Address;
+use PayU\Model\Customer;
+use PayU\Model\CustomerDetail;
+use PayU\Model\Phone;
 
 /**
  * class CustomerDataBuilder
@@ -49,19 +50,18 @@ class CustomerDataBuilder implements BuilderInterface
             ->setPostalCode($billingAddress->getPostcode())
             ->setCountryCode($billingAddress->getCountryId());
 
-        $customerInfo = new CustomerInfo();
-        $customerInfo->setFirstName($billingAddress->getFirstname())
+        $phone = new Phone(['national_number' => $billingAddress->getTelephone()]);
+        $customerDetail = new CustomerDetail();
+        $customerDetail->setFirstName($billingAddress->getFirstname())
             ->setLastName($billingAddress->getLastname())
             ->setEmail($billingAddress->getEmail())
-            ->setCountryOfResidence($billingAddress->getCountryId())
-            ->setCountryCode('27')
-            ->setPhone($billingAddress->getTelephone())
-            ->setCustomerId($order->getCustomerId())
-            ->setBillingAddress($addressBilling);
+            ->setPhone($phone)
+            ->setCustomerId((string)$order->getCustomerId())
+            ->setAddress($addressBilling)
+            ->setIpAddress($order->getRemoteIp());
 
         $customer = new Customer();
-        $customer->setCustomerInfo($customerInfo)
-            ->setIPAddress($order->getRemoteIp());
+        $customer->setCustomerDetail($customerDetail);
 
         return [
             self::CUSTOMER => $customer

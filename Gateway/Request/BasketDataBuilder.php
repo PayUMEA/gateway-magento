@@ -9,8 +9,9 @@ declare(strict_types=1);
 namespace PayU\Gateway\Gateway\Request;
 
 use Magento\Payment\Gateway\Request\BuilderInterface;
-use PayU\Api\Amount;
 use PayU\Gateway\Gateway\SubjectReader;
+use PayU\Model\Currency;
+use PayU\Model\Total;
 
 /**
  * class BasketDataBuilder
@@ -39,13 +40,14 @@ class BasketDataBuilder implements BuilderInterface
         $paymentDO = $this->subjectReader->readPayment($buildSubject);
         $order = $paymentDO->getOrder();
 
-        $amount = new Amount();
-        $amount->setCurrency($order->getCurrencyCode())
-            ->setTotal($this->subjectReader->readAmount($buildSubject));
+        $currency = new Currency(['code' => $order->getCurrencyCode()]);
+        $total = new Total();
+        $total->setCurrency($currency)
+            ->setAmount((float)$this->subjectReader->readAmount($buildSubject));
 
         return [
             self::BASKET => [
-                self::AMOUNT => $amount,
+                self::AMOUNT => $total,
                 self::DESCRIPTION => 'Order Reference#: ' . $order->getOrderIncrementId(),
                 self::MERCHANT_REFERENCE => $order->getOrderIncrementId()
             ]

@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace PayU\Gateway\Gateway\Http\Client;
 
+use PayU\Api\ResponseInterface;
+
 /**
  * class TransactionRefund
  * @package PayU\Gateway\Gateway\Http\Client
@@ -17,7 +19,7 @@ class TransactionRefund extends AbstractTransaction
     /**
      * @inheritdoc
      */
-    protected function process(array $data): mixed
+    protected function process(array $data): ResponseInterface
     {
         $storeId = (int)$data['store_id'] ?? null;
         // not sending store id

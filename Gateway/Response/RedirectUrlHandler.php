@@ -36,9 +36,9 @@ class RedirectUrlHandler implements HandlerInterface
      */
     public function handle(array $handlingSubject, array $response): void
     {
-        $redirect = $this->subjectReader->readRedirect($response);
+        $responseObj = $this->subjectReader->readResponse($response);
 
-        if (!$redirect instanceof Redirect) {
+        if (!$responseObj) {
             return;
         }
 
@@ -47,7 +47,8 @@ class RedirectUrlHandler implements HandlerInterface
         $order = $payment->getOrder();
 
         $payment->setIsTransactionPending(true);
-        $payUReference = $redirect->getReturn()->getPayUReference();
+        $payUReference = $responseObj->getPayUReference();
+        $payment->setAdditionalInformation('payUReference', $payUReference);
 
         $message = 'Redirecting to PayU. PayU Reference: "%1"<br/>';
         $message = __(
@@ -59,6 +60,6 @@ class RedirectUrlHandler implements HandlerInterface
 
         $this->payuSession->unsCheckoutRedirectUrl();
         $this->payuSession->setCheckoutReference($payUReference);
-        $this->payuSession->setCheckoutRedirectUrl($redirect->getPayURedirectUrl());
+        $this->payuSession->setCheckoutRedirectUrl($responseObj->getPayURedirectUrl());
     }
 }

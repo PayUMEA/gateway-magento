@@ -49,10 +49,10 @@ class CancelHandler implements HandlerInterface
         $orderPayment = $paymentDO->getPayment();
 
         $message = 'Payment transaction amount of %1 was canceled by user on PayU.<br/>' . 'PayU reference "%2"<br/>';
-        $response = $this->subjectReader->readTransaction($response);
+        $responseObj = $this->subjectReader->readResponse($response);
 
-        $payUReference = $response->getPayUReference();
-        $incrementId = $response->getMerchantReference();
+        $payUReference = $responseObj->getPayUReference();
+        $incrementId = $responseObj->getMerchantReference();
 
         if ($incrementId) {
             $order = $this->orderFactory->create()->loadByIncrementId($incrementId);

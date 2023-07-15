@@ -10,9 +10,10 @@ namespace PayU\Gateway\Gateway\Request;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Gateway\Request\BuilderInterface;
-use PayU\Api\Amount;
-use PayU\Api\Transaction;
 use PayU\Gateway\Gateway\SubjectReader;
+use PayU\Model\Currency;
+use PayU\Model\Total;
+use PayU\Model\Transaction;
 
 /**
  * class PayUAdapterFactory
@@ -21,7 +22,7 @@ use PayU\Gateway\Gateway\SubjectReader;
 class RefundDataBuilder implements BuilderInterface
 {
     public const TRANSACTION = 'transaction';
-    public const PAYU_REFERENCE = 'payuReference';
+    public const PAYU_REFERENCE = 'payUReference';
     public const MERCHANT_REFERENCE = 'merchantReference';
 
     /**
@@ -50,12 +51,13 @@ class RefundDataBuilder implements BuilderInterface
             throw new LocalizedException(__('No capture transaction to proceed refund.'));
         }
 
-        $amount = new Amount();
-        $amount->setCurrency($order->getCurrencyCode())
-            ->setTotal($this->subjectReader->readAmount($buildSubject));
+        $currency = new Currency(['code' => $order->getCurrencyCode()]);
+        $total = new Total();
+        $total->setCurrency($currency)
+            ->setAmount(floatval($this->subjectReader->readAmount($buildSubject)));
 
         $transaction = new Transaction();
-        $transaction->setAmount($amount);
+        $transaction->setTotal($total);
 
         return [
             self::TRANSACTION => $transaction,
