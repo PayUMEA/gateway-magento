@@ -7,7 +7,16 @@
 -->
 <mapping xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Payment:etc/error_mapping.xsd">
     <message_list>
+        <message code="997">PayU System Error</message>
         <message code="999">PayU Timeout</message>
+        <message code="P001">An error occurred with this payment, please contact your merchant (ref: P001)</message>
+        <message code="P003">An error occurred with this payment, please contact your merchant (ref: P003)</message>
+        <message code="P004">An error occurred with this payment, please contact your merchant (ref: P004)</message>
+        <message code="P005">An error occurred with this payment, please contact your merchant (ref: P005)</message>
+        <message code="P006">An error occurred with this payment, please contact your merchant (ref: P006)</message>
+        <message code="P007">An error occurred with this payment, please contact your merchant (ref: P007)</message>
+        <message code="P011">An error occurred with this payment, please contact your merchant (ref: P011)</message>
+        <message code="P014">An error occurred with this payment, please contact your merchant (ref: P014)</message>
         <message code="P022">Transaction is not in the correct state.</message>
         <message code="301">Invalid API parameter</message>
         <message code="P015">User canceled payment transaction</message>
