@@ -11,10 +11,8 @@ namespace PayU\Gateway\Gateway\Validator;
 use Magento\Payment\Gateway\Validator\AbstractValidator;
 use Magento\Payment\Gateway\Validator\ResultInterface;
 use Magento\Payment\Gateway\Validator\ResultInterfaceFactory;
-use PayU\Api\Response;
 use PayU\Api\ResponseInterface;
 use PayU\Gateway\Gateway\SubjectReader;
-use PayU\Resource;
 
 /**
  * class DefaultResponseValidator

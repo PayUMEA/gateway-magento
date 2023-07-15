@@ -10,7 +10,6 @@ namespace PayU\Gateway\Gateway\Response;
 
 use Magento\Framework\Session\Generic;
 use Magento\Payment\Gateway\Response\HandlerInterface;
-use PayU\Api\Redirect;
 use PayU\Gateway\Gateway\SubjectReader;
 
 /**
