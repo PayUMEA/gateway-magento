@@ -1,13 +1,14 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Copyright © 2022 PayU Financial Services. All rights reserved.
  * See COPYING.txt for license details.
  */
 
+declare(strict_types=1);
+
 namespace PayU\Gateway\Gateway\Config;
 
 use Magento\Payment\Gateway\Config\ValueHandlerInterface;
-use Magento\Sales\Model\Order\Payment;
 use PayU\Gateway\Gateway\SubjectReader;
 
 /**
@@ -39,6 +40,6 @@ class CanVoidHandler implements ValueHandlerInterface
         $paymentDO = $this->subjectReader->readPayment($subject);
         $payment = $paymentDO->getPayment();
 
-        return $payment instanceof Payment && !$payment->getAmountPaid();
+        return $payment->getAmountAuthorized() > 0;
     }
 }
