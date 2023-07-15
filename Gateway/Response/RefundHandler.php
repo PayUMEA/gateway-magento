@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace PayU\Gateway\Gateway\Response;
 
-use Magento\Sales\Model\Order\Payment;
+use Magento\Payment\Model\InfoInterface;
 
 /**
  * class RefundHandler
@@ -19,11 +19,11 @@ class RefundHandler extends VoidHandler
     /**
      * Whether parent transaction should be closed
      *
-     * @param Payment $orderPayment
+     * @param InfoInterface $orderPayment
      * @return bool
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    protected function shouldCloseParentTransaction(Payment $orderPayment): bool
+    protected function shouldCloseParentTransaction(InfoInterface $orderPayment): bool
     {
         return !$orderPayment->getCreditmemo()->getInvoice()->canRefund();
     }
