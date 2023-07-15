@@ -84,7 +84,7 @@ class Config extends CoreConfig
      */
     public function getSafeKey(int|null $storeId = null): string
     {
-        return $this->getValue(Config::KEY_SAFE_KEY, $storeId);
+        return $this->getValue(self::KEY_SAFE_KEY, $storeId);
     }
 
     /**
@@ -93,7 +93,7 @@ class Config extends CoreConfig
      */
     public function isBudgetAllowed(int|null $storeId = null): bool
     {
-        return (bool)$this->getValue(Config::KEY_SHOW_BUDGET, $storeId);
+        return (bool)$this->getValue(self::KEY_SHOW_BUDGET, $storeId);
     }
 
     /**
@@ -102,7 +102,7 @@ class Config extends CoreConfig
      */
     public function isEnterprise(int|null $storeId = null): bool
     {
-        return (bool)$this->getValue(Config::KEY_ENTERPRISE, $storeId);
+        return (bool)$this->getValue(self::KEY_ENTERPRISE, $storeId);
     }
 
     /**
@@ -136,9 +136,18 @@ class Config extends CoreConfig
      * @param int|null $storeId
      * @return string
      */
+    public function getPaymentAction(int|null $storeId = null): string
+    {
+        return $this->getValue(self::KEY_TRANSACTION_TYPE, $storeId);
+    }
+
+    /**
+     * @param int|null $storeId
+     * @return string
+     */
     public function getTransactionType(int|null $storeId = null): string
     {
-        return $this->getValue(Config::KEY_TRANSACTION_TYPE, $storeId);
+        return $this->getValue(self::KEY_TRANSACTION_TYPE, $storeId);
     }
 
     /**
@@ -147,7 +156,7 @@ class Config extends CoreConfig
      */
     public function getSupportedPaymentMethods(int|null $storeId = null): string
     {
-        return $this->getValue(Config::KEY_PAYMENT_METHODS, $storeId);
+        return $this->getValue(self::KEY_PAYMENT_METHODS, $storeId);
     }
 
     /**
@@ -156,7 +165,7 @@ class Config extends CoreConfig
      */
     public function isSecure3ds(int|null $storeId = null): bool
     {
-        return (bool)$this->getValue(Config::KEY_PAYMENT_METHODS, $storeId);
+        return (bool)$this->getValue(self::KEY_PAYMENT_METHODS, $storeId);
     }
 
     /**
@@ -165,7 +174,7 @@ class Config extends CoreConfig
      */
     public function getNotifyUrl(int|null $storeId = null): string
     {
-        return $this->getValue(Config::KEY_PAYMENT_NOTIFY_URL, $storeId);
+        return $this->getValue(self::KEY_PAYMENT_NOTIFY_URL, $storeId);
     }
 
     /**
@@ -174,7 +183,7 @@ class Config extends CoreConfig
      */
     public function getReturnUrl(int|null $storeId = null): string
     {
-        return $this->getValue(Config::KEY_PAYMENT_RETURN_URL, $storeId);
+        return $this->getValue(self::KEY_PAYMENT_RETURN_URL, $storeId);
     }
 
     /**
@@ -183,7 +192,7 @@ class Config extends CoreConfig
      */
     public function getCancelUrl(int|null $storeId = null): string
     {
-        return $this->getValue(Config::KEY_PAYMENT_CANCEL_URL, $storeId);
+        return $this->getValue(self::KEY_PAYMENT_CANCEL_URL, $storeId);
     }
 
     /**
@@ -192,7 +201,7 @@ class Config extends CoreConfig
      */
     public function getRedirectUrl(int|null $storeId = null): string
     {
-        return $this->getValue(Config::KEY_PAYMENT_REDIRECT_URL, $storeId);
+        return $this->getValue(self::KEY_PAYMENT_REDIRECT_URL, $storeId);
     }
 
     /**
