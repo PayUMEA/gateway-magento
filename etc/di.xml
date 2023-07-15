@@ -113,10 +113,10 @@
     <virtualType name="PayUGatewayAuthorizationHandler" type="Magento\Payment\Gateway\Response\HandlerChain">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="payment" xsi:type="string">Payu\Gateway\Gateway\Response\PaymentDetailsHandler</item>
-                <item name="txn_id" xsi:type="string">Payu\Gateway\Gateway\Response\TransactionIdHandler</item>
-                <item name="card_details" xsi:type="string">Payu\Gateway\Gateway\Response\CardDetailsHandler</item>
-                <item name="3d_secure" xsi:type="string">Payu\Gateway\Gateway\Response\ThreeDSecureDetailsHandler</item>
+                <item name="payment" xsi:type="string">PayU\Gateway\Gateway\Response\PaymentDetailsHandler</item>
+                <item name="txn_id" xsi:type="string">PayU\Gateway\Gateway\Response\TransactionIdHandler</item>
+                <item name="card_details" xsi:type="string">PayU\Gateway\Gateway\Response\CardDetailsHandler</item>
+                <item name="3d_secure" xsi:type="string">PayU\Gateway\Gateway\Response\ThreeDSecureDetailsHandler</item>
             </argument>
         </arguments>
     </virtualType>
@@ -321,13 +321,13 @@
     <!-- PayU Gateway error mapping  -->
     <virtualType name="PayU\Gateway\Gateway\ErrorMapper\VirtualConfigReader" type="Magento\Payment\Gateway\ErrorMapper\VirtualConfigReader">
         <arguments>
-            <argument name="fileName" xsi:type="string">payu_error_mapping.xml</argument>
+            <argument name="fileName" xsi:type="string">PayU_error_mapping.xml</argument>
         </arguments>
     </virtualType>
     <virtualType name="PayU\Gateway\Gateway\ErrorMapper\VirtualMappingData" type="Magento\Payment\Gateway\ErrorMapper\MappingData">
         <arguments>
             <argument name="reader" xsi:type="object">PayU\Gateway\Gateway\ErrorMapper\VirtualConfigReader</argument>
-            <argument name="cacheId" xsi:type="string">payu_error_mapper</argument>
+            <argument name="cacheId" xsi:type="string">PayU_error_mapper</argument>
         </arguments>
     </virtualType>
     <virtualType name="PayU\Gateway\Gateway\ErrorMapper\VirtualErrorMessageMapper" type="Magento\Payment\Gateway\ErrorMapper\ErrorMessageMapper">

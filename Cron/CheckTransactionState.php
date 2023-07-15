@@ -29,7 +29,7 @@ use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
 use Magento\Sales\Model\Service\InvoiceService;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use PayU\EasyPlus\Model\AbstractPayU;
+use PayU\Gateway\Model\AbstractPayU;
 use PayU\Gateway\Model\Adapter\PayUAdapter;
 use PayU\Gateway\Model\Adapter\PayUAdapterFactory;
 use Psr\Log\LoggerInterface;

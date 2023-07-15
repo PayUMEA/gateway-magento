@@ -12,8 +12,8 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Payment\Block\Info;
-use PayU\EasyPlus\Helper\Backend\Data;
-use PayU\EasyPlus\Helper\DataFactory;
+use PayU\Gateway\Helper\Data;
+use PayU\Gateway\Helper\DataFactory;
 
 /**
  * class Redirect
@@ -55,10 +55,10 @@ class Redirect extends Info
      * Get helper data
      *
      * @param string $area
-     * @return Data|\PayU\EasyPlus\Helper\Data
+     * @return Data
      *@throws LocalizedException
      */
-    public function getHelper(string $area): Data|\PayU\EasyPlus\Helper\Data
+    public function getHelper(string $area): Data
     {
         return $this->dataFactory->create($area);
     }
