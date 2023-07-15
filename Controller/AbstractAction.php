@@ -361,4 +361,42 @@ abstract class AbstractAction implements ActionInterface, RedirectLoginInterface
             }
         }
     }
+
+    /**
+     * @param string $httpCode
+     * @param $text
+     * @return void
+     */
+    protected function respond(string $httpCode = '200', $text = null): void
+    {
+        if ($httpCode === '200') {
+            if (is_callable('fastcgi_finish_request')) {
+                if ($text !== null) {
+                    echo $text;
+                }
+
+                session_write_close();
+                fastcgi_finish_request();
+
+                return;
+            }
+        }
+
+        ignore_user_abort(true);
+        ob_start();
+
+        if ($text !== null) {
+            echo $text;
+        }
+
+        $serverProtocol = filter_input(INPUT_SERVER, 'SERVER_PROTOCOL', FILTER_SANITIZE_STRING);
+        header($serverProtocol . " {$httpCode} OK");
+        header('Content-Encoding: none');
+        header('Content-Length: ' . ob_get_length());
+        header('Connection: close');
+
+        ob_end_flush();
+        ob_flush();
+        flush();
+    }
 }
