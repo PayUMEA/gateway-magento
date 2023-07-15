@@ -97,7 +97,7 @@ class Response extends AbstractAction implements HttpGetActionInterface, HttpPos
                     new LocalizedException(new Phrase('Unable to validate order')),
                     __('Unable to validate order')
                 );
-                $this->returnCustomerQuote(true, $message);
+                $this->returnCustomerQuote(true, __($message));
 
                 return $resultRedirect->setPath('checkout/cart');
             } else {
@@ -127,7 +127,7 @@ class Response extends AbstractAction implements HttpGetActionInterface, HttpPos
             $this->messageManager->addExceptionMessage($e, __('Payment transaction validation failed.'));
         }
 
-        $this->returnCustomerQuote(true, $message);
+        $this->returnCustomerQuote(true, __($message));
 
         return $resultRedirect->setPath('checkout/cart');
     }
