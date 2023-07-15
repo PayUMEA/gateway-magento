@@ -56,11 +56,28 @@ class TransferObject extends DataObject
     }
 
     /**
+     * @return bool
+     */
+    public function isPaymentNew(): bool
+    {
+        return $this->_getData('successful')
+            && $this->getTransactionState() === TransactionState::NEW->value;
+    }
+
+    /**
      * @return string
      */
     public function getTranxId(): string
     {
         return $this->getData('payUReference');
+    }
+
+    /**
+     * @return string
+     */
+    public function getPayUReference(): string
+    {
+        return $this->getTranxId();
     }
 
     /**
@@ -222,6 +239,8 @@ class TransferObject extends DataObject
             $to->setIsTransactionPending(true);
         } elseif ($this->isPaymentProcessing()) {
             $to->setIsTransactionProcessing(true);
+        } elseif ($this->isPaymentNew()) {
+            $to->setIsTransactionPending(true);
         } else {
             $to->setIsTransactionDenied(true);
         }
