@@ -41,24 +41,30 @@ class Notify extends AbstractAction implements HttpPostActionInterface, CsrfAwar
         $postData = file_get_contents("php://input");
         $sxe = simplexml_load_string($postData);
 
-        if (empty($sxe)) {
-            http_response_code(500);
-        }
-
-        $ipnData = XmlHelper::parseXMLToArray($sxe);
         $resultJson = $this->resultFactory->create(ResultFactory::TYPE_JSON)->setJsonData('{}');
 
-        if (!$ipnData) {
-            http_response_code(500);
+        if (empty($sxe)) {
+            $this->respond('500', 'Instant Payment Notification data is empty');
 
             return $resultJson;
         }
 
+        $ipnData = XmlHelper::parseXMLToArray($sxe);
+
+        if (!$ipnData) {
+            $this->respond('500', 'Failed to decode Instant Payment Notification data.');
+
+            return $resultJson;
+        }
+
+        $this->respond();
+
         $incrementId = $ipnData['MerchantReference'];
         $order = $incrementId ? $this->orderFactory->create()->loadByIncrementId($incrementId) : false;
 
-        $this->responseProcessor->notify($order, $ipnData);
-        http_response_code(200);
+        if ($order) {
+            $this->responseProcessor->notify($order, $ipnData);
+        }
 
         return $resultJson;
     }
