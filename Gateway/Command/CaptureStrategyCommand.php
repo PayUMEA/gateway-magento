@@ -19,7 +19,6 @@ use Magento\Payment\Gateway\Helper\ContextHelper;
 use Magento\Sales\Api\Data\OrderPaymentInterface;
 use Magento\Sales\Api\Data\TransactionInterface;
 use Magento\Sales\Api\TransactionRepositoryInterface;
-use PayU\Api\TransactionBase;
 use PayU\Gateway\Gateway\SubjectReader;
 use PayU\Gateway\Model\Adapter\PayUAdapterFactory;
 
@@ -30,7 +29,7 @@ use PayU\Gateway\Model\Adapter\PayUAdapterFactory;
 class CaptureStrategyCommand implements CommandInterface
 {
     private const AUTHORIZE = 'authorize';
-    private const CAPTURE = 'capture';
+    private const CAPTURE = 'settlement';
     private const FETCH_TXN_INFO = 'fetch_transaction_information';
 
     /**
@@ -76,17 +75,22 @@ class CaptureStrategyCommand implements CommandInterface
         $payment = $paymentDO->getPayment();
         ContextHelper::assertOrderPayment($payment);
 
+        if ($this->isExistsOrderTransaction($payment)) {
+            throw new LocalizedException(__('No authorize transaction found'));
+        }
+
         // if auth transaction does not exist then execute authorize&capture command
         $existsCapture = $this->isExistsCaptureTransaction($payment);
+        $authorizeTxn = $payment->getAuthorizationTransaction();
 
-        if (!$payment->getAuthorizationTransaction() && !$existsCapture) {
+        if (!$authorizeTxn && !$existsCapture) {
             return self::FETCH_TXN_INFO;
         }
 
         // do capture for authorization transaction
         if (
             !$existsCapture &&
-            $payment->getAuthorizationTransaction() &&
+            $authorizeTxn &&
             !$this->isExpiredAuthorization($payment, $paymentDO->getOrder())
         ) {
             return self::CAPTURE;
@@ -109,7 +113,7 @@ class CaptureStrategyCommand implements CommandInterface
         $adapter = $this->payuAdapterFactory->create((int)$orderAdapter->getStoreId());
         $transaction = $adapter->search($payment->getLastTransId());
 
-        return $transaction->getTransactionState() === TransactionBase::STATE_EXPIRED;
+        return $transaction->getTransactionState() === \PayU\Api\Data\TransactionInterface::STATE_EXPIRED;
     }
 
     /**
@@ -134,6 +138,39 @@ class CaptureStrategyCommand implements CommandInterface
                 $this->filterBuilder
                     ->setField('txn_type')
                     ->setValue(TransactionInterface::TYPE_CAPTURE)
+                    ->create(),
+            ]
+        );
+
+        $searchCriteria = $this->searchCriteriaBuilder->create();
+
+        $count = $this->transactionRepository->getList($searchCriteria)->getTotalCount();
+
+        return (bool) $count;
+    }
+
+    /**
+     * Check if capture transaction already exists
+     *
+     * @param OrderPaymentInterface $payment
+     * @return bool
+     */
+    private function isExistsOrderTransaction(OrderPaymentInterface $payment): bool
+    {
+        $this->searchCriteriaBuilder->addFilters(
+            [
+                $this->filterBuilder
+                    ->setField('payment_id')
+                    ->setValue($payment->getId())
+                    ->create(),
+            ]
+        );
+
+        $this->searchCriteriaBuilder->addFilters(
+            [
+                $this->filterBuilder
+                    ->setField('txn_type')
+                    ->setValue(TransactionInterface::TYPE_ORDER)
                     ->create(),
             ]
         );
