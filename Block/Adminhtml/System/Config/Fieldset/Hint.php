@@ -36,7 +36,7 @@ class Hint extends Template implements RendererInterface
             $html .= sprintf('<tr id="row_%s">', $element->getHtmlId());
             $html .= '<td colspan="1"><p class="note"><span>';
             $html .= sprintf(
-                '<a href="%s" target="_blank">Configuration Details</a>',
+                '<a href="%s" target="_blank">Documentation</a>',
                 $element->getComment()
             );
             $html .= '</span></p></td></tr>';
