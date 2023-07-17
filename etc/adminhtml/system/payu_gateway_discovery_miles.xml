@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2022 PayU Financial Services. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="payu_gateway_discovery_miles" translate="label" type="text" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Discovery Miles</label>
+        <comment>
+            <![CDATA[<a href="https://southafrica.payu.com/" target="_blank">Sign up for a Discovery Miles account</a>]]>
+        </comment>
+        <attribute type="activity_path">payment/payu_gateway_discovery_miles/active</attribute>
+        <group id="configuration_details" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="4">
+            <comment>https://payusahelp.atlassian.net/wiki/spaces/developers/pages/426096/Discovery+Miles+RPP</comment>
+            <frontend_model>PayU\Gateway\Block\Adminhtml\System\Config\Fieldset\Hint</frontend_model>
+        </group>
+        <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Enabled</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/payu_gateway_discovery_miles/active</config_path>
+        </field>
+        <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Title</label>
+            <comment>Displayed on payment page in storefront</comment>
+            <config_path>payment/payu_gateway_discovery_miles/title</config_path>
+        </field>
+        <field id="environment" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Environment</label>
+            <source_model>PayU\Gateway\Model\Adminhtml\System\Config\Source\Payment\Environment</source_model>
+            <config_path>payment/payu_gateway_discovery_miles/environment</config_path>
+        </field>
+        <field id="payment_action" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <label>Payment Action</label>
+            <source_model>PayU\Gateway\Model\Adminhtml\System\Config\Source\Payment\DefaultAction</source_model>
+            <config_path>payment/payu_gateway_discovery_miles/payment_action</config_path>
+        </field>
+        <field id="api_username" translate="label" type="text" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>API Username</label>
+            <config_path>payment/payu_gateway_discovery_miles/api_username</config_path>
+        </field>
+        <field id="api_password" translate="label" type="obscure" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>API Password</label>
+            <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+            <config_path>payment/payu_gateway_discovery_miles/api_password</config_path>
+        </field>
+        <field id="safe_key" translate="label" type="obscure" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Safe Key</label>
+            <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+            <config_path>payment/payu_gateway_discovery_miles/safe_key</config_path>
+        </field>
+        <field id="fraudprotection" translate="label comment" type="select" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Fraud Protection</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/payu_gateway_discovery_miles/fraudprotection</config_path>
+        </field>
+        <field id="order_status" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <label>New Order Status</label>
+            <source_model>PayU\Gateway\Model\Adminhtml\System\Config\Source\Order\Status\PendingPayment</source_model>
+            <config_path>payment/payu_gateway_discovery_miles/order_status</config_path>
+        </field>
+        <field id="currency" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <label>Accepted Currency</label>
+            <source_model>Magento\Config\Model\Config\Source\Locale\Currency</source_model>
+            <config_path>payment/payu_gateway_discovery_miles/currency</config_path>
+        </field>
+        <field id="payment_methods" translate="label" type="multiselect" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Payment Methods Code</label>
+            <source_model>PayU\Gateway\Model\Adminhtml\System\Config\Source\Payment\Method</source_model>
+            <config_path>payment/payu_gateway_discovery_miles/payment_methods</config_path>
+        </field>
+        <field id="allowspecific" translate="label" type="allowspecific" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Payment from Applicable Countries</label>
+            <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
+            <config_path>payment/payu_gateway_discovery_miles/allowspecific</config_path>
+        </field>
+        <field id="specificcountry" translate="label" type="multiselect" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Payment from Specific Countries</label>
+            <source_model>PayU\Gateway\Model\Adminhtml\System\Config\Country</source_model>
+            <can_be_empty>1</can_be_empty>
+            <config_path>payment/payu_gateway_discovery_miles/specificcountry</config_path>
+        </field>
+        <field id="min_order_total" translate="label" type="text" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Minimum Order Total</label>
+            <comment>Cannot be less than 1.00</comment>
+            <frontend_class>validate-number</frontend_class>
+            <config_path>payment/payu_gateway_discovery_miles/min_order_total</config_path>
+        </field>
+        <field id="max_order_total" translate="label" type="text" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Maximum Order Total</label>
+            <comment>Cannot be more than 5,000,000.00</comment>
+            <frontend_class>validate-number</frontend_class>
+            <config_path>payment/payu_gateway_discovery_miles/max_order_total</config_path>
+        </field>
+        <field id="debug" translate="label" type="select" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Debugging</label>
+            <comment>Debug data is written to payment.log</comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/payu_gateway_discovery_miles/debug</config_path>
+        </field>
+        <field id="sort_order" translate="label" type="text" sortOrder="165" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Sort Order</label>
+            <frontend_class>validate-number</frontend_class>
+            <config_path>payment/payu_gateway_discovery_miles/sort_order</config_path>
+        </field>
+        <group id="payment_url" translate="label" type="text" sortOrder="170" showInDefault="1" showInStore="1" showInWebsite="1">
+            <label>Payment Urls</label>
+            <comment>Only update URLs if there are external integration outside of Magento</comment>
+            <field id="notify_url" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Notification Url (IPN)</label>
+                <config_path>payment/payu_gateway_discovery_miles/payment_url/notify_url</config_path>
+            </field>
+            <field id="return_url" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Return Url</label>
+                <config_path>payment/payu_gateway_discovery_miles/payment_url/return_url</config_path>
+            </field>
+            <field id="cancel_url" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Cancel Url</label>
+                <config_path>payment/payu_gateway_discovery_miles/payment_url/cancel_url</config_path>
+            </field>
+            <field id="redirect_url" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Redirect Url</label>
+                <config_path>payment/payu_gateway_discovery_miles/payment_url/redirect_url</config_path>
+            </field>
+        </group>
+    </group>
+</include>
