@@ -244,7 +244,7 @@ class Config extends CoreConfig
     public function getCcTypesMapper(): array
     {
         $result = json_decode(
-            $this->getValue(self::KEY_CC_TYPES_MAPPER),
+            $this->getValue(self::KEY_CC_TYPES_MAPPER) ?? '{}',
             true
         );
 
