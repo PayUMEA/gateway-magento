@@ -16,13 +16,14 @@ define(
         'use strict';
 
         let config = window.checkoutConfig.payment,
-            creditCard = 'payu_gateway_creditcard';
+            creditCard = 'payu_gateway_creditcard',
+            discoveryMiles = 'payu_gateway_discovery_miles';
 
         if (config[creditCard].isActive && !config[creditCard].isEnterprise) {
             rendererList.push(
                 {
                     type: creditCard,
-                    component: 'PayU_Gateway/js/view/payment/method-renderer/creditcard'
+                    component: 'PayU_Gateway/js/view/payment/method-renderer/default'
                 },
             );
         }
@@ -34,6 +35,15 @@ define(
                     component: 'PayU_Gateway/js/view/payment/method-renderer/cc-form'
                 },
             );
+        }
+
+        if (config[discoveryMiles].isActive) {
+            rendererList.push(
+                {
+                    type: 'payu_gateway_discovery_miles',
+                    component: 'PayU_Gateway/js/view/payment/method-renderer/default'
+                },
+            )
         }
 
         /** Add view logic here if needed */

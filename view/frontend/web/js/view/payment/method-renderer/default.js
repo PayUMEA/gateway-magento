@@ -30,7 +30,7 @@ define(
         return Component.extend({
             defaults: {
                 redirectAfterPlaceOrder: false,
-                template: 'PayU_Gateway/payment/creditcard'
+                template: 'PayU_Gateway/payment/default'
             },
 
             getCode: function() {
