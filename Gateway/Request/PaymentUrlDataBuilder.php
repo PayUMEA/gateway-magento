@@ -45,6 +45,9 @@ class PaymentUrlDataBuilder implements BuilderInterface
     public function build(array $buildSubject): array
     {
         $storeId = $this->subjectReader->readStoreId($buildSubject);
+        $paymentDO = $this->subjectReader->readPayment($buildSubject);
+        $payment = $paymentDO->getPayment();
+        $this->config->setMethodCode($payment->getMethod());
 
         $cancelUrl = $this->config->getCancelUrl($storeId);
         $returnUrl = $this->config->getReturnUrl($storeId);

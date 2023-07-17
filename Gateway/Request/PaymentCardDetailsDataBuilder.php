@@ -45,6 +45,7 @@ class PaymentCardDetailsDataBuilder implements BuilderInterface
 
         $order = $paymentDO->getOrder();
         $payment = $paymentDO->getPayment();
+        $this->config->setMethodCode($payment->getMethod());
 
         $billingAddress = $order->getBillingAddress();
 

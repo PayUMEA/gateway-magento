@@ -48,6 +48,8 @@ class FraudDataBuilder implements BuilderInterface
     {
         $paymentDO = $this->subjectReader->readPayment($buildSubject);
         $order = $paymentDO->getOrder();
+        $payment = $paymentDO->getPayment();
+        $this->config->setMethodCode($payment->getMethod());
 
         $fraudDetails = null;
         $itemList = null;
