@@ -15,6 +15,7 @@ use Magento\Framework\View\Asset\Repository;
 use PayU\Gateway\Gateway\Config\Config;
 use PayU\Gateway\Helper\Data;
 use PayU\Gateway\Model\Payment\Method\Creditcard;
+use PayU\Gateway\Model\Payment\Method\DiscoveryMiles;
 
 /**
  * class ConfigProvider
@@ -23,12 +24,14 @@ use PayU\Gateway\Model\Payment\Method\Creditcard;
 class ConfigProvider implements ConfigProviderInterface
 {
     const CREDIT_CARD_CODE = Creditcard::CODE;
+    const DISCOVERY_MILES_CODE = DiscoveryMiles::CODE;
 
     /**
      * @var string[]
      */
     protected array $methodCodes = [
-        self::CREDIT_CARD_CODE
+        self::CREDIT_CARD_CODE,
+        self::DISCOVERY_MILES_CODE
     ];
 
     /**
@@ -54,14 +57,13 @@ class ConfigProvider implements ConfigProviderInterface
     public function getConfig(): array
     {
         $config = [];
-        $storeId = $this->session->getStoreId();
-        $isActive = $this->config->isActive($storeId);
-        $isEnterprise = $this->config->isEnterprise($storeId);
 
         foreach ($this->methodCodes as $code) {
+            $this->config->setMethodCode($code);
+            $storeId = $this->session->getStoreId();
             $config['payment'][$code] = [
-                'isActive' => $isActive,
-                'isEnterprise' => $isEnterprise,
+                'isActive' => $this->config->isActive($storeId),
+                'isEnterprise' => $this->config->isEnterprise($storeId),
                 'ccTypesMapper' => $this->config->getCcTypesMapper(),
                 'imageSrc' => $this->getPaymentMethodImageUrl($code),
                 'availableCardTypes' => $this->config->getAvailableCardTypes($storeId),
