@@ -14,21 +14,124 @@
             <argument name="code" xsi:type="const">PayU\Gateway\Model\Ui\ConfigProvider::CREDIT_CARD_CODE</argument>
             <argument name="formBlockType" xsi:type="string">PayU\Gateway\Block\Form</argument>
             <argument name="infoBlockType" xsi:type="string">PayU\Gateway\Block\Info</argument>
-            <argument name="valueHandlerPool" xsi:type="object">PayUGatewayValueHandlerPool</argument>
-            <argument name="validatorPool" xsi:type="object">PayUGatewayValidatorPool</argument>
+            <argument name="valueHandlerPool" xsi:type="object">PayUGatewayCreditCardValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">PayUGatewayCreditCardValidatorPool</argument>
             <argument name="commandPool" xsi:type="object">PayUGatewayCommandPool</argument>
         </arguments>
     </virtualType>
     <!-- END Credit card Facade configuration -->
+    <!-- Discovery Miles Facade configuration -->
+    <virtualType name="PayUGatewayDiscoveryMilesFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">PayU\Gateway\Model\Ui\ConfigProvider::DISCOVERY_MILES_CODE</argument>
+            <argument name="formBlockType" xsi:type="string">PayU\Gateway\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">PayU\Gateway\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">PayUGatewayDiscoveryMilesValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">PayUGatewayDiscoveryMilesValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">PayUGatewayCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <!-- END Discovery Miles Facade configuration -->
     <!-- END Payment Methods Facade configuration -->
 
     <!-- Configuration reader -->
-    <type name="PayU\Gateway\Gateway\Config\Config">
+    <virtualType name="PayUGatewayCreditCardConfig" type="PayU\Gateway\Gateway\Config\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">PayU\Gateway\Model\Ui\ConfigProvider::CREDIT_CARD_CODE</argument>
         </arguments>
-    </type>
+    </virtualType>
+    <virtualType name="PayUGatewayDiscoveryMilesConfig" type="PayU\Gateway\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">PayU\Gateway\Model\Ui\ConfigProvider::DISCOVERY_MILES_CODE</argument>
+        </arguments>
+    </virtualType>
     <!-- END Configuration reader -->
+
+    <!-- Value handlers infrastructure -->
+    <!-- Credit card -->
+    <virtualType name="PayUGatewayCreditCardConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">PayUGatewayCreditCardConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayCreditCardValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">PayUGatewayCreditCardConfigValueHandler</item>
+                <item name="can_refund" xsi:type="string">PayU\Gateway\Gateway\Config\CanRefundHandler</item>
+                <item name="can_void" xsi:type="string">PayU\Gateway\Gateway\Config\CanVoidHandler</item>
+                <item name="can_cancel" xsi:type="string">PayU\Gateway\Gateway\Config\CanCancelHandler</item>
+                <item name="can_capture" xsi:type="string">PayU\Gateway\Gateway\Config\CanVoidHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- Discovery Miles -->
+    <virtualType name="PayUGatewayDiscoveryMilesValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">PayUGatewayDiscoveryMilesConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayDiscoveryMilesValueHandlerPool" type="PayUGatewayCreditCardValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">PayUGatewayDiscoveryMilesValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- END Value handlers infrastructure -->
+
+    <!-- PayU Gateway validators infrastructure -->
+    <!-- Credit card -->
+    <virtualType name="PayUGatewayCreditCardCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayCreditCardConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayCreditCardCredentialValidator" type="PayU\Gateway\Gateway\Validator\CredentialValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayDiscoveryMilesConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayCreditCardGlobalValidator" type="PayU\Gateway\Gateway\Validator\GlobalValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayDiscoveryMilesConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayCreditCardValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">PayUGatewayCreditCardCountryValidator</item>
+                <item name="availability" xsi:type="string">PayUGatewayCreditCardCredentialValidator</item>
+                <item name="global" xsi:type="string">PayUGatewayCreditCardGlobalValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- Discovery Miles -->
+    <virtualType name="PayUGatewayDiscoveryMilesCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayDiscoveryMilesConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayDiscoveryMilesCredentialValidator" type="PayU\Gateway\Gateway\Validator\CredentialValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayDiscoveryMilesConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayDiscoveryMilesGlobalValidator" type="PayU\Gateway\Gateway\Validator\GlobalValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayDiscoveryMilesConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayDiscoveryMilesValidatorPool" type="PayUGatewayCreditCardValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">PayUGatewayDiscoveryMilesCountryValidator</item>
+                <item name="availability" xsi:type="string">PayUGatewayDiscoveryMilesCredentialValidator</item>
+                <item name="global" xsi:type="string">PayUGatewayDiscoveryMilesGlobalValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- END PayU Gateway validators infrastructure -->
 
     <!-- Logger, initialized with PayUGatewayConfig -->
     <type name="PayU\Gateway\Model\Payment\Operations\CreateInvoiceOperation">
@@ -336,40 +439,4 @@
         </arguments>
     </virtualType>
     <!-- END PayU Gateway error mapping  -->
-
-    <!-- Value handlers infrastructure -->
-    <virtualType name="PayUGatewayValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
-        <arguments>
-            <argument name="handlers" xsi:type="array">
-                <item name="default" xsi:type="string">PayUGatewayConfigValueHandler</item>
-                <item name="can_refund" xsi:type="string">PayU\Gateway\Gateway\Config\CanRefundHandler</item>
-                <item name="can_void" xsi:type="string">PayU\Gateway\Gateway\Config\CanVoidHandler</item>
-                <item name="can_cancel" xsi:type="string">PayU\Gateway\Gateway\Config\CanCancelHandler</item>
-                <item name="can_capture" xsi:type="string">PayU\Gateway\Gateway\Config\CanVoidHandler</item>
-            </argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="PayUGatewayConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
-        <arguments>
-            <argument name="configInterface" xsi:type="object">PayU\Gateway\Gateway\Config\Config</argument>
-        </arguments>
-    </virtualType>
-    <!-- END Value handlers infrastructure -->
-
-    <!-- PayU Gateway validators infrastructure -->
-    <virtualType name="PayUGatewayCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
-        <arguments>
-            <argument name="config" xsi:type="object">PayU\Gateway\Gateway\Config\Config</argument>
-        </arguments>
-    </virtualType>
-    <virtualType name="PayUGatewayValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
-        <arguments>
-            <argument name="validators" xsi:type="array">
-                <item name="country" xsi:type="string">PayUGatewayCountryValidator</item>
-                <item name="availability" xsi:type="string">PayU\Gateway\Gateway\Validator\CredentialValidator</item>
-                <item name="global" xsi:type="string">PayU\Gateway\Gateway\Validator\GlobalValidator</item>
-            </argument>
-        </arguments>
-    </virtualType>
-    <!-- END PayU Gateway validators infrastructure -->
 </config>
