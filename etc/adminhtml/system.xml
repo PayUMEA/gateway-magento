@@ -57,11 +57,18 @@
                             <![CDATA[<a href="https://corporate.payu.com/contact-us/" target="_blank">Sign up for a PayU account</a>]]>
                         </comment>
                     </group>
+                    <group id="payu_gateway_discovery_miles_other" translate="label comment" sortOrder="8" extends="payment_all_payu_gateway/payu_gateway_discovery_miles" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Discovery Miles</label>
+                        <comment>
+                            <![CDATA[<a href="https://southafrica.payu.com/" target="_blank">Sign up for a Discovery Miles account</a>]]>
+                        </comment>
+                    </group>
                 </group>
             </group>
         </section>
         <section id="payment_all_payu_gateway" showInDefault="0" showInWebsite="0" showInStore="0">
             <include path="PayU_Gateway::system/payu_gateway_creditcard.xml"/>
+            <include path="PayU_Gateway::system/payu_gateway_discovery_miles.xml"/>
         </section>
     </system>
 </config>

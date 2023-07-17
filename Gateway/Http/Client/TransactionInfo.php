@@ -10,6 +10,7 @@ namespace PayU\Gateway\Gateway\Http\Client;
 
 use Magento\Framework\Exception\LocalizedException;
 use PayU\Api\ResponseInterface;
+use PayU\Gateway\Gateway\Request\StoreConfigBuilder;
 
 /**
  * class TransactionInfo
@@ -23,10 +24,13 @@ class TransactionInfo extends AbstractTransaction
      */
     protected function process(array $data): ResponseInterface
     {
-        $storeId = (int)$data['store_id'] ?? null;
+        $storeId = (int)$data[StoreConfigBuilder::STORE_ID] ?? null;
         // not sending store id
-        unset($data['store_id']);
+        unset($data[StoreConfigBuilder::STORE_ID]);
 
-        return $this->adapterFactory->create($storeId)->transactionInfo($data);
+        return $this->adapterFactory->create(
+            $storeId,
+            $data[StoreConfigBuilder::METHOD_CODE]
+        )->transactionInfo($data);
     }
 }

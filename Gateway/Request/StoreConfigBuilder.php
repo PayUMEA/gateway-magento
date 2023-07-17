@@ -20,6 +20,9 @@ use PayU\Gateway\Gateway\SubjectReader;
  */
 class StoreConfigBuilder implements BuilderInterface
 {
+    public const STORE_ID = 'storeId';
+    public const METHOD_CODE = 'methodCode';
+
     /**
      * @var SubjectReader
      */
@@ -41,9 +44,11 @@ class StoreConfigBuilder implements BuilderInterface
     {
         $paymentDO = $this->subjectReader->readPayment($buildSubject);
         $order = $paymentDO->getOrder();
+        $payment = $paymentDO->getPayment();
 
         return [
-            'store_id' => $order->getStoreId()
+            self::STORE_ID => $order->getStoreId(),
+            self::METHOD_CODE => $payment->getMethod()
         ];
     }
 }

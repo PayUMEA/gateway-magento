@@ -9,10 +9,10 @@ declare(strict_types=1);
 namespace PayU\Gateway\Model\Payment\Method;
 
 /**
- * class Creditcard
+ * class DiscoveryMiles
  * @package PayU\Gateway\Model\Payment\Method
  */
-class Creditcard extends AbstractMethod
+class DiscoveryMiles extends AbstractMethod
 {
-    public const CODE = 'payu_gateway_creditcard';
+    public const CODE = 'payu_gateway_discovery_miles';
 }

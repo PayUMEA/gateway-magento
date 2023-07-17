@@ -44,6 +44,8 @@ class TransactionTypeBuilder implements BuilderInterface
     {
         $paymentDO = $this->subjectReader->readPayment($buildSubject);
         $order = $paymentDO->getOrder();
+        $payment = $paymentDO->getPayment();
+        $this->config->setMethodCode($payment->getMethod());
 
         $transactionType = $this->config->getTransactionType((int)$order->getStoreId());
         $type = match ($transactionType) {
