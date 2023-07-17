@@ -82,7 +82,7 @@ class PaymentCardDetailsDataBuilder implements BuilderInterface
      */
     private function addZeroPrefix(string $month): string
     {
-        if (!str_starts_with($month, '1')) {
+        if ($month === '1' || !str_starts_with($month, '1')) {
             $month = '0' . $month;
         }
 
