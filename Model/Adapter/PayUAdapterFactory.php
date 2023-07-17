@@ -40,10 +40,15 @@ class PayUAdapterFactory
      * @param int|null $storeId if null is provided as an argument, then current scope will be resolved
      * by \Magento\Framework\App\Config\ScopeCodeResolver (useful for most cases) but for adminhtml area the store
      * should be provided as the argument for correct config settings loading.
+     * @param string|null $methodCode
      * @return PayUAdapter
      */
-    public function create(?int $storeId = null): PayUAdapter
+    public function create(?int $storeId = null, ?string $methodCode = ''): PayUAdapter
     {
+        if ($methodCode) {
+            $this->config->setMethodCode($methodCode);
+        }
+
         return $this->objectManager->create(
             $this->class,
             [
