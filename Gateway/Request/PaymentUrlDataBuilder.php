@@ -54,7 +54,7 @@ class PaymentUrlDataBuilder implements BuilderInterface
         $notifyUrl = $this->config->getNotifyUrl($storeId);
 
         $redirectUrls = new TransactionUrl();
-        $redirectUrls->setNotificationUrl('https://468d-105-247-43-172.ngrok.io/' . $notifyUrl)
+        $redirectUrls->setNotificationUrl($this->helper->withBaseUrl($notifyUrl))
             ->setResponseUrl($this->helper->withBaseUrl($returnUrl))
             ->setCancelUrl($this->helper->withBaseUrl($cancelUrl));
 
