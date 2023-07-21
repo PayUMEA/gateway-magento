@@ -250,7 +250,8 @@ class PayUAdapter
 
         $transaction->setTotal($basket[BasketDataBuilder::AMOUNT])
             ->setDescription($basket[BasketDataBuilder::DESCRIPTION])
-            ->setReference($basket[BasketDataBuilder::MERCHANT_REFERENCE]);
+            ->setReference($basket[BasketDataBuilder::MERCHANT_REFERENCE])
+            ->setDemo($attributes[AdditionalInfoDataBuilder::ADDITIONAL_INFO][AdditionalInfoDataBuilder::DEMO_MODE]);
 
         if ($shippingInfo) {
             $transaction->setShippingInfo($shippingInfo);
@@ -288,7 +289,8 @@ class PayUAdapter
 
         $transaction->setTotal($basket[BasketDataBuilder::AMOUNT])
             ->setDescription($basket[BasketDataBuilder::DESCRIPTION])
-            ->setReference($basket[BasketDataBuilder::MERCHANT_REFERENCE]);
+            ->setReference($basket[BasketDataBuilder::MERCHANT_REFERENCE])
+            ->setDemo($attributes[AdditionalInfoDataBuilder::ADDITIONAL_INFO][AdditionalInfoDataBuilder::DEMO_MODE]);
 
         if ($shippingInfo) {
             $transaction->setShippingInfo($shippingInfo);

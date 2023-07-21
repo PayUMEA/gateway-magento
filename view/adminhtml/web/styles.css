@@ -3,7 +3,7 @@
  * See COPYING.txt for license details.
  */
 
-.payu-gateway-section .heading {background: url("images/logo-PayU-reverse-byline@2x.png") no-repeat 0 50% / 18rem auto; padding-left: 20rem;}
+.payu-gateway-section .heading {background: url("images/PayU.png") no-repeat 0 50% / 18rem auto; padding-left: 20rem;}
 .payu-gateway-section .button-container {float: right;}
 /*.payu-gateway-section .config-alt {background: url("images/pp-alt.png") no-repeat; height: 26px; margin: 0.5rem 0 0; width: 158px;}*/
 .payu-gateway-section .link-more {margin-left: 5px;}
