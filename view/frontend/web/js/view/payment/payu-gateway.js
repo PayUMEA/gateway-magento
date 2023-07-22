@@ -16,6 +16,7 @@ define(
         'use strict';
 
         let config = window.checkoutConfig.payment,
+            ebucks = 'payu_gateway_ebucks',
             creditCard = 'payu_gateway_creditcard',
             discoveryMiles = 'payu_gateway_discovery_miles';
 
@@ -43,6 +44,15 @@ define(
                     type: 'payu_gateway_discovery_miles',
                     component: 'PayU_Gateway/js/view/payment/method-renderer/default'
                 },
+            )
+        }
+
+        if (config[ebucks].isActive) {
+            rendererList.push(
+                {
+                    type: ebucks,
+                    component: 'PayU_Gateway/js/view/payment/method-renderer/default'
+                }
             )
         }
 
