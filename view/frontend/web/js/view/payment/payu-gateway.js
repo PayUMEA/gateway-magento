@@ -41,7 +41,7 @@ define(
         if (config[discoveryMiles].isActive) {
             rendererList.push(
                 {
-                    type: 'payu_gateway_discovery_miles',
+                    type: discoveryMiles,
                     component: 'PayU_Gateway/js/view/payment/method-renderer/default'
                 },
             )

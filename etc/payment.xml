@@ -12,7 +12,7 @@
             <allow_multiple_address>1</allow_multiple_address>
         </method>
         <method name="payu_gateway_discovery_miles">
-            <allow_multiple_address>1</allow_multiple_address>
+            <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="payu_gateway_discovery_miles">
             <allow_multiple_address>0</allow_multiple_address>
