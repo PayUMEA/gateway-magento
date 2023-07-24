@@ -32,17 +32,55 @@
         </arguments>
     </virtualType>
     <!-- END Discovery Miles Facade configuration -->
+    <!-- eBucks Facade configuration -->
+    <virtualType name="PayUGatewayEbucksFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">PayU\Gateway\Model\Ui\ConfigProvider::EBUCKS_CODE</argument>
+            <argument name="formBlockType" xsi:type="string">PayU\Gateway\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">PayU\Gateway\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">PayUGatewayEbucksValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">PayUGatewayEbucksValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">PayUGatewayCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <!-- END eBucks Facade configuration -->
+    <!-- EFT Pro Facade configuration -->
+    <virtualType name="PayUGatewayEftProFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">PayU\Gateway\Model\Ui\ConfigProvider::EFT_PRO_CODE</argument>
+            <argument name="formBlockType" xsi:type="string">PayU\Gateway\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">PayU\Gateway\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">PayUGatewayEftProValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">PayUGatewayEftProValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">PayUGatewayCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <!-- END EFT Pro Facade configuration -->
     <!-- END Payment Methods Facade configuration -->
 
     <!-- Configuration reader -->
+    <!-- Credit card -->
     <virtualType name="PayUGatewayCreditCardConfig" type="PayU\Gateway\Gateway\Config\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">PayU\Gateway\Model\Ui\ConfigProvider::CREDIT_CARD_CODE</argument>
         </arguments>
     </virtualType>
+    <!-- Discovery Miles -->
     <virtualType name="PayUGatewayDiscoveryMilesConfig" type="PayU\Gateway\Gateway\Config\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">PayU\Gateway\Model\Ui\ConfigProvider::DISCOVERY_MILES_CODE</argument>
+        </arguments>
+    </virtualType>
+    <!-- eBucks -->
+    <virtualType name="PayUGatewayEbucksConfig" type="PayU\Gateway\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">PayU\Gateway\Model\Ui\ConfigProvider::EBUCKS_CODE</argument>
+        </arguments>
+    </virtualType>
+    <!-- EFT Pro -->
+    <virtualType name="PayUGatewayEftProConfig" type="PayU\Gateway\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">PayU\Gateway\Model\Ui\ConfigProvider::EFT_PRO_CODE</argument>
         </arguments>
     </virtualType>
     <!-- END Configuration reader -->
@@ -75,6 +113,32 @@
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">PayUGatewayDiscoveryMilesValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- eBucks -->
+    <virtualType name="PayUGatewayEbucksValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">PayUGatewayEbucksConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayEbucksValueHandlerPool" type="PayUGatewayDiscoveryMilesValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">PayUGatewayEbucksValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- EFT Pro -->
+    <virtualType name="PayUGatewayEftProValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">PayUGatewayEftProConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayEftProValueHandlerPool" type="PayUGatewayDiscoveryMilesValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">PayUGatewayEftProValueHandler</item>
             </argument>
         </arguments>
     </virtualType>
@@ -128,6 +192,56 @@
                 <item name="country" xsi:type="string">PayUGatewayDiscoveryMilesCountryValidator</item>
                 <item name="availability" xsi:type="string">PayUGatewayDiscoveryMilesCredentialValidator</item>
                 <item name="global" xsi:type="string">PayUGatewayDiscoveryMilesGlobalValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- eBucks -->
+    <virtualType name="PayUGatewayEbucksCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayEbucksConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayEbucksCredentialValidator" type="PayU\Gateway\Gateway\Validator\CredentialValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayEbucksConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayEbucksGlobalValidator" type="PayU\Gateway\Gateway\Validator\GlobalValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayEbucksConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayEbucksValidatorPool" type="PayUGatewayDiscoveryMilesValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">PayUGatewayEbucksCountryValidator</item>
+                <item name="availability" xsi:type="string">PayUGatewayEbucksCredentialValidator</item>
+                <item name="global" xsi:type="string">PayUGatewayEbucksGlobalValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- EFT Pro -->
+    <virtualType name="PayUGatewayEftProCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayEftProConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayEftProCredentialValidator" type="PayU\Gateway\Gateway\Validator\CredentialValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayEftProConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayEftProGlobalValidator" type="PayU\Gateway\Gateway\Validator\GlobalValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayEftProConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayEftProValidatorPool" type="PayUGatewayDiscoveryMilesValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">PayUGatewayEftProCountryValidator</item>
+                <item name="availability" xsi:type="string">PayUGatewayEftProCredentialValidator</item>
+                <item name="global" xsi:type="string">PayUGatewayEftProGlobalValidator</item>
             </argument>
         </arguments>
     </virtualType>

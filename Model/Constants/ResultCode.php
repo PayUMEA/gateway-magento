@@ -16,6 +16,7 @@ enum ResultCode: string
 {
     case POO5 = 'POO5';
     case EFTPRO_003 = 'EFTPRO_003';
+    case EFTPRO_004 = 'EFTPRO_004';
     case TRIPLE_NINE = '999';
     case THREE_ZERO_FIVE = '305';
     case PEE_ZERO_FIFTEEN = 'P015';

@@ -20,5 +20,11 @@
         <message code="P022">Transaction is not in the correct state.</message>
         <message code="301">Invalid API parameter</message>
         <message code="P015">User canceled payment transaction</message>
+        <!-- EFT -->
+        <message code="EFTPRO_003">Some error occurred at the payment gateway</message>
+        <message code="EFTPRO_004">Transaction cancelled by user</message>
+        <message code="EFTPRO_005">Transaction abandoned at the payment gateway</message>
+        <message code="EFTPRO_033">Please contact your bank to confirm the status of your transaction as the transaction has not been verified.</message>
+        <message code="EFTPRO_011">The refund request has been submitted and accepted.</message>
     </message_list>
 </mapping>

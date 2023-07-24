@@ -53,7 +53,7 @@
                 <max_order_total>5000000</max_order_total>
                 <payment_url>
                     <notify_url>payu_magento/gateway/notify</notify_url>
-                    <return_url>payu_magento/gateway/redirect</return_url>
+                    <return_url>payu_magento/gateway/response</return_url>
                     <cancel_url>payu_magento/gateway/cancel</cancel_url>
                     <redirect_url>payu_magento/gateway/redirect</redirect_url>
                 </payment_url>
@@ -102,6 +102,94 @@
                     <redirect_url>payu_magento/gateway/redirect</redirect_url>
                 </payment_url>
             </payu_gateway_discovery_miles>
+            <payu_gateway_ebucks>
+                <model>PayUGatewayEbucksFacade</model>
+                <active>0</active>
+                <title>eBucks</title>
+                <payment_action>order</payment_action>
+                <is_gateway>1</is_gateway>
+                <can_use_checkout>1</can_use_checkout>
+                <can_authorize>0</can_authorize>
+                <can_capture>0</can_capture>
+                <can_sale>0</can_sale>
+                <can_order>1</can_order>
+                <can_capture_partial>0</can_capture_partial>
+                <can_authorize_vault>0</can_authorize_vault>
+                <can_capture_vault>0</can_capture_vault>
+                <can_use_internal>1</can_use_internal>
+                <can_refund_partial_per_invoice>0</can_refund_partial_per_invoice>
+                <can_refund>1</can_refund>
+                <can_void>1</can_void>
+                <can_cancel>1</can_cancel>
+                <can_edit>0</can_edit>
+                <can_accept_payment>1</can_accept_payment>
+                <can_review_payment>0</can_review_payment>
+                <can_deny_payment>1</can_deny_payment>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
+                <paymentInfoKeys>amountInCents</paymentInfoKeys>
+                <order_status>pending_payment</order_status>
+                <debugReplaceKeys>api_username,api_password,safe_key</debugReplaceKeys>
+                <allowspecific>0</allowspecific>
+                <debug>0</debug>
+                <environment>sandbox</environment>
+                <api_username>200021</api_username>
+                <api_password backend_model="Magento\Config\Model\Config\Backend\Encrypted">WSAUFbw6</api_password>
+                <safe_key backend_model="Magento\Config\Model\Config\Backend\Encrypted">{07F70723-1B96-4B97-B891-7BF708594EEA}</safe_key>
+                <payment_methods>EBUCKS</payment_methods>
+                <currency>ZAR</currency>
+                <min_order_total>50</min_order_total>
+                <max_order_total>5000000</max_order_total>
+                <payment_url>
+                    <notify_url>payu_magento/gateway/notify</notify_url>
+                    <return_url>payu_magento/gateway/redirect</return_url>
+                    <cancel_url>payu_magento/gateway/cancel</cancel_url>
+                    <redirect_url>payu_magento/gateway/redirect</redirect_url>
+                </payment_url>
+            </payu_gateway_ebucks>
+            <payu_gateway_eft_pro>
+                <model>PayUGatewayEftProFacade</model>
+                <active>0</active>
+                <title>EFT Pro</title>
+                <payment_action>order</payment_action>
+                <is_gateway>1</is_gateway>
+                <can_use_checkout>1</can_use_checkout>
+                <can_authorize>0</can_authorize>
+                <can_capture>0</can_capture>
+                <can_sale>0</can_sale>
+                <can_order>1</can_order>
+                <can_capture_partial>0</can_capture_partial>
+                <can_authorize_vault>0</can_authorize_vault>
+                <can_capture_vault>0</can_capture_vault>
+                <can_use_internal>1</can_use_internal>
+                <can_refund_partial_per_invoice>0</can_refund_partial_per_invoice>
+                <can_refund>1</can_refund>
+                <can_void>1</can_void>
+                <can_cancel>1</can_cancel>
+                <can_edit>0</can_edit>
+                <can_accept_payment>1</can_accept_payment>
+                <can_review_payment>0</can_review_payment>
+                <can_deny_payment>1</can_deny_payment>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
+                <paymentInfoKeys>amountInCents</paymentInfoKeys>
+                <order_status>pending_payment</order_status>
+                <debugReplaceKeys>api_username,api_password,safe_key</debugReplaceKeys>
+                <allowspecific>0</allowspecific>
+                <debug>0</debug>
+                <environment>sandbox</environment>
+                <api_username>200021</api_username>
+                <api_password backend_model="Magento\Config\Model\Config\Backend\Encrypted">WSAUFbw6</api_password>
+                <safe_key backend_model="Magento\Config\Model\Config\Backend\Encrypted">{07F70723-1B96-4B97-B891-7BF708594EEA}</safe_key>
+                <payment_methods>EFT_PRO</payment_methods>
+                <currency>ZAR</currency>
+                <min_order_total>50</min_order_total>
+                <max_order_total>5000000</max_order_total>
+                <payment_url>
+                    <notify_url>payu_magento/gateway/notify</notify_url>
+                    <return_url>payu_magento/gateway/response</return_url>
+                    <cancel_url>payu_magento/gateway/cancel</cancel_url>
+                    <redirect_url>payu_magento/gateway/redirect</redirect_url>
+                </payment_url>
+            </payu_gateway_eft_pro>
         </payment>
     </default>
 </config>
