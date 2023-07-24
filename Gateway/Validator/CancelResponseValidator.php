@@ -8,8 +8,6 @@ declare(strict_types=1);
 
 namespace PayU\Gateway\Gateway\Validator;
 
-use PayU\Gateway\Model\Constants\ResultCode;
-
 /**
  * class CancelResponseValidator
  * @package PayU\Gateway\Gateway\Validator
@@ -26,8 +24,9 @@ class CancelResponseValidator extends DefaultResponseValidator
             [
                 function ($response) {
                     return [
-                        $response->getResultCode() === ResultCode::PEE_ZERO_FIFTEEN->value,
-                        [__($response->getDisplayMessage() ?? 'Transaction unsuccessful')]
+                        $response->getSuccessful(),
+                        [__($response->getDisplayMessage() ?? 'Transaction unsuccessful')],
+                        [__($response->getResultCode() ?? 'P105')]
                     ];
                 }
             ]

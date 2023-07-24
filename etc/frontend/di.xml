@@ -11,7 +11,7 @@
     <type name="Magento\Checkout\Model\CompositeConfigProvider">
         <arguments>
             <argument name="configProviders" xsi:type="array">
-                <item name="payu_creditcard_config_provider" xsi:type="object">PayU\Gateway\Model\Ui\ConfigProvider</item>
+                <item name="payu_gateway_config_provider" xsi:type="object">PayU\Gateway\Model\Ui\ConfigProvider</item>
             </argument>
         </arguments>
     </type>

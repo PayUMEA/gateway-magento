@@ -17,6 +17,7 @@ define(
 
         let config = window.checkoutConfig.payment,
             ebucks = 'payu_gateway_ebucks',
+            eftPro = 'payu_gateway_eft_pro',
             creditCard = 'payu_gateway_creditcard',
             discoveryMiles = 'payu_gateway_discovery_miles';
 
@@ -41,7 +42,7 @@ define(
         if (config[discoveryMiles].isActive) {
             rendererList.push(
                 {
-                    type: 'payu_gateway_discovery_miles',
+                    type: discoveryMiles,
                     component: 'PayU_Gateway/js/view/payment/method-renderer/default'
                 },
             )
@@ -51,6 +52,15 @@ define(
             rendererList.push(
                 {
                     type: ebucks,
+                    component: 'PayU_Gateway/js/view/payment/method-renderer/default'
+                }
+            )
+        }
+
+        if (config[eftPro].isActive) {
+            rendererList.push(
+                {
+                    type: eftPro,
                     component: 'PayU_Gateway/js/view/payment/method-renderer/default'
                 }
             )
