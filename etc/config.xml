@@ -53,7 +53,7 @@
                 <max_order_total>5000000</max_order_total>
                 <payment_url>
                     <notify_url>payu_magento/gateway/notify</notify_url>
-                    <return_url>payu_magento/gateway/redirect</return_url>
+                    <return_url>payu_magento/gateway/response</return_url>
                     <cancel_url>payu_magento/gateway/cancel</cancel_url>
                     <redirect_url>payu_magento/gateway/redirect</redirect_url>
                 </payment_url>
