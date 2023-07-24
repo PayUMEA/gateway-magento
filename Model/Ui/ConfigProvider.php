@@ -17,6 +17,7 @@ use PayU\Gateway\Helper\Data;
 use PayU\Gateway\Model\Payment\Method\Creditcard;
 use PayU\Gateway\Model\Payment\Method\DiscoveryMiles;
 use PayU\Gateway\Model\Payment\Method\Ebucks;
+use PayU\Gateway\Model\Payment\Method\EftPro;
 
 /**
  * class ConfigProvider
@@ -27,6 +28,7 @@ class ConfigProvider implements ConfigProviderInterface
     const CREDIT_CARD_CODE = Creditcard::CODE;
     const DISCOVERY_MILES_CODE = DiscoveryMiles::CODE;
     const EBUCKS_CODE = Ebucks::CODE;
+    const EFT_PRO_CODE = EftPro::CODE;
 
     /**
      * @var string[]
@@ -34,7 +36,8 @@ class ConfigProvider implements ConfigProviderInterface
     protected array $methodCodes = [
         self::CREDIT_CARD_CODE,
         self::DISCOVERY_MILES_CODE,
-        self::EBUCKS_CODE
+        self::EBUCKS_CODE,
+        self::EFT_PRO_CODE
     ];
 
     /**

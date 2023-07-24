@@ -17,5 +17,8 @@
         <method name="payu_gateway_discovery_miles">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="payu_gateway_eft_pro">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
     </methods>
 </payment>
