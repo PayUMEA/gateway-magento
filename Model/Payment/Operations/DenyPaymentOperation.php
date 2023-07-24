@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PayU\Gateway\Model\Payment\Operations;
 
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Model\InfoInterface;
 use PayU\Gateway\Model\Payment\AbstractOperation;
 use PayU\Gateway\Model\Payment\TransferObject;
@@ -21,6 +22,7 @@ class DenyPaymentOperation extends AbstractOperation
     /**
      * @param InfoInterface $payment
      * @return void
+     * @throws LocalizedException
      */
     public function deny(InfoInterface $payment): void
     {
@@ -30,6 +32,7 @@ class DenyPaymentOperation extends AbstractOperation
         /** @var TransferObject $transactionInfo */
         $transactionInfo = $transactionAdditionalInfo['transactionInfo'];
 
+        $this->transactionOperation->update($order, $payment, $transactionInfo);
         $this->addStatusCommentOnUpdate($payment, $order, $transactionInfo);
         $order->cancel();
     }
