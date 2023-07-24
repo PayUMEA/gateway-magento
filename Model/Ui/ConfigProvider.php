@@ -18,6 +18,7 @@ use PayU\Gateway\Model\Payment\Method\Creditcard;
 use PayU\Gateway\Model\Payment\Method\DiscoveryMiles;
 use PayU\Gateway\Model\Payment\Method\Ebucks;
 use PayU\Gateway\Model\Payment\Method\EftPro;
+use PayU\Gateway\Model\Payment\Method\Mobicred;
 
 /**
  * class ConfigProvider
@@ -29,6 +30,7 @@ class ConfigProvider implements ConfigProviderInterface
     const DISCOVERY_MILES_CODE = DiscoveryMiles::CODE;
     const EBUCKS_CODE = Ebucks::CODE;
     const EFT_PRO_CODE = EftPro::CODE;
+    const MOBICRED_CODE = Mobicred::CODE;
 
     /**
      * @var string[]
@@ -37,7 +39,8 @@ class ConfigProvider implements ConfigProviderInterface
         self::CREDIT_CARD_CODE,
         self::DISCOVERY_MILES_CODE,
         self::EBUCKS_CODE,
-        self::EFT_PRO_CODE
+        self::EFT_PRO_CODE,
+        self::MOBICRED_CODE
     ];
 
     /**

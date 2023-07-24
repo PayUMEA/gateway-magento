@@ -13,7 +13,7 @@
         </comment>
         <attribute type="activity_path">payment/payu_gateway_ebucks/active</attribute>
         <group id="configuration_details" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="4">
-            <comment>https://payusahelp.atlassian.net/wiki/spaces/developers/pages/426096/Discovery+Miles+RPP</comment>
+            <comment><![CDATA[https://payusahelp.atlassian.net/wiki/spaces/developers/pages/426058/eBucks]]></comment>
             <frontend_model>PayU\Gateway\Block\Adminhtml\System\Config\Fieldset\Hint</frontend_model>
         </group>
         <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
