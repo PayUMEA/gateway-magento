@@ -56,6 +56,18 @@
         </arguments>
     </virtualType>
     <!-- END EFT Pro Facade configuration -->
+    <!-- Payflex Facade configuration -->
+    <virtualType name="PayUGatewayPayflexFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">PayU\Gateway\Model\Ui\ConfigProvider::PAYFLEX_CODE</argument>
+            <argument name="formBlockType" xsi:type="string">PayU\Gateway\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">PayU\Gateway\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">PayUGatewayPayflexValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">PayUGatewayPayflexValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">PayUGatewayCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <!-- END Payflex Facade configuration -->
     <!-- END Payment Methods Facade configuration -->
 
     <!-- Configuration reader -->
@@ -81,6 +93,12 @@
     <virtualType name="PayUGatewayEftProConfig" type="PayU\Gateway\Gateway\Config\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">PayU\Gateway\Model\Ui\ConfigProvider::EFT_PRO_CODE</argument>
+        </arguments>
+    </virtualType>
+    <!-- Payflex -->
+    <virtualType name="PayUGatewayPayflexConfig" type="PayU\Gateway\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">PayU\Gateway\Model\Ui\ConfigProvider::PAYFLEX_CODE</argument>
         </arguments>
     </virtualType>
     <!-- END Configuration reader -->
@@ -139,6 +157,19 @@
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">PayUGatewayEftProValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- Payflex -->
+    <virtualType name="PayUGatewayPayflexValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">PayUGatewayPayflexConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayPayflexValueHandlerPool" type="PayUGatewayDiscoveryMilesValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">PayUGatewayPayflexValueHandler</item>
             </argument>
         </arguments>
     </virtualType>
@@ -242,6 +273,31 @@
                 <item name="country" xsi:type="string">PayUGatewayEftProCountryValidator</item>
                 <item name="availability" xsi:type="string">PayUGatewayEftProCredentialValidator</item>
                 <item name="global" xsi:type="string">PayUGatewayEftProGlobalValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- Payflex -->
+    <virtualType name="PayUGatewayPayflexCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayPayflexConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayPayflexCredentialValidator" type="PayU\Gateway\Gateway\Validator\CredentialValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayPayflexConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayPayflexGlobalValidator" type="PayU\Gateway\Gateway\Validator\GlobalValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayPayflexConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayPayflexValidatorPool" type="PayUGatewayDiscoveryMilesValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">PayUGatewayPayflexCountryValidator</item>
+                <item name="availability" xsi:type="string">PayUGatewayPayflexCredentialValidator</item>
+                <item name="global" xsi:type="string">PayUGatewayPayflexGlobalValidator</item>
             </argument>
         </arguments>
     </virtualType>
