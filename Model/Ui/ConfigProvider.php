@@ -14,6 +14,7 @@ use Magento\Framework\Session\SessionManagerInterface;
 use Magento\Framework\View\Asset\Repository;
 use PayU\Gateway\Gateway\Config\Config;
 use PayU\Gateway\Helper\Data;
+use PayU\Gateway\Model\Payment\Method\AirtelMoney;
 use PayU\Gateway\Model\Payment\Method\Creditcard;
 use PayU\Gateway\Model\Payment\Method\DiscoveryMiles;
 use PayU\Gateway\Model\Payment\Method\Ebucks;
@@ -33,6 +34,7 @@ class ConfigProvider implements ConfigProviderInterface
     const EFT_PRO_CODE = EftPro::CODE;
     const MOBICRED_CODE = Mobicred::CODE;
     const PAYFLEX_CODE = Payflex::CODE;
+    const AIRTEL_MONEY_CODE = AirtelMoney::CODE;
 
     /**
      * @var string[]
@@ -44,6 +46,7 @@ class ConfigProvider implements ConfigProviderInterface
         self::EFT_PRO_CODE,
         self::MOBICRED_CODE,
         self::PAYFLEX_CODE,
+        self::AIRTEL_MONEY_CODE
     ];
 
     /**

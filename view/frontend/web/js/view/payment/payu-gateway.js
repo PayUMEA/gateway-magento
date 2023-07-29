@@ -20,6 +20,7 @@ define(
             eftPro = 'payu_gateway_eft_pro',
             mobicred = 'payu_gateway_mobicred',
             payflex = 'payu_gateway_payflex',
+            airtel_money = 'payu_gateway_airtel_money',
             creditCard = 'payu_gateway_creditcard',
             discoveryMiles = 'payu_gateway_discovery_miles';
 
@@ -76,11 +77,20 @@ define(
                 }
             )
         }
-          
+
         if (config[payflex].isActive) {
             rendererList.push(
                 {
                     type: payflex,
+                    component: 'PayU_Gateway/js/view/payment/method-renderer/default'
+                }
+            )
+        }
+
+        if (config[airtel_money].isActive) {
+            rendererList.push(
+                {
+                    type: airtel_money,
                     component: 'PayU_Gateway/js/view/payment/method-renderer/default'
                 }
             )
