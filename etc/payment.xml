@@ -23,5 +23,8 @@
         <method name="payu_gateway_mobicred">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="payu_gateway_payflex">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
     </methods>
 </payment>
