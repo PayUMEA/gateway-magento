@@ -42,7 +42,8 @@ class Method implements OptionSourceInterface
         'MOBILE_BANKING'	=> 'Mobile Banking',
         'MTN_MOBILE'		=> 'MTN Mobile',
         'TIGOPESA'			=> 'Tigopesa',
-        'EQUITEL'			=> 'Equitel'
+        'EQUITEL'			=> 'Equitel',
+        'MOBICRED'			=> 'Mobicred'
     ];
 
     /**

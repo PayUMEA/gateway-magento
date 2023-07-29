@@ -18,6 +18,7 @@ define(
         let config = window.checkoutConfig.payment,
             ebucks = 'payu_gateway_ebucks',
             eftPro = 'payu_gateway_eft_pro',
+            mobicred = 'payu_gateway_mobicred',
             payflex = 'payu_gateway_payflex',
             creditCard = 'payu_gateway_creditcard',
             discoveryMiles = 'payu_gateway_discovery_miles';
@@ -67,6 +68,15 @@ define(
             )
         }
 
+        if (config[mobicred].isActive) {
+            rendererList.push(
+                {
+                    type: mobicred,
+                    component: 'PayU_Gateway/js/view/payment/method-renderer/default'
+                }
+            )
+        }
+          
         if (config[payflex].isActive) {
             rendererList.push(
                 {
