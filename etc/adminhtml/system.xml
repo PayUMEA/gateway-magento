@@ -87,6 +87,12 @@
                             <![CDATA[<a href="https://corporate.payu.com/contact-us/" target="_blank">Sign up for a Merchant account</a>]]>
                         </comment>
                     </group>
+                    <group id="payu_gateway_airtel_money_other" translate="label comment" sortOrder="13" extends="payment_all_payu_gateway/payu_gateway_airtel_money" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Airtel Money</label>
+                        <comment>
+                            <![CDATA[<a href="https://corporate.payu.com/contact-us/" target="_blank">Sign up for a Merchant account</a>]]>
+                        </comment>
+                    </group>
                 </group>
             </group>
         </section>
@@ -97,6 +103,7 @@
             <include path="PayU_Gateway::system/payu_gateway_eft_pro.xml"/>
             <include path="PayU_Gateway::system/payu_gateway_mobicred.xml"/>
             <include path="PayU_Gateway::system/payu_gateway_payflex.xml"/>
+            <include path="PayU_Gateway::system/payu_gateway_airtel_money.xml"/>
         </section>
     </system>
 </config>
