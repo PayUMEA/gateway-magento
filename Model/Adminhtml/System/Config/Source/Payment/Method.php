@@ -43,7 +43,8 @@ class Method implements OptionSourceInterface
         'MTN_MOBILE'		=> 'MTN Mobile',
         'TIGOPESA'			=> 'Tigopesa',
         'EQUITEL'			=> 'Equitel',
-        'MOBICRED'			=> 'Mobicred'
+        'MOBICRED'			=> 'Mobicred',
+        'CAPITEC_PAY'       => 'Capitec Pay'
     ];
 
     /**

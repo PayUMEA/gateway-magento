@@ -8,7 +8,9 @@ declare(strict_types=1);
 
 namespace PayU\Gateway\Gateway\Request;
 
+use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Request\BuilderInterface;
+use Magento\Sales\Model\Order;
 use PayU\Gateway\Gateway\SubjectReader;
 use PayU\Model\Address;
 use PayU\Model\Customer;
@@ -60,11 +62,20 @@ class CustomerDataBuilder implements BuilderInterface
             ->setAddress($addressBilling)
             ->setIpAddress($order->getRemoteIp());
 
+        $customerDetail = $this->setRegionalIdentification($order, $customerDetail);
+
         $customer = new Customer();
         $customer->setCustomerDetail($customerDetail);
 
         return [
             self::CUSTOMER => $customer
         ];
+    }
+
+    private function setRegionalIdentification(
+        OrderAdapterInterface $order,
+        CustomerDetail $customerDetail
+    ): CustomerDetail {
+        return $customerDetail;
     }
 }

@@ -29,5 +29,8 @@
         <method name="payu_gateway_airtel_money">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="payu_gateway_capitec_pay">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
     </methods>
 </payment>
