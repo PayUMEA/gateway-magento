@@ -8,9 +8,11 @@ declare(strict_types=1);
 
 namespace PayU\Gateway\Gateway\Request;
 
+use Magento\Customer\Model\ResourceModel\CustomerRepository;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Request\BuilderInterface;
-use Magento\Sales\Model\Order;
 use PayU\Gateway\Gateway\SubjectReader;
 use PayU\Model\Address;
 use PayU\Model\Customer;
@@ -29,9 +31,12 @@ class CustomerDataBuilder implements BuilderInterface
      * Constructor
      *
      * @param SubjectReader $subjectReader
+     * @param CustomerRepository $customerRepository
      */
-    public function __construct(private readonly SubjectReader $subjectReader)
-    {
+    public function __construct(
+        private readonly SubjectReader $subjectReader,
+        private readonly CustomerRepository $customerRepository
+    ) {
     }
 
     /**
@@ -76,6 +81,23 @@ class CustomerDataBuilder implements BuilderInterface
         OrderAdapterInterface $order,
         CustomerDetail $customerDetail
     ): CustomerDetail {
+        try {
+            $customer = $this->customerRepository->getById($order->getCustomerId());
+        } catch (NoSuchEntityException|LocalizedException) {
+            $customer = null;
+        }
+
+        if (!$customer) {
+            return $customerDetail;
+        }
+
+        // TODO custom customer attribute should be configurable.
+        $saIdNumber = $customer->getCustomAttribute('sa_id_number')->getValue();
+
+        if ($saIdNumber) {
+            $customerDetail->setRegionalId($saIdNumber);
+        }
+
         return $customerDetail;
     }
 }
