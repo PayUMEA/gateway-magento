@@ -50,6 +50,12 @@
             <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
             <config_path>payment/payu_gateway_capitec_pay/safe_key</config_path>
         </field>
+        <field id="customer_attribute" translate="label" type="select" sortOrder="61" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>SA ID Number</label>
+            <source_model>PayU\Gateway\Model\Adminhtml\System\Config\Source\Payment\CustomerAttribute</source_model>
+            <config_path>payment/payu_gateway_capitec_pay/customer_attribute</config_path>
+            <comment>This should be the custom customer attribute that stores SA ID number</comment>
+        </field>
         <field id="fraudprotection" translate="label comment" type="select" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Fraud Protection</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

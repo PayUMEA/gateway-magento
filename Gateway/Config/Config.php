@@ -36,7 +36,8 @@ class Config extends CoreConfig
     private const KEY_CC_TYPES = 'cctypes';
     private const KEY_COUNTRY_CREDIT_CARD = 'country_creditcard';
     private const KEY_CC_TYPES_MAPPER = 'cctypes_payu_gateway_mapper';
-    private const FRAUD_PROTECTION = 'fraudprotection';
+    private const FRAUD_PROTECTION = 'fraud_protection';
+    private const CUSTOMER_ATTRIBUTE = 'customer_attribute';
 
     /**
      * Braintree config constructor
@@ -285,5 +286,10 @@ class Config extends CoreConfig
     public function hasFraudProtection(int|null $storeId = null): bool
     {
         return (bool) $this->getValue(self::FRAUD_PROTECTION, $storeId);
+    }
+
+    public function getCustomerAttribute(int|null $storeId = null): string
+    {
+        return $this->getValue(self::CUSTOMER_ATTRIBUTE, $storeId);
     }
 }
