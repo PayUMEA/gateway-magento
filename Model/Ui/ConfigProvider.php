@@ -15,6 +15,7 @@ use Magento\Framework\View\Asset\Repository;
 use PayU\Gateway\Gateway\Config\Config;
 use PayU\Gateway\Helper\Data;
 use PayU\Gateway\Model\Payment\Method\AirtelMoney;
+use PayU\Gateway\Model\Payment\Method\CapitecPay;
 use PayU\Gateway\Model\Payment\Method\Creditcard;
 use PayU\Gateway\Model\Payment\Method\DiscoveryMiles;
 use PayU\Gateway\Model\Payment\Method\Ebucks;
@@ -35,6 +36,7 @@ class ConfigProvider implements ConfigProviderInterface
     const MOBICRED_CODE = Mobicred::CODE;
     const PAYFLEX_CODE = Payflex::CODE;
     const AIRTEL_MONEY_CODE = AirtelMoney::CODE;
+    const CAPITEC_PAY_CODE = CapitecPay::CODE;
 
     /**
      * @var string[]
@@ -46,7 +48,8 @@ class ConfigProvider implements ConfigProviderInterface
         self::EFT_PRO_CODE,
         self::MOBICRED_CODE,
         self::PAYFLEX_CODE,
-        self::AIRTEL_MONEY_CODE
+        self::AIRTEL_MONEY_CODE,
+        self::CAPITEC_PAY_CODE
     ];
 
     /**
@@ -80,12 +83,17 @@ class ConfigProvider implements ConfigProviderInterface
             $config['payment'][$code] = [
                 'isActive' => $this->config->isActive($storeId),
                 'isEnterprise' => $this->config->isEnterprise($storeId),
-                'ccTypesMapper' => $this->config->getCcTypesMapper(),
                 'imageSrc' => $this->getPaymentMethodImageUrl($code),
-                'availableCardTypes' => $this->config->getAvailableCardTypes($storeId),
                 'redirectUrl' => $this->helper->withBaseUrl($this->config->getRedirectUrl()),
-                'countrySpecificCardTypes' => $this->config->getCountrySpecificCardTypeConfig($storeId),
             ];
+
+            if ($code === self::CREDIT_CARD_CODE) {
+                $config['payment'][$code] = [
+                    'ccTypesMapper' => $this->config->getCcTypesMapper(),
+                    'availableCardTypes' => $this->config->getAvailableCardTypes($storeId),
+                    'countrySpecificCardTypes' => $this->config->getCountrySpecificCardTypeConfig($storeId),
+                ];
+            }
         }
 
         return $config;

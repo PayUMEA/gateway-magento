@@ -8,7 +8,13 @@ declare(strict_types=1);
 
 namespace PayU\Gateway\Gateway\Request;
 
+use Magento\Customer\Model\ResourceModel\CustomerRepository;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Request\BuilderInterface;
+use Magento\Payment\Model\InfoInterface;
+use PayU\Gateway\Gateway\Config\Config;
 use PayU\Gateway\Gateway\SubjectReader;
 use PayU\Model\Address;
 use PayU\Model\Customer;
@@ -27,9 +33,13 @@ class CustomerDataBuilder implements BuilderInterface
      * Constructor
      *
      * @param SubjectReader $subjectReader
+     * @param CustomerRepository $customerRepository
      */
-    public function __construct(private readonly SubjectReader $subjectReader)
-    {
+    public function __construct(
+        private readonly Config $config,
+        private readonly SubjectReader $subjectReader,
+        private readonly CustomerRepository $customerRepository
+    ) {
     }
 
     /**
@@ -60,11 +70,44 @@ class CustomerDataBuilder implements BuilderInterface
             ->setAddress($addressBilling)
             ->setIpAddress($order->getRemoteIp());
 
+        $customerDetail = $this->setRegionalIdentification($order, $paymentDO->getPayment(), $customerDetail);
+
         $customer = new Customer();
         $customer->setCustomerDetail($customerDetail);
 
         return [
             self::CUSTOMER => $customer
         ];
+    }
+
+    private function setRegionalIdentification(
+        OrderAdapterInterface $order,
+        InfoInterface $payment,
+        CustomerDetail $customerDetail
+    ): CustomerDetail {
+        try {
+            $customer = $this->customerRepository->getById($order->getCustomerId());
+        } catch (NoSuchEntityException|LocalizedException) {
+            $customer = null;
+        }
+
+        if (!$customer) {
+            return $customerDetail;
+        }
+
+        $this->config->setMethodCode($payment->getMethod());
+        $customAttribute = $customer->getCustomAttribute($this->config->getCustomerAttribute($order->getStoreId()));
+
+        if (!$customAttribute) {
+            return $customerDetail;
+        }
+
+        $saIdNumber = $customAttribute->getValue();
+
+        if ($saIdNumber) {
+            $customerDetail->setRegionalId($saIdNumber);
+        }
+
+        return $customerDetail;
     }
 }
