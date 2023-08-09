@@ -16,6 +16,7 @@ use Magento\Payment\Gateway\Request\BuilderInterface;
 use Magento\Payment\Model\InfoInterface;
 use PayU\Gateway\Gateway\Config\Config;
 use PayU\Gateway\Gateway\SubjectReader;
+use PayU\Gateway\Model\Payment\Method\CapitecPay;
 use PayU\Model\Address;
 use PayU\Model\Customer;
 use PayU\Model\CustomerDetail;
@@ -50,6 +51,7 @@ class CustomerDataBuilder implements BuilderInterface
     {
         $paymentDO = $this->subjectReader->readPayment($buildSubject);
         $order = $paymentDO->getOrder();
+        $payment = $paymentDO->getPayment();
         $billingAddress = $order->getBillingAddress();
 
         $addressBilling = new Address();
@@ -70,7 +72,9 @@ class CustomerDataBuilder implements BuilderInterface
             ->setAddress($addressBilling)
             ->setIpAddress($order->getRemoteIp());
 
-        $customerDetail = $this->setRegionalIdentification($order, $paymentDO->getPayment(), $customerDetail);
+        if ($payment->getMethod() === CapitecPay::CODE) {
+            $customerDetail = $this->setRegionalIdentification($order, $payment, $customerDetail);
+        }
 
         $customer = new Customer();
         $customer->setCustomerDetail($customerDetail);

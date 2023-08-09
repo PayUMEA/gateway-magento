@@ -31,7 +31,7 @@ class TransferObject extends DataObject
     /**
      * @return bool
      */
-    public function isPaymentSuccessful(): bool
+    public function isPaymentComplete(): bool
     {
         return $this->_getData('successful')
             && $this->getTransactionState() === TransactionState::SUCCESSFUL->value;
@@ -233,7 +233,7 @@ class TransferObject extends DataObject
         }
 
         // give generic info about transaction state
-        if ($this->isPaymentSuccessful()) {
+        if ($this->isPaymentComplete()) {
             $to->setIsTransactionApproved(true);
         } elseif ($this->isAwaitingPayment()) {
             $to->setIsTransactionPending(true);

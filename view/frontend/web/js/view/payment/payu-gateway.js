@@ -18,6 +18,7 @@ define(
         let config = window.checkoutConfig.payment,
             ebucks = 'payu_gateway_ebucks',
             eftPro = 'payu_gateway_eft_pro',
+            equitel = 'payu_gateway_equitel',
             mobicred = 'payu_gateway_mobicred',
             payflex = 'payu_gateway_payflex',
             airtelMoney = 'payu_gateway_airtel_money',
@@ -101,6 +102,15 @@ define(
             rendererList.push(
                 {
                     type: capitecPay,
+                    component: 'PayU_Gateway/js/view/payment/method-renderer/default'
+                }
+            )
+        }
+
+        if (config[equitel].isActive) {
+            rendererList.push(
+                {
+                    type: equitel,
                     component: 'PayU_Gateway/js/view/payment/method-renderer/default'
                 }
             )
