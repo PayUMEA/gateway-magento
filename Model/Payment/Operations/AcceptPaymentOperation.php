@@ -72,7 +72,7 @@ class AcceptPaymentOperation extends AbstractOperation
 
         if ($isError) {
             $responseText = $transactionInfo->getResultMessage();
-            $responseText = $responseText && !$transactionInfo->isPaymentSuccessful()
+            $responseText = $responseText && !$transactionInfo->isPaymentComplete()
                 ? __($responseText)
                 : __("This payment didn't work out because we can't find this order.");
 

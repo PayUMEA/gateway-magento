@@ -20,6 +20,7 @@ use PayU\Gateway\Model\Payment\Method\Creditcard;
 use PayU\Gateway\Model\Payment\Method\DiscoveryMiles;
 use PayU\Gateway\Model\Payment\Method\Ebucks;
 use PayU\Gateway\Model\Payment\Method\EftPro;
+use PayU\Gateway\Model\Payment\Method\Equitel;
 use PayU\Gateway\Model\Payment\Method\Mobicred;
 use PayU\Gateway\Model\Payment\Method\Payflex;
 
@@ -38,6 +39,8 @@ class ConfigProvider implements ConfigProviderInterface
     const AIRTEL_MONEY_CODE = AirtelMoney::CODE;
     const CAPITEC_PAY_CODE = CapitecPay::CODE;
 
+    const EQUITEL_CODE = Equitel::CODE;
+
     /**
      * @var string[]
      */
@@ -49,7 +52,8 @@ class ConfigProvider implements ConfigProviderInterface
         self::MOBICRED_CODE,
         self::PAYFLEX_CODE,
         self::AIRTEL_MONEY_CODE,
-        self::CAPITEC_PAY_CODE
+        self::CAPITEC_PAY_CODE,
+        self::EQUITEL_CODE,
     ];
 
     /**
