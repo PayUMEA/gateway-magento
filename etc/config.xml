@@ -44,8 +44,8 @@
                 <debug>0</debug>
                 <environment>sandbox</environment>
                 <api_username>200021</api_username>
-                <api_password backend_model="Magento\Config\Model\Config\Backend\Encrypted">WSAUFbw6</api_password>
-                <safe_key backend_model="Magento\Config\Model\Config\Backend\Encrypted">{07F70723-1B96-4B97-B891-7BF708594EEA}</safe_key>
+                <api_password>WSAUFbw6</api_password>
+                <safe_key>{07F70723-1B96-4B97-B891-7BF708594EEA}</safe_key>
                 <payment_methods>CREDITCARD</payment_methods>
                 <currency>ZAR</currency>
                 <enterprise>0</enterprise>
@@ -89,8 +89,8 @@
                 <debug>0</debug>
                 <environment>sandbox</environment>
                 <api_username>200021</api_username>
-                <api_password backend_model="Magento\Config\Model\Config\Backend\Encrypted">WSAUFbw6</api_password>
-                <safe_key backend_model="Magento\Config\Model\Config\Backend\Encrypted">{07F70723-1B96-4B97-B891-7BF708594EEA}</safe_key>
+                <api_password>WSAUFbw6</api_password>
+                <safe_key>{07F70723-1B96-4B97-B891-7BF708594EEA}</safe_key>
                 <payment_methods>DISCOVERYMILES</payment_methods>
                 <currency>ZAR</currency>
                 <min_order_total>50</min_order_total>
@@ -133,8 +133,8 @@
                 <debug>0</debug>
                 <environment>sandbox</environment>
                 <api_username>200021</api_username>
-                <api_password backend_model="Magento\Config\Model\Config\Backend\Encrypted">WSAUFbw6</api_password>
-                <safe_key backend_model="Magento\Config\Model\Config\Backend\Encrypted">{07F70723-1B96-4B97-B891-7BF708594EEA}</safe_key>
+                <api_password>WSAUFbw6</api_password>
+                <safe_key>{07F70723-1B96-4B97-B891-7BF708594EEA}</safe_key>
                 <payment_methods>EBUCKS</payment_methods>
                 <currency>ZAR</currency>
                 <min_order_total>50</min_order_total>
@@ -177,8 +177,8 @@
                 <debug>0</debug>
                 <environment>sandbox</environment>
                 <api_username>200021</api_username>
-                <api_password backend_model="Magento\Config\Model\Config\Backend\Encrypted">WSAUFbw6</api_password>
-                <safe_key backend_model="Magento\Config\Model\Config\Backend\Encrypted">{07F70723-1B96-4B97-B891-7BF708594EEA}</safe_key>
+                <api_password>WSAUFbw6</api_password>
+                <safe_key>{07F70723-1B96-4B97-B891-7BF708594EEA}</safe_key>
                 <payment_methods>EFT_PRO</payment_methods>
                 <currency>ZAR</currency>
                 <min_order_total>50</min_order_total>
@@ -221,8 +221,8 @@
                 <debug>0</debug>
                 <environment>sandbox</environment>
                 <api_username>200021</api_username>
-                <api_password backend_model="Magento\Config\Model\Config\Backend\Encrypted">WSAUFbw6</api_password>
-                <safe_key backend_model="Magento\Config\Model\Config\Backend\Encrypted">{07F70723-1B96-4B97-B891-7BF708594EEA}</safe_key>
+                <api_password>WSAUFbw6</api_password>
+                <safe_key>{07F70723-1B96-4B97-B891-7BF708594EEA}</safe_key>
                 <payment_methods>MOBICRED</payment_methods>
                 <currency>ZAR</currency>
                 <min_order_total>50</min_order_total>
@@ -265,8 +265,8 @@
                   <debug>0</debug>
                   <environment>sandbox</environment>
                   <api_username>200021</api_username>
-                  <api_password backend_model="Magento\Config\Model\Config\Backend\Encrypted">WSAUFbw6</api_password>
-                  <safe_key backend_model="Magento\Config\Model\Config\Backend\Encrypted">{07F70723-1B96-4B97-B891-7BF708594EEA}</safe_key>
+                  <api_password>WSAUFbw6</api_password>
+                  <safe_key>{07F70723-1B96-4B97-B891-7BF708594EEA}</safe_key>
                   <payment_methods>PAYFLEX</payment_methods>
                   <currency>ZAR</currency>
                   <min_order_total>50</min_order_total>
@@ -309,8 +309,8 @@
                 <debug>0</debug>
                 <environment>sandbox</environment>
                 <api_username>200021</api_username>
-                <api_password backend_model="Magento\Config\Model\Config\Backend\Encrypted">WSAUFbw6</api_password>
-                <safe_key backend_model="Magento\Config\Model\Config\Backend\Encrypted">{07F70723-1B96-4B97-B891-7BF708594EEA}</safe_key>
+                <api_password>WSAUFbw6</api_password>
+                <safe_key>{07F70723-1B96-4B97-B891-7BF708594EEA}</safe_key>
                 <payment_methods>AIRTEL_MONEY</payment_methods>
                 <currency>ZAR</currency>
                 <min_order_total>50</min_order_total>
