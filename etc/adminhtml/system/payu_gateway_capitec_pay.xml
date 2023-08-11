@@ -6,7 +6,7 @@
  */
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <group id="payu_gateway_capitec_pay" translate="label" type="text" sortOrder="16" showInDefault="1" showInWebsite="1" showInStore="1">
+    <group id="payu_gateway_capitec_pay" translate="label" type="text" sortOrder="19" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Capitec Pay</label>
         <comment>
             <![CDATA[<a href="https://corporate.payu.com/contact-us/" target="_blank">Sign up for a Merchant account</a>]]>

@@ -16,6 +16,7 @@ define(
         'use strict';
 
         let config = window.checkoutConfig.payment,
+            fasta = 'payu_gateway_fasta',
             ebucks = 'payu_gateway_ebucks',
             eftPro = 'payu_gateway_eft_pro',
             equitel = 'payu_gateway_equitel',
@@ -111,6 +112,15 @@ define(
             rendererList.push(
                 {
                     type: equitel,
+                    component: 'PayU_Gateway/js/view/payment/method-renderer/default'
+                }
+            )
+        }
+
+        if (config[fasta].isActive) {
+            rendererList.push(
+                {
+                    type: fasta,
                     component: 'PayU_Gateway/js/view/payment/method-renderer/default'
                 }
             )

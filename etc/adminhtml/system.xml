@@ -99,8 +99,14 @@
                             <![CDATA[<a href="https://corporate.payu.com/contact-us/" target="_blank">Sign up for a Merchant account</a>]]>
                         </comment>
                     </group>
-                    <group id="payu_gateway_equitel_other" translate="label comment" sortOrder="14" extends="payment_all_payu_gateway/payu_gateway_equitel" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <group id="payu_gateway_equitel_other" translate="label comment" sortOrder="15" extends="payment_all_payu_gateway/payu_gateway_equitel" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Equitel</label>
+                        <comment>
+                            <![CDATA[<a href="https://corporate.payu.com/contact-us/" target="_blank">Sign up for a Merchant account</a>]]>
+                        </comment>
+                    </group>
+                    <group id="payu_gateway_fasta_other" translate="label comment" sortOrder="16" extends="payment_all_payu_gateway/payu_gateway_fasta" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Fasta</label>
                         <comment>
                             <![CDATA[<a href="https://corporate.payu.com/contact-us/" target="_blank">Sign up for a Merchant account</a>]]>
                         </comment>
@@ -118,6 +124,7 @@
             <include path="PayU_Gateway::system/payu_gateway_airtel_money.xml"/>
             <include path="PayU_Gateway::system/payu_gateway_capitec_pay.xml"/>
             <include path="PayU_Gateway::system/payu_gateway_equitel.xml"/>
+            <include path="PayU_Gateway::system/payu_gateway_fasta.xml"/>
         </section>
     </system>
 </config>
