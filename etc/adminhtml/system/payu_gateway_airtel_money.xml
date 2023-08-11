@@ -6,7 +6,7 @@
  */
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <group id="payu_gateway_airtel_money" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
+    <group id="payu_gateway_airtel_money" translate="label" type="text" sortOrder="18" showInDefault="1" showInWebsite="1" showInStore="1">
         <label>Airtel Money</label>
         <comment>
             <![CDATA[<a href="https://corporate.payu.com/contact-us/" target="_blank">Sign up for a Merchant account</a>]]>

@@ -116,6 +116,18 @@
         </arguments>
     </virtualType>
     <!-- END Equitel Facade configuration -->
+    <!-- Fasta Facade configuration -->
+    <virtualType name="PayUGatewayFastaFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">PayU\Gateway\Model\Ui\ConfigProvider::FASTA_CODE</argument>
+            <argument name="formBlockType" xsi:type="string">PayU\Gateway\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">PayU\Gateway\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">PayUGatewayFastaValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">PayUGatewayFastaValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">PayUGatewayCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <!-- END Fasta Facade configuration -->
     <!-- END Payment Methods Facade configuration -->
 
     <!-- Configuration reader -->
@@ -171,6 +183,12 @@
     <virtualType name="PayUGatewayEquitelConfig" type="PayU\Gateway\Gateway\Config\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">PayU\Gateway\Model\Ui\ConfigProvider::EQUITEL_CODE</argument>
+        </arguments>
+    </virtualType>
+    <!-- Fasta -->
+    <virtualType name="PayUGatewayFastaConfig" type="PayU\Gateway\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">PayU\Gateway\Model\Ui\ConfigProvider::FASTA_CODE</argument>
         </arguments>
     </virtualType>
     <!-- END Configuration reader -->
@@ -294,6 +312,19 @@
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">PayUGatewayEquitelValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- Fasta -->
+    <virtualType name="PayUGatewayFastaValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">PayUGatewayFastaConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayFastaValueHandlerPool" type="PayUGatewayDiscoveryMilesValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">PayUGatewayFastaValueHandler</item>
             </argument>
         </arguments>
     </virtualType>
@@ -522,6 +553,31 @@
                 <item name="country" xsi:type="string">PayUGatewayEquitelCountryValidator</item>
                 <item name="availability" xsi:type="string">PayUGatewayEquitelCredentialValidator</item>
                 <item name="global" xsi:type="string">PayUGatewayEquitelGlobalValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- Fasta -->
+    <virtualType name="PayUGatewayFastaCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayFastaConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayFastaCredentialValidator" type="PayU\Gateway\Gateway\Validator\CredentialValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayFastaConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayFastaGlobalValidator" type="PayU\Gateway\Gateway\Validator\GlobalValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayFastaConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayFastaValidatorPool" type="PayUGatewayDiscoveryMilesValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">PayUGatewayFastaCountryValidator</item>
+                <item name="availability" xsi:type="string">PayUGatewayFastaCredentialValidator</item>
+                <item name="global" xsi:type="string">PayUGatewayFastaGlobalValidator</item>
             </argument>
         </arguments>
     </virtualType>
