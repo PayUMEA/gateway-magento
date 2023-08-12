@@ -20,8 +20,9 @@ define(
             ebucks = 'payu_gateway_ebucks',
             eftPro = 'payu_gateway_eft_pro',
             equitel = 'payu_gateway_equitel',
-            mobicred = 'payu_gateway_mobicred',
             payflex = 'payu_gateway_payflex',
+            mobicred = 'payu_gateway_mobicred',
+            moreTyme = 'payu_gateway_more_tyme',
             airtelMoney = 'payu_gateway_airtel_money',
             capitecPay = 'payu_gateway_capitec_pay',
             creditCard = 'payu_gateway_creditcard',
@@ -121,6 +122,15 @@ define(
             rendererList.push(
                 {
                     type: fasta,
+                    component: 'PayU_Gateway/js/view/payment/method-renderer/default'
+                }
+            )
+        }
+
+        if (config[moreTyme].isActive) {
+            rendererList.push(
+                {
+                    type: moreTyme,
                     component: 'PayU_Gateway/js/view/payment/method-renderer/default'
                 }
             )
