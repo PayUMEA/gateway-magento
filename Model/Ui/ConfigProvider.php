@@ -23,6 +23,7 @@ use PayU\Gateway\Model\Payment\Method\EftPro;
 use PayU\Gateway\Model\Payment\Method\Equitel;
 use PayU\Gateway\Model\Payment\Method\Fasta;
 use PayU\Gateway\Model\Payment\Method\Mobicred;
+use PayU\Gateway\Model\Payment\Method\MoreTyme;
 use PayU\Gateway\Model\Payment\Method\Payflex;
 
 /**
@@ -41,6 +42,7 @@ class ConfigProvider implements ConfigProviderInterface
     const CAPITEC_PAY_CODE = CapitecPay::CODE;
     const EQUITEL_CODE = Equitel::CODE;
     const FASTA_CODE = Fasta::CODE;
+    const MORE_TYME_CODE = MoreTyme::CODE;
 
     /**
      * @var string[]
@@ -55,7 +57,8 @@ class ConfigProvider implements ConfigProviderInterface
         self::AIRTEL_MONEY_CODE,
         self::CAPITEC_PAY_CODE,
         self::EQUITEL_CODE,
-        self::FASTA_CODE
+        self::FASTA_CODE,
+        self::MORE_TYME_CODE
     ];
 
     /**
