@@ -41,5 +41,8 @@
         <method name="payu_gateway_more_tyme">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="payu_gateway_ucount">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
     </methods>
 </payment>

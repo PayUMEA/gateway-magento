@@ -25,6 +25,7 @@ use PayU\Gateway\Model\Payment\Method\Fasta;
 use PayU\Gateway\Model\Payment\Method\Mobicred;
 use PayU\Gateway\Model\Payment\Method\MoreTyme;
 use PayU\Gateway\Model\Payment\Method\Payflex;
+use PayU\Gateway\Model\Payment\Method\Ucount;
 
 /**
  * class ConfigProvider
@@ -43,6 +44,7 @@ class ConfigProvider implements ConfigProviderInterface
     const EQUITEL_CODE = Equitel::CODE;
     const FASTA_CODE = Fasta::CODE;
     const MORE_TYME_CODE = MoreTyme::CODE;
+    const UCOUNT_CODE = Ucount::CODE;
 
     /**
      * @var string[]
@@ -58,7 +60,8 @@ class ConfigProvider implements ConfigProviderInterface
         self::CAPITEC_PAY_CODE,
         self::EQUITEL_CODE,
         self::FASTA_CODE,
-        self::MORE_TYME_CODE
+        self::MORE_TYME_CODE,
+        self::UCOUNT_CODE
     ];
 
     /**
@@ -97,11 +100,14 @@ class ConfigProvider implements ConfigProviderInterface
             ];
 
             if ($code === self::CREDIT_CARD_CODE) {
-                $config['payment'][$code] = [
-                    'ccTypesMapper' => $this->config->getCcTypesMapper(),
-                    'availableCardTypes' => $this->config->getAvailableCardTypes($storeId),
-                    'countrySpecificCardTypes' => $this->config->getCountrySpecificCardTypeConfig($storeId),
-                ];
+                array_merge(
+                    $config['payment'][$code],
+                    [
+                        'ccTypesMapper' => $this->config->getCcTypesMapper(),
+                        'availableCardTypes' => $this->config->getAvailableCardTypes($storeId),
+                        'countrySpecificCardTypes' => $this->config->getCountrySpecificCardTypeConfig($storeId),
+                    ]
+                );
             }
         }
 

@@ -45,7 +45,8 @@ class Method implements OptionSourceInterface
         'EQUITEL'			=> 'Equitel',
         'MOBICRED'			=> 'Mobicred',
         'OPEN_BANKING'      => 'Capitec Pay',
-        'MORETYME'          => 'MoreTyme'
+        'MORETYME'          => 'MoreTyme',
+        'UCOUNT'            => 'Ucount'
     ];
 
     /**
