@@ -9,6 +9,7 @@
     <message_list>
         <message code="997">PayU System Error</message>
         <message code="999">PayU Timeout</message>
+        <message code="301">An error occurred with this payment, please contact your merchant (ref: 301)</message>
         <message code="P001">An error occurred with this payment, please contact your merchant (ref: P001)</message>
         <message code="P003">An error occurred with this payment, please contact your merchant (ref: P003)</message>
         <message code="P004">An error occurred with this payment, please contact your merchant (ref: P004)</message>
