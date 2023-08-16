@@ -23,6 +23,7 @@ define(
             equitel = 'payu_gateway_equitel',
             payflex = 'payu_gateway_payflex',
             mobicred = 'payu_gateway_mobicred',
+            tigopesa = 'payu_gateway_tigopesa',
             moreTyme = 'payu_gateway_more_tyme',
             airtelMoney = 'payu_gateway_airtel_money',
             capitecPay = 'payu_gateway_capitec_pay',
@@ -141,6 +142,15 @@ define(
             rendererList.push(
                 {
                     type: ucount,
+                    component: 'PayU_Gateway/js/view/payment/method-renderer/default'
+                }
+            )
+        }
+
+        if (config[tigopesa].isActive) {
+            rendererList.push(
+                {
+                    type: tigopesa,
                     component: 'PayU_Gateway/js/view/payment/method-renderer/default'
                 }
             )
