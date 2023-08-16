@@ -8,14 +8,11 @@ declare(strict_types=1);
 
 namespace PayU\Gateway\Model\Payment\Method;
 
-use Magento\Payment\Model\Method\Adapter;
-
 /**
- * class AbstractMethod
+ * class Tigopesa
  * @package PayU\Gateway\Model\Payment\Method
  */
-class AbstractMethod extends Adapter
+class Tigopesa extends AbstractMethod
 {
-    public const CODE = 'no_code';
-    public const STATE_PENDING = 'pending';
+    public const CODE = 'payu_gateway_tigopesa';
 }

@@ -152,6 +152,18 @@
         </arguments>
     </virtualType>
     <!-- END Ucount Facade configuration -->
+    <!-- Tigopesa Facade configuration -->
+    <virtualType name="PayUGatewayTigopesaFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">PayU\Gateway\Model\Ui\ConfigProvider::TIGOPESA_CODE</argument>
+            <argument name="formBlockType" xsi:type="string">PayU\Gateway\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">PayU\Gateway\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">PayUGatewayTigopesaValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">PayUGatewayTigopesaValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">PayUGatewayCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <!-- END Tigopesa Facade configuration -->
     <!-- END Payment Methods Facade configuration -->
 
     <!-- Configuration reader -->
@@ -225,6 +237,12 @@
     <virtualType name="PayUGatewayUcountConfig" type="PayU\Gateway\Gateway\Config\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">PayU\Gateway\Model\Ui\ConfigProvider::UCOUNT_CODE</argument>
+        </arguments>
+    </virtualType>
+    <!-- Tigopesa -->
+    <virtualType name="PayUGatewayTigopesaConfig" type="PayU\Gateway\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">PayU\Gateway\Model\Ui\ConfigProvider::TIGOPESA_CODE</argument>
         </arguments>
     </virtualType>
     <!-- END Configuration reader -->
@@ -387,6 +405,19 @@
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">PayUGatewayUcountValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- Tigopesa -->
+    <virtualType name="PayUGatewayTigopesaValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">PayUGatewayTigopesaConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayTigopesaValueHandlerPool" type="PayUGatewayDiscoveryMilesValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">PayUGatewayTigopesaValueHandler</item>
             </argument>
         </arguments>
     </virtualType>
@@ -690,6 +721,31 @@
                 <item name="country" xsi:type="string">PayUGatewayUcountCountryValidator</item>
                 <item name="availability" xsi:type="string">PayUGatewayUcountCredentialValidator</item>
                 <item name="global" xsi:type="string">PayUGatewayUcountGlobalValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- Tigopesa -->
+    <virtualType name="PayUGatewayTigopesaCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayTigopesaConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayTigopesaCredentialValidator" type="PayU\Gateway\Gateway\Validator\CredentialValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayTigopesaConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayTigopesaGlobalValidator" type="PayU\Gateway\Gateway\Validator\GlobalValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayTigopesaConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayTigopesaValidatorPool" type="PayUGatewayDiscoveryMilesValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">PayUGatewayTigopesaCountryValidator</item>
+                <item name="availability" xsi:type="string">PayUGatewayTigopesaCredentialValidator</item>
+                <item name="global" xsi:type="string">PayUGatewayTigopesaGlobalValidator</item>
             </argument>
         </arguments>
     </virtualType>

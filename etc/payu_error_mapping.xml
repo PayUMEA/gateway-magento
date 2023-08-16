@@ -18,9 +18,9 @@
         <message code="P007">An error occurred with this payment, please contact your merchant (ref: P007)</message>
         <message code="P011">An error occurred with this payment, please contact your merchant (ref: P011)</message>
         <message code="P014">An error occurred with this payment, please contact your merchant (ref: P014)</message>
-        <message code="P022">Transaction is not in the correct state.</message>
-        <message code="301">Invalid API parameter</message>
         <message code="P015">User canceled payment transaction</message>
+        <message code="P022">Transaction is not in the correct state.</message>
+        <message code="P047">Payment Error: P047</message>
         <!-- EFT -->
         <message code="EFTPRO_003">Some error occurred at the payment gateway</message>
         <message code="EFTPRO_004">Transaction cancelled by user</message>
