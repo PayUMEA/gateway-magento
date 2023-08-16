@@ -140,6 +140,18 @@
         </arguments>
     </virtualType>
     <!-- END MoreTyme Facade configuration -->
+    <!-- Ucount Facade configuration -->
+    <virtualType name="PayUGatewayUcountFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">PayU\Gateway\Model\Ui\ConfigProvider::UCOUNT_CODE</argument>
+            <argument name="formBlockType" xsi:type="string">PayU\Gateway\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">PayU\Gateway\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">PayUGatewayUcountValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">PayUGatewayUcountValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">PayUGatewayCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <!-- END Ucount Facade configuration -->
     <!-- END Payment Methods Facade configuration -->
 
     <!-- Configuration reader -->
@@ -207,6 +219,12 @@
     <virtualType name="PayUGatewayMoreTymeConfig" type="PayU\Gateway\Gateway\Config\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">PayU\Gateway\Model\Ui\ConfigProvider::MORE_TYME_CODE</argument>
+        </arguments>
+    </virtualType>
+    <!-- Ucount -->
+    <virtualType name="PayUGatewayUcountConfig" type="PayU\Gateway\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">PayU\Gateway\Model\Ui\ConfigProvider::UCOUNT_CODE</argument>
         </arguments>
     </virtualType>
     <!-- END Configuration reader -->
@@ -349,13 +367,26 @@
     <!-- MoreTyme -->
     <virtualType name="PayUGatewayMoreTymeValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
         <arguments>
-            <argument name="configInterface" xsi:type="object">PayUGatewayFastaConfig</argument>
+            <argument name="configInterface" xsi:type="object">PayUGatewayMoreTymeConfig</argument>
         </arguments>
     </virtualType>
     <virtualType name="PayUGatewayMoreTymeValueHandlerPool" type="PayUGatewayDiscoveryMilesValueHandlerPool">
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">PayUGatewayMoreTymeValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- Ucount -->
+    <virtualType name="PayUGatewayUcountValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">PayUGatewayUcountConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayUcountValueHandlerPool" type="PayUGatewayDiscoveryMilesValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">PayUGatewayUcountValueHandler</item>
             </argument>
         </arguments>
     </virtualType>
@@ -634,6 +665,31 @@
                 <item name="country" xsi:type="string">PayUGatewayMoreTymeCountryValidator</item>
                 <item name="availability" xsi:type="string">PayUGatewayMoreTymeCredentialValidator</item>
                 <item name="global" xsi:type="string">PayUGatewayMoreTymeGlobalValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- Ucount -->
+    <virtualType name="PayUGatewayUcountCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayUcountConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayUcountCredentialValidator" type="PayU\Gateway\Gateway\Validator\CredentialValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayUcountConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayUcountGlobalValidator" type="PayU\Gateway\Gateway\Validator\GlobalValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayUcountConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayUcountValidatorPool" type="PayUGatewayDiscoveryMilesValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">PayUGatewayUcountCountryValidator</item>
+                <item name="availability" xsi:type="string">PayUGatewayUcountCredentialValidator</item>
+                <item name="global" xsi:type="string">PayUGatewayUcountGlobalValidator</item>
             </argument>
         </arguments>
     </virtualType>

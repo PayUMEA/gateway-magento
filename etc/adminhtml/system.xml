@@ -111,8 +111,14 @@
                             <![CDATA[<a href="https://corporate.payu.com/contact-us/" target="_blank">Sign up for a Merchant account</a>]]>
                         </comment>
                     </group>
-                    <group id="payu_gateway_more_tyme_other" translate="label comment" sortOrder="16" extends="payment_all_payu_gateway/payu_gateway_more_tyme" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <group id="payu_gateway_more_tyme_other" translate="label comment" sortOrder="17" extends="payment_all_payu_gateway/payu_gateway_more_tyme" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>MoreTyme</label>
+                        <comment>
+                            <![CDATA[<a href="https://corporate.payu.com/contact-us/" target="_blank">Sign up for a Merchant account</a>]]>
+                        </comment>
+                    </group>
+                    <group id="payu_gateway_ucount_other" translate="label comment" sortOrder="18" extends="payment_all_payu_gateway/payu_gateway_ucount" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Ucount</label>
                         <comment>
                             <![CDATA[<a href="https://corporate.payu.com/contact-us/" target="_blank">Sign up for a Merchant account</a>]]>
                         </comment>
@@ -132,6 +138,7 @@
             <include path="PayU_Gateway::system/payu_gateway_equitel.xml"/>
             <include path="PayU_Gateway::system/payu_gateway_fasta.xml"/>
             <include path="PayU_Gateway::system/payu_gateway_more_tyme.xml"/>
+            <include path="PayU_Gateway::system/payu_gateway_ucount.xml"/>
         </section>
     </system>
 </config>

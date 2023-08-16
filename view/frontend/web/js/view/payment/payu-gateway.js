@@ -17,6 +17,7 @@ define(
 
         let config = window.checkoutConfig.payment,
             fasta = 'payu_gateway_fasta',
+            ucount = 'payu_gateway_ucount',
             ebucks = 'payu_gateway_ebucks',
             eftPro = 'payu_gateway_eft_pro',
             equitel = 'payu_gateway_equitel',
@@ -131,6 +132,15 @@ define(
             rendererList.push(
                 {
                     type: moreTyme,
+                    component: 'PayU_Gateway/js/view/payment/method-renderer/default'
+                }
+            )
+        }
+
+        if (config[ucount].isActive) {
+            rendererList.push(
+                {
+                    type: ucount,
                     component: 'PayU_Gateway/js/view/payment/method-renderer/default'
                 }
             )
