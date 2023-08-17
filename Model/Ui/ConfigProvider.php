@@ -25,6 +25,7 @@ use PayU\Gateway\Model\Payment\Method\Fasta;
 use PayU\Gateway\Model\Payment\Method\Mobicred;
 use PayU\Gateway\Model\Payment\Method\MoreTyme;
 use PayU\Gateway\Model\Payment\Method\Payflex;
+use PayU\Gateway\Model\Payment\Method\Rcs;
 use PayU\Gateway\Model\Payment\Method\Tigopesa;
 use PayU\Gateway\Model\Payment\Method\Ucount;
 
@@ -47,6 +48,7 @@ class ConfigProvider implements ConfigProviderInterface
     const MORE_TYME_CODE = MoreTyme::CODE;
     const UCOUNT_CODE = Ucount::CODE;
     const TIGOPESA_CODE = Tigopesa::CODE;
+    const RCS_CODE = Rcs::CODE;
 
     /**
      * @var string[]
@@ -64,7 +66,8 @@ class ConfigProvider implements ConfigProviderInterface
         self::FASTA_CODE,
         self::MORE_TYME_CODE,
         self::UCOUNT_CODE,
-        self::TIGOPESA_CODE
+        self::TIGOPESA_CODE,
+        self::RCS_CODE
     ];
 
     /**
