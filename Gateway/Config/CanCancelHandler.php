@@ -40,6 +40,6 @@ class CanCancelHandler implements ValueHandlerInterface
         $paymentDO = $this->subjectReader->readPayment($subject);
         $payment = $paymentDO->getPayment();
 
-        return $payment->getAmountOrdered() > 0;
+        return $payment->getAmountOrdered() > 0 || $payment->getAmountAuthorized() > 0;
     }
 }
