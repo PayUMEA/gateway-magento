@@ -50,5 +50,8 @@
         <method name="payu_gateway_rcs">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="payu_gateway_rcs_plc">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
     </methods>
 </payment>

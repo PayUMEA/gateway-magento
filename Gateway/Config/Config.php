@@ -85,7 +85,7 @@ class Config extends CoreConfig
      */
     public function getSafeKey(int|null $storeId = null): string
     {
-        return $this->getValue(self::KEY_SAFE_KEY, $storeId);
+        return $this->encryptor->decrypt($this->getValue(self::KEY_SAFE_KEY, $storeId));
     }
 
     /**
@@ -130,7 +130,7 @@ class Config extends CoreConfig
      */
     public function getApiPassword(int|null $storeId = null): string
     {
-        return $this->getValue(self::KEY_API_PASSWORD, $storeId);
+        return $this->encryptor->decrypt($this->getValue(self::KEY_API_PASSWORD, $storeId));
     }
 
     /**

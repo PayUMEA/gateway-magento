@@ -176,6 +176,18 @@
         </arguments>
     </virtualType>
     <!-- END RCS Facade configuration -->
+    <!-- RCS PLC Facade configuration -->
+    <virtualType name="PayUGatewayRcsPlcFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">PayU\Gateway\Model\Payment\Method\RcsPlc::CODE</argument>
+            <argument name="formBlockType" xsi:type="string">PayU\Gateway\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">PayU\Gateway\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">PayUGatewayRcsPlcValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">PayUGatewayRcsPlcValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">PayUGatewayCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <!-- END RCS PLC Facade configuration -->
     <!-- END Payment Methods Facade configuration -->
 
     <!-- Configuration reader -->
@@ -261,6 +273,12 @@
     <virtualType name="PayUGatewayRcsConfig" type="PayU\Gateway\Gateway\Config\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">PayU\Gateway\Model\Ui\ConfigProvider::RCS_CODE</argument>
+        </arguments>
+    </virtualType>
+    <!-- RCS PLC -->
+    <virtualType name="PayUGatewayRcsPlcConfig" type="PayU\Gateway\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">PayU\Gateway\Model\Payment\Method\RcsPlc::CODE</argument>
         </arguments>
     </virtualType>
     <!-- END Configuration reader -->
@@ -449,6 +467,19 @@
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">PayUGatewayRcsValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- RCS PLC -->
+    <virtualType name="PayUGatewayRcsPlcValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">PayUGatewayRcsPlcConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayRcsPlcValueHandlerPool" type="PayUGatewayDiscoveryMilesValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">PayUGatewayRcsPlcValueHandler</item>
             </argument>
         </arguments>
     </virtualType>
@@ -802,6 +833,31 @@
                 <item name="country" xsi:type="string">PayUGatewayRcsCountryValidator</item>
                 <item name="availability" xsi:type="string">PayUGatewayRcsCredentialValidator</item>
                 <item name="global" xsi:type="string">PayUGatewayRcsGlobalValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- RCS PLC -->
+    <virtualType name="PayUGatewayRcsPlcCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayRcsPlcConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayRcsPlcCredentialValidator" type="PayU\Gateway\Gateway\Validator\CredentialValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayRcsPlcConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayRcsPlcGlobalValidator" type="PayU\Gateway\Gateway\Validator\GlobalValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayRcsPlcConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayRcsPlcValidatorPool" type="PayUGatewayDiscoveryMilesValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">PayUGatewayRcsPlcCountryValidator</item>
+                <item name="availability" xsi:type="string">PayUGatewayRcsPlcCredentialValidator</item>
+                <item name="global" xsi:type="string">PayUGatewayRcsPlcGlobalValidator</item>
             </argument>
         </arguments>
     </virtualType>
