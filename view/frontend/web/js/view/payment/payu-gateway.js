@@ -16,6 +16,7 @@ define(
         'use strict';
 
         let config = window.checkoutConfig.payment,
+            rcs = 'payu_gateway_rcs',
             fasta = 'payu_gateway_fasta',
             ucount = 'payu_gateway_ucount',
             ebucks = 'payu_gateway_ebucks',
@@ -151,6 +152,15 @@ define(
             rendererList.push(
                 {
                     type: tigopesa,
+                    component: 'PayU_Gateway/js/view/payment/method-renderer/default'
+                }
+            )
+        }
+
+        if (config[rcs].isActive) {
+            rendererList.push(
+                {
+                    type: rcs,
                     component: 'PayU_Gateway/js/view/payment/method-renderer/default'
                 }
             )
