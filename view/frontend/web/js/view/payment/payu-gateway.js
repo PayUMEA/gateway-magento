@@ -28,6 +28,7 @@ define(
             mobicred = 'payu_gateway_mobicred',
             tigopesa = 'payu_gateway_tigopesa',
             moreTyme = 'payu_gateway_more_tyme',
+            mtnMobile = 'payu_gateway_mtn_mobile',
             airtelMoney = 'payu_gateway_airtel_money',
             capitecPay = 'payu_gateway_capitec_pay',
             creditCard = 'payu_gateway_creditcard',
@@ -181,6 +182,15 @@ define(
             rendererList.push(
                 {
                     type: mpesa,
+                    component: 'PayU_Gateway/js/view/payment/method-renderer/default'
+                }
+            )
+        }
+
+        if (config[mtnMobile].isActive) {
+            rendererList.push(
+                {
+                    type: mtnMobile,
                     component: 'PayU_Gateway/js/view/payment/method-renderer/default'
                 }
             )
