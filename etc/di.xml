@@ -188,6 +188,18 @@
         </arguments>
     </virtualType>
     <!-- END RCS PLC Facade configuration -->
+    <!-- Mpesa Facade configuration -->
+    <virtualType name="PayUGatewayMpesaFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">PayU\Gateway\Model\Payment\Method\Mpesa::CODE</argument>
+            <argument name="formBlockType" xsi:type="string">PayU\Gateway\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">PayU\Gateway\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">PayUGatewayMpesaValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">PayUGatewayMpesaValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">PayUGatewayCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <!-- END Mpesa Facade configuration -->
     <!-- END Payment Methods Facade configuration -->
 
     <!-- Configuration reader -->
@@ -279,6 +291,12 @@
     <virtualType name="PayUGatewayRcsPlcConfig" type="PayU\Gateway\Gateway\Config\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">PayU\Gateway\Model\Payment\Method\RcsPlc::CODE</argument>
+        </arguments>
+    </virtualType>
+    <!-- Mpesa -->
+    <virtualType name="PayUGatewayMpesaConfig" type="PayU\Gateway\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">PayU\Gateway\Model\Payment\Method\Mpesa::CODE</argument>
         </arguments>
     </virtualType>
     <!-- END Configuration reader -->
@@ -480,6 +498,19 @@
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">PayUGatewayRcsPlcValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- Mpesa -->
+    <virtualType name="PayUGatewayMpesaValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">PayUGatewayMpesaConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayMpesaValueHandlerPool" type="PayUGatewayDiscoveryMilesValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">PayUGatewayMpesaValueHandler</item>
             </argument>
         </arguments>
     </virtualType>
@@ -861,19 +892,44 @@
             </argument>
         </arguments>
     </virtualType>
+    <!-- Mpesa -->
+    <virtualType name="PayUGatewayMpesaCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayMpesaConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayMpesaCredentialValidator" type="PayU\Gateway\Gateway\Validator\CredentialValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayMpesaConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayMpesaGlobalValidator" type="PayU\Gateway\Gateway\Validator\GlobalValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayMpesaConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayMpesaValidatorPool" type="PayUGatewayDiscoveryMilesValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">PayUGatewayMpesaCountryValidator</item>
+                <item name="availability" xsi:type="string">PayUGatewayMpesaCredentialValidator</item>
+                <item name="global" xsi:type="string">PayUGatewayMpesaGlobalValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
     <!-- END PayU Gateway validators infrastructure -->
 
     <!-- Logger, initialized with PayUGatewayConfig -->
-    <type name="PayU\Gateway\Model\Payment\Operations\CreateInvoiceOperation">
-        <arguments>
-            <argument name="logger" xsi:type="object">PayUGatewayLogger</argument>
-        </arguments>
-    </type>
     <virtualType name="PayUGatewayLogger" type="Magento\Payment\Model\Method\Logger">
         <arguments>
             <argument name="config" xsi:type="object">PayU\Gateway\Gateway\Config\Config</argument>
         </arguments>
     </virtualType>
+    <type name="PayU\Gateway\Model\Payment\Operations\CreateInvoiceOperation">
+        <arguments>
+            <argument name="logger" xsi:type="object">PayUGatewayLogger</argument>
+        </arguments>
+    </type>
     <type name="PayU\Gateway\Gateway\Http\Client\TransactionOrder">
         <arguments>
             <argument name="customLogger" xsi:type="object">PayUGatewayLogger</argument>

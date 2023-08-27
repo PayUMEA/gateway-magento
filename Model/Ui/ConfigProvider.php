@@ -24,6 +24,7 @@ use PayU\Gateway\Model\Payment\Method\Equitel;
 use PayU\Gateway\Model\Payment\Method\Fasta;
 use PayU\Gateway\Model\Payment\Method\Mobicred;
 use PayU\Gateway\Model\Payment\Method\MoreTyme;
+use PayU\Gateway\Model\Payment\Method\Mpesa;
 use PayU\Gateway\Model\Payment\Method\Payflex;
 use PayU\Gateway\Model\Payment\Method\Rcs;
 use PayU\Gateway\Model\Payment\Method\RcsPlc;
@@ -51,6 +52,7 @@ class ConfigProvider implements ConfigProviderInterface
     const TIGOPESA_CODE = Tigopesa::CODE;
     const RCS_CODE = Rcs::CODE;
     const RCS_CODE_PLC = RcsPlc::CODE;
+    const MPESA_CODE = Mpesa::CODE;
 
     /**
      * @var string[]
@@ -70,7 +72,8 @@ class ConfigProvider implements ConfigProviderInterface
         self::UCOUNT_CODE,
         self::TIGOPESA_CODE,
         self::RCS_CODE,
-        self::RCS_CODE_PLC
+        self::RCS_CODE_PLC,
+        self::MPESA_CODE
     ];
 
     /**
