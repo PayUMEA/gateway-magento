@@ -50,7 +50,7 @@ class ConfigProvider implements ConfigProviderInterface
     const UCOUNT_CODE = Ucount::CODE;
     const TIGOPESA_CODE = Tigopesa::CODE;
     const RCS_CODE = Rcs::CODE;
-    const RCS_CODE_PLC = RcsPlc::CODE;
+    const RCS_PLC_CODE = RcsPlc::CODE;
 
     /**
      * @var string[]
@@ -70,7 +70,7 @@ class ConfigProvider implements ConfigProviderInterface
         self::UCOUNT_CODE,
         self::TIGOPESA_CODE,
         self::RCS_CODE,
-        self::RCS_CODE_PLC
+        self::RCS_PLC_CODE
     ];
 
     /**
