@@ -141,6 +141,12 @@
                             <![CDATA[<a href="https://corporate.payu.com/contact-us/" target="_blank">Sign up for a Merchant account</a>]]>
                         </comment>
                     </group>
+                    <group id="payu_gateway_mpesa_other" translate="label comment" sortOrder="22" extends="payment_all_payu_gateway/payu_gateway_mpesa" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Mpesa</label>
+                        <comment>
+                            <![CDATA[<a href="https://corporate.payu.com/contact-us/" target="_blank">Sign up for a Merchant account</a>]]>
+                        </comment>
+                    </group>
                 </group>
             </group>
         </section>
@@ -160,6 +166,7 @@
             <include path="PayU_Gateway::system/payu_gateway_tigopesa.xml"/>
             <include path="PayU_Gateway::system/payu_gateway_rcs.xml"/>
             <include path="PayU_Gateway::system/payu_gateway_rcs_plc.xml"/>
+            <include path="PayU_Gateway::system/payu_gateway_mpesa.xml"/>
         </section>
     </system>
 </config>

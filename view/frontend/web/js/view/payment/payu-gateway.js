@@ -18,6 +18,7 @@ define(
         let config = window.checkoutConfig.payment,
             rcs = 'payu_gateway_rcs',
             fasta = 'payu_gateway_fasta',
+            mpesa = 'payu_gateway_mpesa',
             ucount = 'payu_gateway_ucount',
             ebucks = 'payu_gateway_ebucks',
             eftPro = 'payu_gateway_eft_pro',
@@ -171,6 +172,15 @@ define(
             rendererList.push(
                 {
                     type: rcs_plc,
+                    component: 'PayU_Gateway/js/view/payment/method-renderer/default'
+                }
+            )
+        }
+
+        if (config[mpesa].isActive) {
+            rendererList.push(
+                {
+                    type: mpesa,
                     component: 'PayU_Gateway/js/view/payment/method-renderer/default'
                 }
             )
