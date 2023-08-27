@@ -21,6 +21,7 @@ define(
             ucount = 'payu_gateway_ucount',
             ebucks = 'payu_gateway_ebucks',
             eftPro = 'payu_gateway_eft_pro',
+            rcs_plc = 'payu_gateway_rcs_plc',
             equitel = 'payu_gateway_equitel',
             payflex = 'payu_gateway_payflex',
             mobicred = 'payu_gateway_mobicred',
@@ -161,6 +162,15 @@ define(
             rendererList.push(
                 {
                     type: rcs,
+                    component: 'PayU_Gateway/js/view/payment/method-renderer/default'
+                }
+            )
+        }
+
+        if (config[rcs_plc].isActive) {
+            rendererList.push(
+                {
+                    type: rcs_plc,
                     component: 'PayU_Gateway/js/view/payment/method-renderer/default'
                 }
             )

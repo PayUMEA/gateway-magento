@@ -20,6 +20,7 @@
         <message code="P014">An error occurred with this payment, please contact your merchant (ref: P014)</message>
         <message code="P015">User canceled payment transaction</message>
         <message code="P022">Transaction is not in the correct state.</message>
+        <message code="P023">Transaction in progress</message>
         <message code="P047">Payment Error: P047</message>
         <!-- EFT -->
         <message code="EFTPRO_003">Some error occurred at the payment gateway</message>

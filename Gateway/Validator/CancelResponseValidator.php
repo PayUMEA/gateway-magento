@@ -24,7 +24,7 @@ class CancelResponseValidator extends DefaultResponseValidator
             [
                 function ($response) {
                     return [
-                        $response->getSuccessful(),
+                        !$response->getSuccessful(),
                         [__($response->getDisplayMessage() ?? 'Transaction unsuccessful')],
                         [__($response->getResultCode() ?? 'P105')]
                     ];
