@@ -23,6 +23,7 @@ use PayU\Gateway\Model\Payment\Method\EftPro;
 use PayU\Gateway\Model\Payment\Method\Equitel;
 use PayU\Gateway\Model\Payment\Method\Fasta;
 use PayU\Gateway\Model\Payment\Method\Mobicred;
+use PayU\Gateway\Model\Payment\Method\MobileBanking;
 use PayU\Gateway\Model\Payment\Method\MoreTyme;
 use PayU\Gateway\Model\Payment\Method\Mpesa;
 use PayU\Gateway\Model\Payment\Method\MtnMobile;
@@ -55,6 +56,7 @@ class ConfigProvider implements ConfigProviderInterface
     const RCS_PLC_CODE = RcsPlc::CODE;
     const MPESA_CODE = Mpesa::CODE;
     const MTN_MOBILE_CODE = MtnMobile::CODE;
+    const MOBILE_BANKING_CODE = MobileBanking::CODE;
 
     /**
      * @var string[]
@@ -76,7 +78,8 @@ class ConfigProvider implements ConfigProviderInterface
         self::RCS_CODE,
         self::RCS_PLC_CODE,
         self::MPESA_CODE,
-        self::MTN_MOBILE_CODE
+        self::MTN_MOBILE_CODE,
+        self::MOBILE_BANKING_CODE
     ];
 
     /**
