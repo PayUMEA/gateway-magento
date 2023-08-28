@@ -32,6 +32,7 @@ define(
             airtelMoney = 'payu_gateway_airtel_money',
             capitecPay = 'payu_gateway_capitec_pay',
             creditCard = 'payu_gateway_creditcard',
+            mobileBanking = 'payu_gateway_mobile_banking',
             discoveryMiles = 'payu_gateway_discovery_miles';
 
         if (config[creditCard].isActive && !config[creditCard].isEnterprise) {
@@ -191,6 +192,15 @@ define(
             rendererList.push(
                 {
                     type: mtnMobile,
+                    component: 'PayU_Gateway/js/view/payment/method-renderer/default'
+                }
+            )
+        }
+
+        if (config[mobileBanking].isActive) {
+            rendererList.push(
+                {
+                    type: mobileBanking,
                     component: 'PayU_Gateway/js/view/payment/method-renderer/default'
                 }
             )

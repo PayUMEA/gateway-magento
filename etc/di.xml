@@ -211,6 +211,17 @@
             <argument name="commandPool" xsi:type="object">PayUGatewayCommandPool</argument>
         </arguments>
     </virtualType>
+    <!-- Mobile Banking Facade configuration -->
+    <virtualType name="PayUGatewayMobileBankingFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">PayU\Gateway\Model\Payment\Method\MobileBanking::CODE</argument>
+            <argument name="formBlockType" xsi:type="string">PayU\Gateway\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">PayU\Gateway\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">PayUGatewayMobileBankingValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">PayUGatewayMobileBankingValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">PayUGatewayCommandPool</argument>
+        </arguments>
+    </virtualType>
     <!-- END MTN Mobile Facade configuration -->
     <!-- END Payment Methods Facade configuration -->
 
@@ -315,6 +326,12 @@
     <virtualType name="PayUGatewayMtnMobileConfig" type="PayU\Gateway\Gateway\Config\Config">
         <arguments>
             <argument name="methodCode" xsi:type="const">PayU\Gateway\Model\Payment\Method\MtnMobile::CODE</argument>
+        </arguments>
+    </virtualType>
+    <!-- Mobile Banking -->
+    <virtualType name="PayUGatewayMobileBankingConfig" type="PayU\Gateway\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">PayU\Gateway\Model\Payment\Method\MobileBanking::CODE</argument>
         </arguments>
     </virtualType>
     <!-- END Configuration reader -->
@@ -542,6 +559,19 @@
         <arguments>
             <argument name="handlers" xsi:type="array">
                 <item name="default" xsi:type="string">PayUGatewayMtnMobileValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- Mobile Banking -->
+    <virtualType name="PayUGatewayMobileBankingValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">PayUGatewayMobileBankingConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayMobileBankingValueHandlerPool" type="PayUGatewayDiscoveryMilesValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">PayUGatewayMobileBankingValueHandler</item>
             </argument>
         </arguments>
     </virtualType>
@@ -970,6 +1000,31 @@
                 <item name="country" xsi:type="string">PayUGatewayMtnMobileCountryValidator</item>
                 <item name="availability" xsi:type="string">PayUGatewayMtnMobileCredentialValidator</item>
                 <item name="global" xsi:type="string">PayUGatewayMtnMobileGlobalValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- Mobile Banking -->
+    <virtualType name="PayUGatewayMobileBankingCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayMobileBankingConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayMobileBankingCredentialValidator" type="PayU\Gateway\Gateway\Validator\CredentialValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayMobileBankingConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayMobileBankingGlobalValidator" type="PayU\Gateway\Gateway\Validator\GlobalValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">PayUGatewayMobileBankingConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="PayUGatewayMobileBankingValidatorPool" type="PayUGatewayDiscoveryMilesValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">PayUGatewayMobileBankingCountryValidator</item>
+                <item name="availability" xsi:type="string">PayUGatewayMobileBankingCredentialValidator</item>
+                <item name="global" xsi:type="string">PayUGatewayMobileBankingGlobalValidator</item>
             </argument>
         </arguments>
     </virtualType>
