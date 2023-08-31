@@ -46,7 +46,6 @@ class Method implements OptionSourceInterface
         'MOBICRED'			=> 'Mobicred',
         'OPEN_BANKING'      => 'Capitec Pay',
         'MORETYME'          => 'MoreTyme',
-        'UCOUNT'            => 'Ucount'
     ];
 
     /**

@@ -531,7 +531,7 @@
                 <api_username>200021</api_username>
                 <api_password>WSAUFbw6</api_password>
                 <safe_key>{07F70723-1B96-4B97-B891-7BF708594EEA}</safe_key>
-                <payment_methods>UCOUNT</payment_methods>
+                <payment_methods>CREDITCARD</payment_methods>
                 <currency>ZAR</currency>
                 <min_order_total>50</min_order_total>
                 <max_order_total>5000000</max_order_total>
