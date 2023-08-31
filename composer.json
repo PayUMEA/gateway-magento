@@ -1,23 +1,20 @@
 {
     "name": "payumea/gateway-magento",
-    "description": "Secure payment processing via PayU Gateway MEA for Magento 2.4+",
+    "description": "Secure payment processing via PayU Gateway MEA for Magento 2.4 and above",
     "keywords": [
         "payu",
         "payment gateway",
-        "payu magento 2.4+ extension",
-        "payu magento 2.4+"
+        "payu magento 2.4 and above extension",
+        "payu magento 2.4 and above"
     ],
     "type": "magento2-module",
-    "version": "0.1.1-beta.1",
+    "version": "0.1.1-beta.2",
     "homepage": "https://southafrica.payu.com/",
     "license": [
         "OSL-3.0",
         "AFL-3.0"
     ],
     "require": {
-        "magento/module-payment": "100.1.*",
-        "magento/module-checkout": "100.1.*",
-        "magento/module-sales": "100.1.*",
         "payu-mea/payu-mea-sdk-php": "dev-feature/php8-upgrade"
     },
     "authors": [
