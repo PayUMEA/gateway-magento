@@ -1,5 +1,5 @@
 {
-    "name": "payu-mea/gateway-magento",
+    "name": "payumea/gateway-magento",
     "description": "Secure payment processing via PayU Gateway MEA for Magento 2.4+",
     "keywords": [
         "payu",
