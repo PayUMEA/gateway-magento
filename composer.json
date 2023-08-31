@@ -18,7 +18,7 @@
         "magento/module-payment": "100.1.*",
         "magento/module-checkout": "100.1.*",
         "magento/module-sales": "100.1.*",
-        "payu-mea/payu-mea-sdk-php": ">=2.0"
+        "payu-mea/payu-mea-sdk-php": "dev-feature/php8-upgrade"
     },
     "authors": [
         {
@@ -31,5 +31,11 @@
         "psr-4": {
             "PayU\\Gateway\\": ""
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/onahkenneth/payu-mea-sdk-php"
+        }
+    ]
 }
