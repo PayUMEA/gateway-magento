@@ -12,7 +12,7 @@
             <group id="payu_gateway_section" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
                 <group id="payu_gateway" translate="label comment" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>PayU Secure Payments</label>
-                    <comment><![CDATA[Accept credit/debit cards, Discovery Miles, eBucks, EFT, Mobiccred, FASTA  in your Magento store.<br />If configured, your customers never leave your store to complete the purchase.]]></comment>
+                    <comment><![CDATA[Accept credit/debit cards, Discovery Miles, eBucks, Pay by EFT, Mobiccred, FASTA  in your Magento store.<br />If configured, your customers never leave your store to complete the purchase.]]></comment>
                     <fieldset_css>complex payu-gateway-section</fieldset_css>
                     <attribute type="displayIn">recommended_solutions</attribute>
                     <frontend_model>PayU\Gateway\Block\Adminhtml\System\Config\Fieldset\Payment</frontend_model>
@@ -70,7 +70,7 @@
                         </comment>
                     </group>
                     <group id="payu_gateway_eft_pro_other" translate="label comment" sortOrder="10" extends="payment_all_payu_gateway/payu_gateway_eft_pro" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>EFT Pro</label>
+                        <label>Pay by EFT</label>
                         <comment>
                             <![CDATA[<a href="https://corporate.payu.com/contact-us/" target="_blank">Sign up for a Merchant account</a>]]>
                         </comment>

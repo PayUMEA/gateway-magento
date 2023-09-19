@@ -149,7 +149,7 @@
             <payu_gateway_eft_pro>
                 <model>PayUGatewayEftProFacade</model>
                 <active>0</active>
-                <title>EFT Pro</title>
+                <title>Pay by EFT</title>
                 <payment_action>order</payment_action>
                 <is_gateway>1</is_gateway>
                 <can_use_checkout>1</can_use_checkout>
