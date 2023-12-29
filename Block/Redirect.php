@@ -12,8 +12,8 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Payment\Block\Info;
-use PayU\EasyPlus\Helper\Backend\Data;
-use PayU\EasyPlus\Helper\DataFactory;
+use PayU\Gateway\Helper\Backend\Data;
+use PayU\Gateway\Helper\DataFactory;
 
 /**
  * class Redirect
