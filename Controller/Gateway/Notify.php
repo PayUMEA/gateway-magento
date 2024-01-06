@@ -16,7 +16,7 @@ use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Exception\LocalizedException;
 use PayU\Gateway\Controller\AbstractAction;
-use PayU\Model\XmlHelper;
+use PayU\Framework\XmlHelper;
 
 /**
  * class Notify
