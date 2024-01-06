@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace PayU\Gateway\Gateway\Request;
 
 use Magento\Payment\Gateway\Request\BuilderInterface;
-use PayU\Api\Data\TransactionInterface;
+use PayUSdk\Api\Data\TransactionInterface;
 use PayU\Gateway\Gateway\Config\Config;
 use PayU\Gateway\Gateway\SubjectReader;
 

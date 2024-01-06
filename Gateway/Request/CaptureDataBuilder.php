@@ -11,11 +11,11 @@ namespace PayU\Gateway\Gateway\Request;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Gateway\Request\BuilderInterface;
 use PayU\Gateway\Gateway\SubjectReader;
-use PayU\Model\Currency;
-use PayU\Model\Customer;
-use PayU\Model\PaymentMethod;
-use PayU\Model\Total;
-use PayU\Model\Transaction;
+use PayUSdk\Model\Currency;
+use PayUSdk\Model\Customer;
+use PayUSdk\Model\PaymentMethod;
+use PayUSdk\Model\Total;
+use PayUSdk\Model\Transaction;
 
 /**
  * class CaptureDataBuilder

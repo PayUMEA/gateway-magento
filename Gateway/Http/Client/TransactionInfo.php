@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace PayU\Gateway\Gateway\Http\Client;
 
 use Magento\Framework\Exception\LocalizedException;
-use PayU\Api\ResponseInterface;
+use PayUSdk\Api\ResponseInterface;
 use PayU\Gateway\Gateway\Request\StoreConfigBuilder;
 
 /**

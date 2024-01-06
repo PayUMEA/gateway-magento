@@ -10,9 +10,9 @@ namespace PayU\Gateway\Gateway\Request;
 
 use Magento\Payment\Gateway\Request\BuilderInterface;
 use PayU\Gateway\Gateway\SubjectReader;
-use PayU\Model\Address;
-use PayU\Model\Phone;
-use PayU\Model\ShippingAddress;
+use PayUSdk\Model\Address;
+use PayUSdk\Model\Phone;
+use PayUSdk\Model\ShippingAddress;
 
 /**
  * class AddressDataBuilder

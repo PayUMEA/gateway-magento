@@ -17,10 +17,10 @@ use Magento\Payment\Model\InfoInterface;
 use PayU\Gateway\Gateway\Config\Config;
 use PayU\Gateway\Gateway\SubjectReader;
 use PayU\Gateway\Model\Payment\Method\CapitecPay;
-use PayU\Model\Address;
-use PayU\Model\Customer;
-use PayU\Model\CustomerDetail;
-use PayU\Model\Phone;
+use PayUSdk\Model\Address;
+use PayUSdk\Model\Customer;
+use PayUSdk\Model\CustomerDetail;
+use PayUSdk\Model\Phone;
 
 /**
  * class CustomerDataBuilder

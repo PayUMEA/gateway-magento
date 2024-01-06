@@ -12,8 +12,8 @@ use Magento\Payment\Gateway\Request\BuilderInterface;
 use Magento\Quote\Api\Data\PaymentInterface;
 use PayU\Gateway\Gateway\Config\Config;
 use PayU\Gateway\Gateway\SubjectReader;
-use PayU\Model\CreditCard;
-use PayU\Model\FundingInstrument;
+use PayUSdk\Model\CreditCard;
+use PayUSdk\Model\FundingInstrument;
 
 /**
  * class PaymentCardDetailsDataBuilder

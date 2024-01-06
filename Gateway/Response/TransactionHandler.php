@@ -12,7 +12,7 @@ use Magento\Payment\Gateway\Data\OrderAdapterInterface;
 use Magento\Payment\Gateway\Response\HandlerInterface;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Sales\Model\Order\Payment;
-use PayU\Api\ResponseInterface;
+use PayUSdk\Api\ResponseInterface;
 use PayU\Gateway\Gateway\Config\Config;
 use PayU\Gateway\Gateway\SubjectReader;
 

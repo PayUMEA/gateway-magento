@@ -19,7 +19,7 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\ResourceModel\Order\Collection;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
 use Magento\Store\Model\ScopeInterface;
-use PayU\Api\ResponseInterface;
+use PayUSdk\Api\ResponseInterface;
 use PayU\Gateway\Model\Adapter\PayUAdapter;
 use PayU\Gateway\Model\Adapter\PayUAdapterFactory;
 use PayU\Gateway\Model\Payment\Operations\CreateInvoiceOperation;

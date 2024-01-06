@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace PayU\Gateway\Gateway\Http\Client;
 
-use PayU\Api\ResponseInterface;
+use PayUSdk\Api\ResponseInterface;
 use PayU\Gateway\Gateway\Request\StoreConfigBuilder;
 
 /**

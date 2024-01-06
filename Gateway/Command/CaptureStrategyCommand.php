@@ -113,7 +113,7 @@ class CaptureStrategyCommand implements CommandInterface
         $adapter = $this->payuAdapterFactory->create((int)$orderAdapter->getStoreId());
         $transaction = $adapter->search($payment->getLastTransId());
 
-        return $transaction->getTransactionState() === \PayU\Api\Data\TransactionInterface::STATE_EXPIRED;
+        return $transaction->getTransactionState() === \PayUSdk\Api\Data\TransactionInterface::STATE_EXPIRED;
     }
 
     /**

@@ -13,7 +13,7 @@ use Magento\Payment\Gateway\Request\BuilderInterface;
 use PayU\Gateway\Gateway\Config\Config;
 use PayU\Gateway\Gateway\SubjectReader;
 use PayU\Gateway\Helper\Data;
-use PayU\Model\TransactionUrl;
+use PayUSdk\Model\TransactionUrl;
 
 /**
  * class PaymentUrlDataBuilder

@@ -10,8 +10,8 @@ namespace PayU\Gateway\Gateway\Request;
 
 use Magento\Payment\Gateway\Request\BuilderInterface;
 use PayU\Gateway\Gateway\SubjectReader;
-use PayU\Model\Currency;
-use PayU\Model\Total;
+use PayUSdk\Model\Currency;
+use PayUSdk\Model\Total;
 
 /**
  * class BasketDataBuilder

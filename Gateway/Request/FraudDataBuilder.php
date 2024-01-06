@@ -13,9 +13,9 @@ use Magento\Payment\Gateway\Request\BuilderInterface;
 use PayU\Gateway\Gateway\Config\Config;
 use PayU\Gateway\Gateway\SubjectReader;
 use PayU\Gateway\Helper\Data;
-use PayU\Model\FraudService;
-use PayU\Model\Item;
-use PayU\Model\ItemList;
+use PayUSdk\Model\FraudService;
+use PayUSdk\Model\Item;
+use PayUSdk\Model\ItemList;
 
 /**
  * class PaymentCardDetailsDataBuilder

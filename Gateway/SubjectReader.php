@@ -11,7 +11,7 @@ namespace PayU\Gateway\Gateway;
 use InvalidArgumentException;
 use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Payment\Gateway\Helper;
-use PayU\Api\ResponseInterface;
+use PayUSdk\Api\ResponseInterface;
 
 /**
  * class SubjectReader
