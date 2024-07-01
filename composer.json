@@ -15,7 +15,7 @@
         "AFL-3.0"
     ],
     "require": {
-        "payu-mea/payu-mea-sdk-php": "dev-feature/php8-upgrade"
+        "payu-mea/payu-mea-sdk-php": "^2.0"
     },
     "authors": [
         {
@@ -28,11 +28,5 @@
         "psr-4": {
             "PayU\\Gateway\\": ""
         }
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/onahkenneth/payu-mea-sdk-php"
-        }
-    ]
+    }
 }
