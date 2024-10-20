@@ -1066,6 +1066,21 @@
             <argument name="customLogger" xsi:type="object">PayUGatewayLogger</argument>
         </arguments>
     </type>
+    <type name="PayU\Gateway\Controller\Gateway\Cancel">
+        <arguments>
+            <argument name="logger" xsi:type="object">PayUGatewayLogger</argument>
+        </arguments>
+    </type>
+    <type name="PayU\Gateway\Controller\Gateway\Notify">
+        <arguments>
+            <argument name="logger" xsi:type="object">PayUGatewayLogger</argument>
+        </arguments>
+    </type>
+    <type name="PayU\Gateway\Controller\Gateway\Response">
+        <arguments>
+            <argument name="logger" xsi:type="object">PayUGatewayLogger</argument>
+        </arguments>
+    </type>
     <!-- END Logger, initialized with PayUGatewayConfig -->
 
     <!-- Commands pool infrastructure -->
@@ -1336,4 +1351,17 @@
         </arguments>
     </virtualType>
     <!-- END PayU Gateway error mapping  -->
+    <virtualType name="PayU\Gateway\Model\ResourceModel\Transaction\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">payu_gateway_transaction</argument>
+            <argument name="resourceModel" xsi:type="string">PayU\Gateway\Model\ResourceModel\Transaction</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="payu_gateway_transaction_grid_list_data_source" xsi:type="string">PayU\Gateway\Model\ResourceModel\Transaction\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

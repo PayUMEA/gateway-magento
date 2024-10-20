@@ -19,8 +19,8 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\ResourceModel\Order\Collection;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
 use Magento\Store\Model\ScopeInterface;
+use Magento\Store\Model\StoreManagerInterface;
 use PayUSdk\Api\ResponseInterface;
-use PayU\Gateway\Model\Adapter\PayUAdapter;
 use PayU\Gateway\Model\Adapter\PayUAdapterFactory;
 use PayU\Gateway\Model\Payment\Operations\CreateInvoiceOperation;
 use PayU\Gateway\Model\Payment\Operations\TransactionUpdateOperation;
@@ -28,13 +28,12 @@ use PayU\Gateway\Model\Payment\TransferObject;
 use Psr\Log\LoggerInterface;
 
 /**
- * class CheckTransactionState
+ * class CheckTransactionStatus
  * @package PayU\Gateway\Cron
  */
-class CheckTransactionState
+class CheckTransactionStatus
 {
-    private const CONFIG_PATTERN = 'payment/%s/%s';
-    private const CRON_CONFIG_PATTERN = 'payment/payu_gateway_cron/%s';
+    private const CRON_CONFIG_PATTERN = 'payu_gateway/txn_status/%s';
 
     /**
      * @var string|null
@@ -47,12 +46,11 @@ class CheckTransactionState
     protected string $processId = '';
 
     /**
-     * @var PayUAdapter
+     * @var string
      */
-    protected payUAdapter $payUAdapter;
+    protected string $processClass = '';
 
     /**
-     * CheckTransactionState constructor.
      * @param LoggerInterface $logger
      * @param PayUAdapterFactory $apiFactory
      * @param EncryptorInterface $encryptor
@@ -60,6 +58,7 @@ class CheckTransactionState
      * @param OrderRepositoryInterface $orderRepository
      * @param CollectionFactory $orderCollectionFactory
      * @param CreateInvoiceOperation $invoiceOperation
+     * @param StoreManagerInterface $storeManager
      * @param TransactionUpdateOperation $transactionUpdateOperation
      */
     public function __construct(
@@ -70,9 +69,9 @@ class CheckTransactionState
         private readonly OrderRepositoryInterface $orderRepository,
         private readonly CollectionFactory $orderCollectionFactory,
         private readonly CreateInvoiceOperation $invoiceOperation,
+        private readonly StoreManagerInterface $storeManager,
         private readonly TransactionUpdateOperation $transactionUpdateOperation
     ) {
-        $this->payUAdapter = $apiFactory->create();
     }
 
     /**
@@ -85,11 +84,11 @@ class CheckTransactionState
     public function processReturn(ResponseInterface $response, OrderInterface $order, InfoInterface $payment): void
     {
         $data = $response->toArray();
-        $transactionNotes = "<strong>-----PAYU GATEWAY CRON: STATUS CHECKED ---</strong><br />";
+        $transactionNotes = "<strong>-----PAYU GATEWAY TXN STATUS CRON: STATUS CHECKED ---</strong><br />";
 
         if (!isset($data['resultCode']) || (in_array($data['resultCode'], ['POO5', 'EFTPRO_003', '999', '305']))) {
             $this->logger->info(
-                "PAYU GATEWAY CRON: ($this->processId) Result code - {$data['resultCode']}. Skip order processing"
+                "PAYU GATEWAY TXN STATUS CRON: ($this->processId) Result code - {$data['resultCode']}. Skip order processing"
             );
             $this->logger->info("PayU txn data: " . PHP_EOL . json_encode($data));
         }
@@ -103,7 +102,7 @@ class CheckTransactionState
                 )
             )
         ) {
-            $this->logger->info("PAYU GATEWAY CRON: ($this->processId) Invalid  transaction state");
+            $this->logger->info("PAYU GATEWAY TXN STATUS CRON: ($this->processId) Invalid  transaction state");
             $this->logger->info(json_encode($data));
 
             return;
@@ -114,7 +113,7 @@ class CheckTransactionState
 
         switch ($data['transactionState']) {
             case 'SUCCESSFUL':
-                $this->invoiceOperation->invoice($order);
+                $this->invoiceOperation->invoice($order, $this->processId, $this->processClass);
                 $this->transactionUpdateOperation->update($order, $payment, new TransferObject($data));
                 break;
             case 'FAILED':
@@ -122,7 +121,7 @@ class CheckTransactionState
             case 'EXPIRED':
                 $order->cancel();
                 $this->logger->info(
-                    "PAYU GATEWAY CRON: ({$order->getEntityId()}) Transaction state prevents processing order"
+                    "PAYU GATEWAY TXN STATUS CRON: ({$order->getEntityId()}) Transaction state prevents processing order"
                 );
                 break;
         }
@@ -134,13 +133,18 @@ class CheckTransactionState
     /**
      * @return Collection
      */
-    public function getOrderCollection(): Collection
+    public function getOrderCollection(string $storeId): Collection
     {
         return $this->orderCollectionFactory->create()
             ->addFieldToSelect('*')
+            ->addFieldToFilter('store_id', $storeId)
             ->addFieldToFilter(
                 'status',
                 ['in' => explode(',', $this->getCronConfigData('order_status'))]
+            )
+            ->setOrder(
+                'created_at',
+                'asc'
             );
     }
 
@@ -150,96 +154,112 @@ class CheckTransactionState
      */
     public function execute(): void
     {
-        $cronDisabled = (bool)$this->getCronConfigData('bypass_cron');
-
-        if ($cronDisabled) {
-            $this->logger->info("PAYU GATEWAY CRON: Disabled");
-
-            return;
-        }
-
         $processId = uniqid();
         $this->processId = $processId;
+        $this->processClass = self::class;
 
-        $this->logger->info("PAYU GATEWAY CRON: Started, PID: $processId");
+        $this->logger->info("PAYU GATEWAY TXN STATUS CRON: Started, PID: $processId");
 
-        $orders = $this->getOrderCollection();
+        $websites = $this->storeManager->getWebsites();
 
-        foreach ($orders->getItems() as $order) {
-            $payment = $order->getPayment();
-            $additionalInfo = $payment->getAdditionalInformation();
-            $transactionId = $payment->getLastTransId();
-            $code = $payment->getData('method');
-            $this->code = $code;
+        foreach($websites as $website) {
+            $websiteStores = $website->getStores();
 
-            $id = $order->getIncrementId();
-            $this->logger->info("($processId) Checking: $id");
+            foreach ($websiteStores as $store) {
+                $storeId = $store->getId();
+                $cronEnabled = (bool)$this->getCronConfigData('enable', $storeId);
 
-            if (!str_contains($code, 'payu_gateway')) {
-                $this->logger->info("PAYU GATEWAY CRON: ($processId) Not a PayU payment method");
-
-                continue;
-            }
-
-            if (isset($additionalInfo["fraud_details"])) {
-                if ($additionalInfo["fraud_details"]["return"]["transactionState"] === 'SUCCESSFUL') {
-                    $this->logger->info("PAYU GATEWAY CRON: ($processId) ($id) Already successful");
+                if (!$cronEnabled) {
+                    $this->logger->info(
+                        "PAYU GATEWAY TXN STATUS CRON: disabled for website ({$website->getName()}), store ({$store->getName()})"
+                    );
 
                     continue;
                 }
 
-                $payUReference = $additionalInfo["fraud_details"]["return"]["payUReference"];
-            } else {
-                $payUReference = $additionalInfo["payUReference"] ?? $transactionId;
-            }
-
-            if (!isset($payUReference)) {
-                $this->logger->info("PAYU GATEWAY CRON: ($processId) No PayU reference");
-
-                continue;
-            }
-
-            if (!$this->shouldDoCheck($order)) {
-                $this->logger->info("PAYU GATEWAY CRON: ($processId) ($id) Check delayed");
-
-                continue;
-            }
-
-            $this->logger->info("PAYU GATEWAY CRON: ($processId) ($id) Doing Check");
-
-            $order = $this->orderRepository->get($order->getId());
-
-            if ($order->getState() == Order::STATE_PROCESSING) {
                 $this->logger->info(
-                    "PAYU GATEWAY CRON: Order completed, skip processing. Order id = " . $order->getId()
+                    "PAYU GATEWAY TXN STATUS CRON: Started for website ({$website->getName()}), store ({$store->getName()}), PID: $processId"
                 );
 
-                continue;
+                $orders = $this->getOrderCollection($storeId);
+
+                foreach ($orders->getItems() as $order) {
+                    $payment = $order->getPayment();
+                    $additionalInfo = $payment->getAdditionalInformation();
+                    $transactionId = $payment->getLastTransId();
+                    $code = $payment->getData('method');
+                    $this->code = $code;
+
+                    $id = $order->getIncrementId();
+                    $this->logger->info("PAYU GATEWAY TXN STATUS CRON: ($processId) checking: $id");
+
+                    if (!str_contains($code, 'payu_gateway')) {
+                        $this->logger->info("PAYU GATEWAY TXN STATUS CRON: ($processId) not a PayU payment method");
+
+                        continue;
+                    }
+
+                    if (isset($additionalInfo["fraud_details"])) {
+                        if ($additionalInfo["fraud_details"]["return"]["transactionState"] === 'SUCCESSFUL') {
+                            $this->logger->info("PAYU GATEWAY TXN STATUS CRON: ($id) ($processId) already successful");
+
+                            continue;
+                        }
+
+                        $payUReference = $additionalInfo["fraud_details"]["return"]["payUReference"];
+                    } else {
+                        $payUReference = $additionalInfo["payUReference"] ?? $transactionId;
+                    }
+
+                    if (!isset($payUReference)) {
+                        $this->logger->info("PAYU GATEWAY TXN STATUS CRON: ($processId) no PayU reference");
+
+                        continue;
+                    }
+
+                    if (!$this->shouldDoCheck($order)) {
+                        $this->logger->info("PAYU GATEWAY TXN STATUS CRON: ($id) ($processId) check delayed");
+
+                        continue;
+                    }
+
+                    $this->logger->info("PAYU GATEWAY TXN STATUS CRON: ($id) ($processId) doing Check");
+
+                    $order = $this->orderRepository->get($order->getId());
+
+                    if ($order->getState() === Order::STATE_PROCESSING || $order->getStatus() === Order::STATE_PROCESSING) {
+                        $this->logger->info(
+                            "PAYU GATEWAY TXN STATUS CRON: order completed, skip processing. Order id = " . $order->getIncrementId()
+                        );
+
+                        continue;
+                    }
+
+                    if ($order->hasInvoices()) {
+                        $this->logger->info(
+                            "PAYU GATEWAY TXN STATUS CRON: ($processId) already invoiced, skip processing. order id = "
+                            . $order->getIncrementId()
+                        );
+
+                        continue;
+                    }
+
+                    try {
+                        $payUAdapter = $this->apiFactory->create($storeId, $code);
+                        $result = $payUAdapter->search($payUReference);
+                        $this->processReturn($result, $order, $payment);
+                    } catch (Exception $exception) {
+                        $this->logger->info('PAYU GATEWAY TXN STATUS CRON: ' . $exception->getMessage());
+                        $this->logger->info($result->toJSON());
+                    }
+
+                    $order->setUpdatedAt(null);
+                    $this->orderRepository->save($order);
+                }
             }
-
-            if ($order->hasInvoices()) {
-                $this->logger->info(
-                    "PAYU GATEWAY CRON: ($processId) Already invoiced, skip processing. order id = "
-                    . $order->getId()
-                );
-
-                continue;
-            }
-
-            $result = $this->payUAdapter->search($payUReference);
-
-            try {
-                $this->processReturn($result, $order, $payment);
-            } catch (Exception $exception) {
-                $this->logger->info('PAYU GATEWAY CRON: ' . $exception->getMessage());
-                $this->logger->info($result->toJSON());
-            }
-
-            $order->setUpdatedAt(null);
-            $this->orderRepository->save($order);
         }
 
-        $this->logger->info("PAYU GATEWAY CRON: Ended, PID: $processId");
+        $this->logger->info("PAYU GATEWAY TXN STATUS CRON: Ended, PID: $processId");
     }
 
     /**
@@ -263,10 +283,10 @@ class CheckTransactionState
         }
 
         $this->logger->info(
-            "PAYU GATEWAY CRON: ($this->processId) Minutes created: $minutesCreated - Delay: $cronDelay mins"
+            "PAYU GATEWAY TXN STATUS CRON: ($this->processId) Minutes created: $minutesCreated - Delay: $cronDelay mins"
         );
         $this->logger->info(
-            "PAYU GATEWAY CRON: ($this->processId) Minutes updated: $minutesUpdated - Delay: $cronDelay mins"
+            "PAYU GATEWAY TXN STATUS CRON: ($this->processId) Minutes updated: $minutesUpdated - Delay: $cronDelay mins"
         );
 
         $minutesCreated = $minutesCreated - $cronDelay;
@@ -302,35 +322,9 @@ class CheckTransactionState
             return true;
         }
 
-        $this->logger->info("PAYU GATEWAY CRON: ($this->processId) Check Not Needed");
+        $this->logger->info("PAYU GATEWAY TXN STATUS CRON: ($this->processId) Check Not Needed");
 
         return false;
-    }
-
-    /**
-     * @param $key
-     * @param $storeId
-     * @return mixed|string
-     */
-    public function getValue($key, $storeId = null): mixed
-    {
-        if (in_array($key, ['safe_key', 'api_password'])) {
-            return $this->encryptor->decrypt($this->getConfigData($key, $storeId));
-        }
-
-        return $this->getConfigData($key, $storeId);
-    }
-
-    /**
-     * @param string $field
-     * @param $storeId
-     * @return mixed
-     */
-    public function getConfigData(string $field, $storeId = null): mixed
-    {
-        $path = sprintf(self::CONFIG_PATTERN, $this->code, $field);
-
-        return $this->scopeConfig->getValue($path, ScopeInterface::SCOPE_STORE, $storeId);
     }
 
     /**
