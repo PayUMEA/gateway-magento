@@ -7,6 +7,20 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../Store/etc/config.xsd">
     <default>
+        <payu_gateway>
+            <txn_status>
+                <enable>0</enable>
+                <order_status>pending,pending_payment</order_status>
+                <cron_delay>5</cron_delay>
+            </txn_status>
+            <txn_lock>
+                <enable>0</enable>
+                <keep_log>30</keep_log>
+            </txn_lock>
+            <bypass_redirect>
+                <enable>0</enable>
+            </bypass_redirect>
+        </payu_gateway>
         <payment>
             <payu_gateway_creditcard>
                 <model>PayUGatewayCreditCardFacade</model>
