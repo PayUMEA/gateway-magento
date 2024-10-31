@@ -22,138 +22,151 @@
                         <comment>https://payusahelp.atlassian.net/wiki/spaces/developers/pages</comment>
                         <frontend_model>PayU\Gateway\Block\Adminhtml\System\Config\Fieldset\Hint</frontend_model>
                     </group>
-                    <group id="payu_gateway_cron" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>CRON Settings</label>
-                        <field id="bypass_cron" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                            <label>Disable</label>
+                    <group id="payu_gateway_txn_status" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Transaction Status Checker</label>
+                        <field id="enable" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Enable</label>
                             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                            <config_path>payment/payu_gateway_cron/bypass_cron</config_path>
+                            <config_path>payu_gateway/txn_status/enable</config_path>
                         </field>
                         <field id="order_status" translate="label" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                             <label>Order Status</label>
                             <comment>The status of orders to be processed</comment>
                             <source_model>PayU\Gateway\Model\Adminhtml\System\Config\Source\Order\Status\PendingPayment</source_model>
-                            <config_path>payment/payu_gateway_cron/order_status</config_path>
+                            <config_path>payu_gateway/txn_status/order_status</config_path>
                         </field>
                         <field id="cron_delay" translate="label" type="text" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
                             <label>Delay (Minutes)</label>
                             <comment>
                                 How long after order placement will the CRON start checking the order status, leave empty for default
                             </comment>
-                            <config_path>payment/payu_gateway_cron/cron_delay</config_path>
+                            <config_path>payu_gateway/txn_status/cron_delay</config_path>
+                        </field>
+                    </group>
+                    <group id="payu_gateway_txn_lock" translate="label" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Transaction Locks Cleaner</label>
+                        <field id="enable" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                            <label>Enable</label>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>payu_gateway/txn_lock/enable</config_path>
+                        </field>
+                        <field id="keep_log" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                            <label>Keep Log (Days)</label>
+                            <comment>How many days logs can be kept</comment>
+                            <config_path>payu_gateway/txn_lock/keep_log</config_path>
                         </field>
                     </group>
                     <group id="payu_gateway_redirect_config" translate="label" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Redirect Settings</label>
+                        <label>Response Redirect Processing</label>
                         <field id="bypass_payu_redirect" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                             <label>Disable</label>
                             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                            <config_path>payment/payu_gateway/bypass_payu_redirect</config_path>
+                            <config_path>payu_gateway/bypass_redirect/enable</config_path>
                         </field>
                     </group>
-                    <group id="payu_gateway_creditcard_other" translate="label comment" sortOrder="7" extends="payment_all_payu_gateway/payu_gateway_creditcard" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <group id="payu_gateway_creditcard_other" translate="label comment" sortOrder="8" extends="payment_all_payu_gateway/payu_gateway_creditcard" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Credit Card</label>
                         <comment>
                             <![CDATA[<a href="https://corporate.payu.com/contact-us/" target="_blank">Sign up for a Merchant account</a>]]>
                         </comment>
                     </group>
-                    <group id="payu_gateway_discovery_miles_other" translate="label comment" sortOrder="8" extends="payment_all_payu_gateway/payu_gateway_discovery_miles" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <group id="payu_gateway_discovery_miles_other" translate="label comment" sortOrder="9" extends="payment_all_payu_gateway/payu_gateway_discovery_miles" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Discovery Miles</label>
                         <comment>
                             <![CDATA[<a href="https://southafrica.payu.com/" target="_blank">Sign up for a Merchant account</a>]]>
                         </comment>
                     </group>
-                    <group id="payu_gateway_ebucks_other" translate="label comment" sortOrder="9" extends="payment_all_payu_gateway/payu_gateway_ebucks" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <group id="payu_gateway_ebucks_other" translate="label comment" sortOrder="10" extends="payment_all_payu_gateway/payu_gateway_ebucks" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>eBucks</label>
                         <comment>
                             <![CDATA[<a href="https://southafrica.payu.com/" target="_blank">Sign up for a Merchant account</a>]]>
                         </comment>
                     </group>
-                    <group id="payu_gateway_eft_pro_other" translate="label comment" sortOrder="10" extends="payment_all_payu_gateway/payu_gateway_eft_pro" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <group id="payu_gateway_eft_pro_other" translate="label comment" sortOrder="11" extends="payment_all_payu_gateway/payu_gateway_eft_pro" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Pay by EFT</label>
                         <comment>
                             <![CDATA[<a href="https://corporate.payu.com/contact-us/" target="_blank">Sign up for a Merchant account</a>]]>
                         </comment>
                     </group>
-                    <group id="payu_gateway_mobicred_other" translate="label comment" sortOrder="11" extends="payment_all_payu_gateway/payu_gateway_mobicred" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <group id="payu_gateway_mobicred_other" translate="label comment" sortOrder="12" extends="payment_all_payu_gateway/payu_gateway_mobicred" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Mobicred</label>
                         <comment>
                             <![CDATA[<a href="https://corporate.payu.com/contact-us/" target="_blank">Sign up for a Merchant account</a>]]>
                         </comment>
                     </group>
-                    <group id="payu_gateway_payflex_other" translate="label comment" sortOrder="12" extends="payment_all_payu_gateway/payu_gateway_payflex" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <group id="payu_gateway_payflex_other" translate="label comment" sortOrder="13" extends="payment_all_payu_gateway/payu_gateway_payflex" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Payflex</label>
                         <comment>
                             <![CDATA[<a href="https://corporate.payu.com/contact-us/" target="_blank">Sign up for a Merchant account</a>]]>
                         </comment>
                     </group>
-                    <group id="payu_gateway_airtel_money_other" translate="label comment" sortOrder="13" extends="payment_all_payu_gateway/payu_gateway_airtel_money" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <group id="payu_gateway_airtel_money_other" translate="label comment" sortOrder="14" extends="payment_all_payu_gateway/payu_gateway_airtel_money" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Airtel Money</label>
                         <comment>
                             <![CDATA[<a href="https://corporate.payu.com/contact-us/" target="_blank">Sign up for a Merchant account</a>]]>
                         </comment>
                     </group>
-                    <group id="payu_gateway_capitec_pay_other" translate="label comment" sortOrder="14" extends="payment_all_payu_gateway/payu_gateway_capitec_pay" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <group id="payu_gateway_capitec_pay_other" translate="label comment" sortOrder="15" extends="payment_all_payu_gateway/payu_gateway_capitec_pay" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Capitec Pay</label>
                         <comment>
                             <![CDATA[<a href="https://corporate.payu.com/contact-us/" target="_blank">Sign up for a Merchant account</a>]]>
                         </comment>
                     </group>
-                    <group id="payu_gateway_equitel_other" translate="label comment" sortOrder="15" extends="payment_all_payu_gateway/payu_gateway_equitel" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <group id="payu_gateway_equitel_other" translate="label comment" sortOrder="16" extends="payment_all_payu_gateway/payu_gateway_equitel" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Equitel</label>
                         <comment>
                             <![CDATA[<a href="https://corporate.payu.com/contact-us/" target="_blank">Sign up for a Merchant account</a>]]>
                         </comment>
                     </group>
-                    <group id="payu_gateway_fasta_other" translate="label comment" sortOrder="16" extends="payment_all_payu_gateway/payu_gateway_fasta" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <group id="payu_gateway_fasta_other" translate="label comment" sortOrder="17" extends="payment_all_payu_gateway/payu_gateway_fasta" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Fasta</label>
                         <comment>
                             <![CDATA[<a href="https://corporate.payu.com/contact-us/" target="_blank">Sign up for a Merchant account</a>]]>
                         </comment>
                     </group>
-                    <group id="payu_gateway_more_tyme_other" translate="label comment" sortOrder="17" extends="payment_all_payu_gateway/payu_gateway_more_tyme" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <group id="payu_gateway_more_tyme_other" translate="label comment" sortOrder="18" extends="payment_all_payu_gateway/payu_gateway_more_tyme" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>MoreTyme</label>
                         <comment>
                             <![CDATA[<a href="https://corporate.payu.com/contact-us/" target="_blank">Sign up for a Merchant account</a>]]>
                         </comment>
                     </group>
-                    <group id="payu_gateway_ucount_other" translate="label comment" sortOrder="18" extends="payment_all_payu_gateway/payu_gateway_ucount" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <group id="payu_gateway_ucount_other" translate="label comment" sortOrder="19" extends="payment_all_payu_gateway/payu_gateway_ucount" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Ucount</label>
                         <comment>
                             <![CDATA[<a href="https://corporate.payu.com/contact-us/" target="_blank">Sign up for a Merchant account</a>]]>
                         </comment>
                     </group>
-                    <group id="payu_gateway_tigopesa_other" translate="label comment" sortOrder="19" extends="payment_all_payu_gateway/payu_gateway_tigopesa" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <group id="payu_gateway_tigopesa_other" translate="label comment" sortOrder="20" extends="payment_all_payu_gateway/payu_gateway_tigopesa" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Tigopesa</label>
                         <comment>
                             <![CDATA[<a href="https://corporate.payu.com/contact-us/" target="_blank">Sign up for a Merchant account</a>]]>
                         </comment>
                     </group>
-                    <group id="payu_gateway_rcs_other" translate="label comment" sortOrder="20" extends="payment_all_payu_gateway/payu_gateway_rcs" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <group id="payu_gateway_rcs_other" translate="label comment" sortOrder="21" extends="payment_all_payu_gateway/payu_gateway_rcs" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>RCS</label>
                         <comment>
                             <![CDATA[<a href="https://corporate.payu.com/contact-us/" target="_blank">Sign up for a Merchant account</a>]]>
                         </comment>
                     </group>
-                    <group id="payu_gateway_rcs_plc_other" translate="label comment" sortOrder="21" extends="payment_all_payu_gateway/payu_gateway_rcs_plc" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <group id="payu_gateway_rcs_plc_other" translate="label comment" sortOrder="22" extends="payment_all_payu_gateway/payu_gateway_rcs_plc" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>RCS PLC</label>
                         <comment>
                             <![CDATA[<a href="https://corporate.payu.com/contact-us/" target="_blank">Sign up for a Merchant account</a>]]>
                         </comment>
                     </group>
-                    <group id="payu_gateway_mpesa_other" translate="label comment" sortOrder="22" extends="payment_all_payu_gateway/payu_gateway_mpesa" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <group id="payu_gateway_mpesa_other" translate="label comment" sortOrder="23" extends="payment_all_payu_gateway/payu_gateway_mpesa" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Mpesa</label>
                         <comment>
                             <![CDATA[<a href="https://corporate.payu.com/contact-us/" target="_blank">Sign up for a Merchant account</a>]]>
                         </comment>
                     </group>
-                    <group id="payu_gateway_mtn_mobile_other" translate="label comment" sortOrder="23" extends="payment_all_payu_gateway/payu_gateway_mtn_mobile" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <group id="payu_gateway_mtn_mobile_other" translate="label comment" sortOrder="24" extends="payment_all_payu_gateway/payu_gateway_mtn_mobile" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>MTN Mobile</label>
                         <comment>
                             <![CDATA[<a href="https://corporate.payu.com/contact-us/" target="_blank">Sign up for a Merchant account</a>]]>
                         </comment>
                     </group>
-                    <group id="payu_gateway_mobile_banking_other" translate="label comment" sortOrder="24" extends="payment_all_payu_gateway/payu_gateway_mobile_banking" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <group id="payu_gateway_mobile_banking_other" translate="label comment" sortOrder="25" extends="payment_all_payu_gateway/payu_gateway_mobile_banking" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Mobile Banking</label>
                         <comment>
                             <![CDATA[<a href="https://corporate.payu.com/contact-us/" target="_blank">Sign up for a Merchant account</a>]]>

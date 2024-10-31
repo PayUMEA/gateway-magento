@@ -106,10 +106,10 @@ class CustomerDataBuilder implements BuilderInterface
             return $customerDetail;
         }
 
-        $saIdNumber = $customAttribute->getValue();
+        $idNumber = $customAttribute->getValue();
 
-        if ($saIdNumber) {
-            $customerDetail->setRegionalId($saIdNumber);
+        if ($idNumber) {
+            $customerDetail->setRegionalId($idNumber);
         }
 
         return $customerDetail;

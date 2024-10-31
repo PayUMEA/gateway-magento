@@ -11,10 +11,13 @@ namespace PayU\Gateway\Model\Payment;
 use Magento\Framework\Convert\ConvertArray;
 use Magento\Framework\DataObject;
 use Magento\Payment\Model\InfoInterface;
+use Magento\Sales\Model\Order;
 use PayU\Gateway\Model\Constants\TransactionState;
+use PayU\Gateway\Model\Payment\Method\Masterpass;
+use PayU\Gateway\Model\Payment\Method\Payflex;
 
 /**
- * class ReturnHandler
+ * class TransferObject
  * @package PayU\Gateway\Model\Payment
  */
 class TransferObject extends DataObject
@@ -33,7 +36,7 @@ class TransferObject extends DataObject
      */
     public function isPaymentComplete(): bool
     {
-        return $this->_getData('successful')
+        return $this->_getData('txn')->successful
             && $this->getTransactionState() === TransactionState::SUCCESSFUL->value;
     }
 
@@ -42,7 +45,7 @@ class TransferObject extends DataObject
      */
     public function isAwaitingPayment(): bool
     {
-        return $this->_getData('successful')
+        return $this->_getData('txn')->successful
             && $this->getTransactionState() === TransactionState::AWAITING_PAYMENT->value;
     }
 
@@ -51,7 +54,7 @@ class TransferObject extends DataObject
      */
     public function isPaymentProcessing(): bool
     {
-        return $this->_getData('successful')
+        return $this->_getData('txn')->successful
             && $this->getTransactionState() === TransactionState::PROCESSING->value;
     }
 
@@ -60,8 +63,20 @@ class TransferObject extends DataObject
      */
     public function isPaymentNew(): bool
     {
-        return $this->_getData('successful')
+        return $this->_getData('txn')->successful
             && $this->getTransactionState() === TransactionState::NEW->value;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPaymentFailed(): bool
+    {
+        return ($this->_getData('txn')->successful === true || $this->_getData('txn')->successful === false)
+            && in_array(
+                $this->getTransactionState(),
+                [TransactionState::FAILED, TransactionState::EXPIRED, TransactionState::TIMEOUT]
+            );
     }
 
     /**
@@ -69,7 +84,7 @@ class TransferObject extends DataObject
      */
     public function getTranxId(): string
     {
-        return $this->getData('payUReference');
+        return $this->_getData('txn')->payUReference;
     }
 
     /**
@@ -85,7 +100,7 @@ class TransferObject extends DataObject
      */
     public function getResultCode(): string
     {
-        return $this->getData('resultCode');
+        return $this->_getData('txn')->resultCode;
     }
 
     /**
@@ -93,7 +108,20 @@ class TransferObject extends DataObject
      */
     public function getResultMessage(): string
     {
-        return $this->getData('resultMessage');
+        return $this->_getData('txn')->resultMessage;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasPaymentMethod(): bool
+    {
+        return isset($this->_getData('txn')->paymentMethodsUsed);
+    }
+
+    public function getPaymentMethods()
+    {
+        return $this->hasPaymentMethod() ? $this->_getData('txn')->paymentMethodsUsed : null;
     }
 
     /**
@@ -101,50 +129,102 @@ class TransferObject extends DataObject
      */
     public function hasCreditCard(): bool
     {
-        return $this->getData('paymentMethodsUsed') !== null
-            && isset($this->getData('paymentMethodsUsed')['cardNumber']);
+        return $this->isPaymentMethodCc();
     }
 
     /**
-     * @return array
+     * @return bool
      */
-    public function getCreditCardData(): array
+    public function isPaymentMethodCc(): bool
     {
-        return $this->hasCreditCard() ? $this->getData('paymentMethodsUsed') : [];
+        return $this->hasPaymentMethod() && $this->checkPaymentMethodCc();
+    }
+
+    public function checkPaymentMethodCc(): bool
+    {
+        $paymentMethods = $this->getPaymentMethods();
+
+        if (is_array($paymentMethods)) {
+            foreach ($paymentMethods as $method) {
+                if (property_exists($method, 'gatewayReference')) {
+                    return true;
+                }
+            }
+        } else {
+            if (property_exists($paymentMethods, 'gatewayReference')) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
      * @return string
      */
-    public function getCreditCardNumber(): string
+    public function getGatewayReference(): string
     {
-        return $this->hasCreditCard() ? $this->getData('paymentMethodsUsed')['cardNumber'] : '';
-    }
+        $gatewayReference = 'N/A';
+        $paymentMethods = $this->getPaymentMethods();
 
-    /**
-     * @return bool
-     */
-    public function hasEft(): bool
-    {
-        return $this->getData('paymentMethodsUsed') !== null
-            && isset($this->getData('paymentMethodsUsed')['Eft']);
+        if (is_array($paymentMethods)) {
+            foreach ($paymentMethods as $method) {
+                if (property_exists($method, 'gatewayReference')) {
+                    $gatewayReference = $method->gatewayReference;
+                }
+            }
+        } else {
+            if (property_exists($paymentMethods, 'gatewayReference')) {
+                $gatewayReference = $paymentMethods->gatewayReference;
+            }
+        }
+
+        return $gatewayReference;
     }
 
     /**
      * @return array
      */
-    public function getEftData(): array
+    public function getCardData(): array
     {
-        return $this->hasEft() ? $this->getData('paymentMethodsUsed')['Eft'] : [];
+        $cardData = [];
+        $hasCc = $this->isPaymentMethodCc();
+
+        if ($hasCc) {
+            $paymentMethods = $this->getPaymentMethods();
+
+            if (is_array($paymentMethods)) {
+                foreach ($paymentMethods as $method) {
+                    if (property_exists($method, 'cardNumber')) {
+                        $cardData['cardNumber'] = $method->cardNumber;
+                        $cardData['owner'] = $method->nameOnCard;
+                        $cardData['txnId'] = $method->gatewayReference;
+                        $cardData['expiryYear'] = substr($method->cardExpiry, -4);
+                        $cardData['type'] = $method->information;
+                    }
+                }
+            } else {
+                if (property_exists($paymentMethods, 'cardNumber')) {
+                    $cardData['cardNumber'] = $paymentMethods->cardNumber;
+                    $cardData['owner'] = $paymentMethods->nameOnCard;
+                    $cardData['txnId'] = $paymentMethods->gatewayReference;
+                    $cardData['expiryYear'] = substr($paymentMethods->cardExpiry, -4);
+                    $cardData['type'] = $paymentMethods->information;
+                }
+            }
+        }
+
+        return $cardData;
     }
 
     /**
-     * @return bool
+     * @return float
      */
-    public function hasGatewayReference(): bool
+    public function getTotalDue(): float
     {
-        return $this->getData('paymentMethodsUsed') !== null
-            && isset($this->getData('paymentMethodsUsed')['gatewayReference']);
+        $basket = $this->getBasket();
+
+        return $basket->amountInCents / 100 ?? 0;
     }
 
     /**
@@ -152,13 +232,38 @@ class TransferObject extends DataObject
      */
     public function getTotalCaptured(): float
     {
-        $paymentMethod = $this->getData('paymentMethodsUsed');
+        $total = 0.0;
 
-        if (!$paymentMethod) {
-            $paymentMethod = $this->getData('basket');
+        if ($this->isPaymentNew()) {
+            return $total;
         }
 
-        return (float)($paymentMethod['amountInCents'] / 100);
+        $paymentMethods = $this->getPaymentMethods();
+
+        if (!$paymentMethods) {
+            return $total;
+        }
+
+        if (
+            is_a($paymentMethods, \stdClass::class, true) &&
+            !property_exists($paymentMethods, 'amountInCents')
+        ) {
+            return $total;
+        }
+
+        if (
+            is_a($paymentMethods, \stdClass::class, true) &&
+            property_exists($paymentMethods, 'amountInCents')
+        ) {
+            return ($paymentMethods->amountInCents / 100);
+        }
+
+        foreach ($paymentMethods as $paymentMethod) {
+            $total += $paymentMethod->amountInCents;
+        }
+
+        // Prevent division by zero
+        return (max($total, 1) / 100);
     }
 
     /**
@@ -166,7 +271,7 @@ class TransferObject extends DataObject
      */
     public function getDisplayMessage(): string
     {
-        return $this->getData('displayMessage');
+        return $this->getData('txn')->displayMessage;
     }
 
     /**
@@ -174,7 +279,7 @@ class TransferObject extends DataObject
      */
     public function isFraudDetected(): bool
     {
-        return $this->getData('fraud') !== null && $this->getData('fraud')['resultCode'];
+        return isset($this->getData('txn')->fraud) && $this->getData('txn')->fraud->resultCode;
     }
 
     /**
@@ -182,7 +287,7 @@ class TransferObject extends DataObject
      */
     public function getMerchantReference(): string
     {
-        return $this->getData('merchantReference');
+        return $this->getData('txn')->merchantReference;
     }
 
     /**
@@ -190,7 +295,7 @@ class TransferObject extends DataObject
      */
     public function getTransactionState(): string
     {
-        return $this->getData('transactionState');
+        return $this->getData('txn')->transactionState;
     }
 
     /**
@@ -198,7 +303,7 @@ class TransferObject extends DataObject
      */
     public function getTransactionType(): string
     {
-        return $this->getData('transactionType');
+        return $this->getData('txn')->transactionType;
     }
 
     /**
@@ -206,7 +311,7 @@ class TransferObject extends DataObject
      */
     public function getPointOfFailure(): mixed
     {
-        return $this->getData('pointOfFailure');
+        return $this->getData('txn')->pointOfFailure;
     }
 
     /**
@@ -214,7 +319,7 @@ class TransferObject extends DataObject
      */
     public function getBasket(): mixed
     {
-        return $this->getData('basket');
+        return $this->getData('txn')->basket;
     }
 
     /**
@@ -253,6 +358,34 @@ class TransferObject extends DataObject
      */
     public function getPaymentData(): array
     {
-        return ConvertArray::toFlatArray($this->toArray());
+        return ConvertArray::toFlatArray(json_decode(json_encode($this->toArray()['txn']), true));
+    }
+
+    /**
+     * Is Canceled Payflex transaction
+     *
+     * @param Order $order
+     * @return bool
+     */
+    public function isCancelPayflex(Order $order)
+    {
+        $payment = $order->getPayment();
+        $method = $payment->getMethodInstance();
+
+        return $method->getCode() === Payflex::CODE && $this->isPaymentProcessing();
+    }
+
+    /**
+     * Is Canceled Payflex transaction
+     *
+     * @param Order $order
+     * @return bool
+     */
+    public function isMasterpassTimeout(Order $order)
+    {
+        $payment = $order->getPayment();
+        $method = $payment->getMethodInstance();
+
+        return $method->getCode() === Masterpass::CODE && $this->isPaymentProcessing();
     }
 }

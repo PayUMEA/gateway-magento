@@ -35,5 +35,6 @@ class DenyPaymentOperation extends AbstractOperation
         $this->transactionOperation->update($order, $payment, $transactionInfo);
         $this->addStatusCommentOnUpdate($payment, $order, $transactionInfo);
         $order->cancel();
+        $this->orderRepository->save($order);
     }
 }

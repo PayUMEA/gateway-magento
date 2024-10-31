@@ -13,12 +13,12 @@ use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\Result\Redirect;
-use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Phrase;
 use Magento\Sales\Model\Order;
 use PayU\Gateway\Controller\AbstractAction;
-use PayU\Gateway\Model\Payment\Method\AbstractMethod;
+use PayU\Gateway\Model\Constants\RedirectPage;
+use PayU\Gateway\Model\Constants\TransactionState;
 
 /**
  * class Response
@@ -29,106 +29,163 @@ class Response extends AbstractAction implements HttpGetActionInterface, HttpPos
     /**
      * Retrieve transaction information and validates payment
      *
-     * @return ResponseInterface|Redirect
+     * @return ResponseInterface|Redirect|ResultInterface
      */
     public function execute()
     {
-        $bypassPayURedirect = (bool)$this->getRedirectConfigData('bypass_payu_redirect');
-
         $processId = uniqid();
-        $processString = self::class;
+        $processClass = self::class;
+        $alreadyProcessed = false;
 
-        $this->getSession()->setPayUProcessId($processId);
-        $this->getSession()->setPayUProcessString($processString);
+        $orderId = $this->getCheckoutSession()->getLastRealOrderId() ??
+            $this->getCheckoutSession()->getData('last_real_order_id');
 
-        $this->logger->info("($processId) START $processString");
-
-        /** @var Redirect $resultRedirect */
-        $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
-
-        $message = __('');
+        if (!$orderId) {
+            return $this->returnToCart();
+        }
 
         try {
-            $payUReference = $this->initPayUReference();
+            $payUReference = $this->getPayUReference();
 
-            // if there is an order - load it
-            $incrementId = $this->getCheckoutSession()->getLastRealOrderId()
-                ?? $this->getCheckoutSession()->getData('last_real_order_id');
+            $canProceed = $this->responseProcessor->canProceed($orderId, $processId, $processClass);
 
-            /** @var Order $order */
-            $order = $incrementId ? $this->orderFactory->create()->loadByIncrementId($incrementId) : false;
+            if (!$canProceed) {
+                $page = $this->responseProcessor->redirectTo($orderId, $payUReference);
+
+                switch ($page) {
+                    case RedirectPage::SUCCESS_PAGE->value:
+                        return $this->sendSuccessPage();
+                    case RedirectPage:: FAILED_PAGE->value:
+                        return $this->sendFailedPage();
+                    case RedirectPage:: RETURN_CART->value:
+                        $this->messageManager->addErrorMessage('User canceled transaction');
+                        return $this->returnToCart();
+                    default:
+                        return $this->sendPendingPage();
+                }
+            }
+
+            $this->logger->debug(['info' => "START ($orderId) ($processId) $processClass"]);
+
+            $order = $this->orderFactory->create()->loadByIncrementId($orderId);
+
+            if (!$order) {
+                return $this->sendFailedPage('Order not found');
+            }
+
+            $orderState = $order->getState();
+            $orderStatus = $order->getStatus();
+
+            // If the order is already a success
+            if (
+                $order->hasInvoices() ||
+                in_array(
+                    $orderState,
+                    [
+                        Order::STATE_PROCESSING,
+                        Order::STATE_COMPLETE
+                    ]
+                ) ||
+                in_array(
+                    $orderStatus,
+                    [
+                        Order::STATE_PROCESSING,
+                        Order::STATE_COMPLETE
+                    ]
+                )
+            ) {
+                $alreadyProcessed = true;
+            }
+
+            $bypassPayURedirect = (bool)$this->getRedirectConfigData('enable');
 
             if ($bypassPayURedirect) {
-                $this->logger->info(
-                    "($processId) ($incrementId) PayU Redirect Disabled, checking possible existing IPN status"
+                $this->logger->debug(
+                    ['info' => "($orderId) ($processId) $processClass: PayU redirect disabled, checking existing IPN status"]
                 );
 
-                $orderState = $order->getState();
-
                 // If the order is already a success
-                if (in_array($orderState, [
-                    Order::STATE_PROCESSING,
-                    Order::STATE_COMPLETE
-                ])) {
-                    $this->logger->info(
-                        "($processId) ($incrementId) PayU $processString ALREADY SUCCESS (from IPN) " .
-                        "-> Redirect User"
-                    );
+                if ($alreadyProcessed) {
+                    $this->logger->debug([
+                        'info' => "($orderId) ($processId)  $processClass:  already successful"
+                    ]);
+                    $this->responseProcessor->updateTransactionLog($orderId, $processId);
 
-                    return $this->sendSuccessPage($order);
+                    return $this->sendSuccessPage();
                 }
 
                 // Or still pending
                 if (in_array(
                     $orderState,
                     [
-                        Order::STATE_NEW,
-                        AbstractMethod::STATE_PENDING,
-                        Order::STATE_PENDING_PAYMENT
+                        Order::STATE_PENDING_PAYMENT,
+                        TransactionState::MAGENTO_ORDER_STATE_PENDING
                     ]
                 )) {
-                    $this->logger->info("($processId) ($incrementId) PayU $processString Order status pending");
+                    $this->logger->debug(['info' => " ($orderId) ($processId) $processClass order status pending"]);
+                    $this->responseProcessor->updateTransactionLog($orderId, $processId);
 
-                    return $this->sendPendingPage($order);
+                    return $this->sendPendingPage();
                 }
 
-                // Else there is a failure of some sort
-                $this->messageManager->addExceptionMessage(
-                    new LocalizedException(new Phrase('Unable to validate order')),
-                    __('Unable to validate order')
-                );
-                $this->returnCustomerQuote(true, __($message));
-
-                return $resultRedirect->setPath('checkout/cart');
-            } else {
-                $this->logger->info(
-                    "($processId) ($incrementId) PayU Redirect Enabled, processing redirect response."
-                );
+                return $this->sendFailedPage();
             }
 
-            if ($order->getState() === Order::STATE_PROCESSING) {
-                $this->logger->info(
-                    "($processId) ($incrementId) PayU $processString ALREADY SUCCESS (from IPN) -> Redirect User"
-                );
+            $this->logger->debug(
+                ['info' => "($orderId) ($processId) $processClass: PayU redirect enabled, processing redirect response."]
+            );
 
-                return $this->sendSuccessPage($order);
+            if ($alreadyProcessed) {
+                $this->logger->debug([
+                    'info' => "($orderId) ($processId) $processClass: already successful"
+                ]);
+                $this->responseProcessor->updateTransactionLog($orderId, $processId);
+
+                return $this->sendSuccessPage();
             }
 
             if ($payUReference) {
-                list($success, $message) = $this->responseProcessor->response($order, $payUReference);
+                $successful = $this->responseProcessor->return(
+                    $order,
+                    $payUReference,
+                    $processId,
+                    $processClass
+                );
 
-                if ($success) {
-                    return $this->sendSuccessPage($order);
+                $this->responseProcessor->updateTransactionLog($orderId, $processId);
+
+                if ($successful[0]) {
+                    return $this->sendSuccessPage();
                 }
 
-                $this->messageManager->addErrorMessage(__($message));
+                $message = $successful[1];
+
+                if ($this->responseProcessor->isCancelPayflex($order) || $this->responseProcessor->isMasterpassTimeout($order)) {
+                    $this->messageManager->addErrorMessage($message);
+
+                    return $this->returnToCart();
+                }
+
+                if ($this->responseProcessor->isPaymentPending() || $this->responseProcessor->isPaymentProcessing()) {
+                    $this->messageManager->addNoticeMessage($message);
+
+                    return $this->sendPendingPage();
+                }
+
+                if ($this->responseProcessor->isPaymentFailed()) {
+                    return $this->sendFailedPage($message);
+                }
             }
-        } catch (LocalizedException|Exception $e) {
-            $this->messageManager->addExceptionMessage($e, __('Payment transaction validation failed.'));
+        } catch (LocalizedException|Exception $exception) {
+            $this->logger->debug([
+                'error' => "($processId) ($orderId) $processClass" . $exception->getMessage()
+            ]);
+            $this->messageManager->addExceptionMessage($exception, __($exception->getMessage()));
+            $this->clearSessionData();
         }
 
-        $this->returnCustomerQuote(true, __($message));
+        $this->responseProcessor->updateTransactionLog($orderId, $processId);
 
-        return $resultRedirect->setPath('checkout/cart');
+        return $this->returnToCart();
     }
 }

@@ -10,6 +10,7 @@ namespace PayU\Gateway\Model\Payment;
 
 use Magento\Framework\DataObject;
 use Magento\Payment\Model\InfoInterface;
+use Magento\Sales\Api\OrderPaymentRepositoryInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface;
@@ -35,6 +36,7 @@ abstract class AbstractOperation
      * @param LoggerInterface $logger
      * @param BuilderInterface $transactionBuilder
      * @param OrderRepositoryInterface $orderRepository
+     * @param OrderPaymentRepositoryInterface $paymentRepository,
      */
     public function __construct(
         protected readonly Validator $validator,
@@ -44,7 +46,8 @@ abstract class AbstractOperation
         protected readonly ProcessFraudOperation $fraudOperation,
         protected readonly LoggerInterface $logger,
         protected readonly BuilderInterface $transactionBuilder,
-        protected OrderRepositoryInterface $orderRepository
+        protected OrderRepositoryInterface $orderRepository,
+        protected OrderPaymentRepositoryInterface $paymentRepository,
     ) {
     }
 
@@ -98,13 +101,17 @@ abstract class AbstractOperation
             ->setParentTransactionId(null)
             ->setIsTransactionClosed(true)
             ->setAdditionalInformation(
-                [Order\Payment\Transaction::RAW_DETAILS => $transactionInfo->toArray()]
+                [Order\Payment\Transaction::RAW_DETAILS => $transactionInfo->getPaymentData()]
             )
             ->setTransactionAdditionalInfo(TransactionState::REAL_TRANSACTION_ID_KEY->value, $transactionInfo->getTranxId());
 
         if ($transactionInfo->hasCreditCard()) {
-            $payment->setGatewayReference($transactionInfo->getGatewayReference())
-                ->setCcLast4($payment->encrypt(substr($transactionInfo->getCreditCardNumber(), -4)));
+            $cardData = $transactionInfo->getCardData();
+            $payment->setCcTransId($cardData['txnId'])
+                ->setCcOwner($cardData['owner'])
+                ->setCcType($cardData['type'])
+                ->setCcExpYear($cardData['expiryYear'])
+                ->setCcNumberEnc($payment->encrypt($cardData['cardNumber']));
         }
 
         if ($transactionInfo->getTransactionState() == TransactionState::AWAITING_PAYMENT->value) {
@@ -114,5 +121,7 @@ abstract class AbstractOperation
         if ($transactionInfo->isFraudDetected()) {
             $payment->setIsFraudDetected(true);
         }
+
+        $this->paymentRepository->save($payment);
     }
 }

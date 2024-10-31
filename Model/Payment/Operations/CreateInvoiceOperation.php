@@ -57,19 +57,16 @@ class CreateInvoiceOperation
      * @return void
      * @throws LocalizedException
      */
-    public function invoice(OrderInterface $order): void
+    public function invoice(OrderInterface $order, string $processId, string $processClass): void
     {
         $id = $order->getIncrementId();
-
-        $processId = $this->session->getPayUProcessId(uniqid());
-        $processString = $this->session->getPayUProcessString(self::class);
 
         try {
             $order->setCanSendNewEmailFlag(true);
             $this->orderSender->send($order);
 
             $this->logger->debug(
-                [" ($processId) ($id) PayU $processString: can_invoice (initial check): " . $order->canInvoice()]
+                ['info' => "($id) ($processId) ($processClass) : can_invoice (initial check): " . $order->canInvoice()]
             );
 
             if ($order->canInvoice()) {
@@ -78,18 +75,18 @@ class CreateInvoiceOperation
                  * Force reload order state to check status just before update,
                  * discard invoice if status changed since start of process
                  */
-                $oldOrder = $this->orderFactory->create()->loadByIncrementId($order->getIncrementId());
+                $dupOrder = $this->orderFactory->create()->loadByIncrementId($order->getIncrementId());
                 $this->logger->debug(
-                    [" ($processId) ($id) PayU $processString: can_invoice (double check): " . $order->canInvoice()]
+                    ['info' => "($id) ($processId) ($processClass) : can_invoice (double check): " . $order->canInvoice()]
                 );
 
-                if (!$oldOrder->canInvoice()) {
+                if (!$dupOrder->canInvoice()) {
                     // Just skip to else clause
                     goto cannot_invoice_marker;
                 }
 
                 $status = $this->orderConfig->getStateDefaultStatus('processing');
-                $order->setState("processing")->setStatus($status);
+                $order->setState('processing')->setStatus($status);
 
                 $invoice = $this->invoiceService->prepareInvoice($order);
                 $invoice->setRequestedCaptureCase(Invoice::CAPTURE_OFFLINE);
@@ -102,7 +99,7 @@ class CreateInvoiceOperation
                 );
                 $transactionService->save();
 
-                $this->logger->debug([" ($processId) ($id) PayU $processString: INVOICED"]);
+                $this->logger->debug(['info' => "INVOICED => ($id) ($processId) ($processClass)"]);
 
                 $this->invoiceSender->send($invoice);
 
@@ -117,7 +114,7 @@ class CreateInvoiceOperation
                  * 2020/10/23
                  */
                 cannot_invoice_marker:
-                $this->logger->debug([" ($processId) ($id) PayU $processString: Already invoiced, skip"]);
+                $this->logger->debug(['info' => "($id) ($processId) ($processClass) : already invoiced, skipped."]);
             }
         } catch (Exception $e) {
             throw new LocalizedException(__("Error encountered while capturing your order"));
