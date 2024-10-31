@@ -25,7 +25,7 @@
                     <group id="payu_gateway_txn_status" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Transaction Status Checker</label>
                         <field id="enable" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                            <label>Disable</label>
+                            <label>Enable</label>
                             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                             <config_path>payu_gateway/txn_status/enable</config_path>
                         </field>
@@ -56,8 +56,8 @@
                             <config_path>payu_gateway/txn_lock/keep_log</config_path>
                         </field>
                     </group>
-                    <group id="payu_gateway_redirect_config" translate="label" type="text" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Redirect Settings</label>
+                    <group id="payu_gateway_redirect_config" translate="label" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Response Redirect Processing</label>
                         <field id="bypass_payu_redirect" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                             <label>Disable</label>
                             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

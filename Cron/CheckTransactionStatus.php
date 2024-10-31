@@ -75,46 +75,56 @@ class CheckTransactionStatus
     }
 
     /**
-     * @param ResponseInterface $response
      * @param OrderInterface $order
      * @param InfoInterface $payment
      * @return void
      * @throws LocalizedException
      */
-    public function processReturn(ResponseInterface $response, OrderInterface $order, InfoInterface $payment): void
+    public function processReturn(OrderInterface $order, InfoInterface $payment): void
     {
-        $data = $response->toArray();
-        $transactionNotes = "<strong>-----PAYU GATEWAY TXN STATUS CRON: STATUS CHECKED ---</strong><br />";
+        $transactionAdditionalInfo = $payment->getTransactionAdditionalInfo();
+        $transactionInfo = $transactionAdditionalInfo['transactionInfo'] ?? null;
 
-        if (!isset($data['resultCode']) || (in_array($data['resultCode'], ['POO5', 'EFTPRO_003', '999', '305']))) {
-            $this->logger->info(
-                "PAYU GATEWAY TXN STATUS CRON: ($this->processId) Result code - {$data['resultCode']}. Skip order processing"
-            );
-            $this->logger->info("PayU txn data: " . PHP_EOL . json_encode($data));
+        if (!$transactionInfo) {
+            return;
         }
 
-        if (
-            !isset($data["transactionState"])
-            || (
-                !in_array(
-                    $data['transactionState'],
-                    ['PROCESSING', 'SUCCESSFUL', 'AWAITING_PAYMENT', 'FAILED', 'TIMEOUT', 'EXPIRED']
-                )
-            )
-        ) {
-            $this->logger->info("PAYU GATEWAY TXN STATUS CRON: ($this->processId) Invalid  transaction state");
-            $this->logger->info(json_encode($data));
+        $transactionNotes = "<strong>-----PAYU GATEWAY TXN STATUS CRON: STATUS CHECKED ---</strong><br />";
+        $resultCode = $transactionInfo->getResultCode();
+
+        if (in_array($resultCode, ['POO5', 'EFTPRO_003', '999', '305'])) {
+            $this->logger->info(
+                "PAYU GATEWAY TXN STATUS CRON: ($this->processId) Result code - $resultCode. Skip order processing"
+            );
 
             return;
         }
 
-        $transactionNotes .= "PayU Reference: " . $data["payUReference"] . "<br />";
-        $transactionNotes .= "PayU Transaction state: " . $data["transactionState"] . "<br /><br />";
+        $transactionState = $transactionInfo->getTransactionState();
 
-        switch ($data['transactionState']) {
+        if (!in_array(
+            $transactionState,
+            ['PROCESSING', 'SUCCESSFUL', 'AWAITING_PAYMENT', 'FAILED', 'TIMEOUT', 'EXPIRED']
+            )
+        ) {
+            $this->logger->info(
+                "PAYU GATEWAY TXN STATUS CRON: ($this->processId) Invalid  transaction state: $transactionState"
+            );
+
+            return;
+        }
+
+        $transactionNotes .= "PayU Reference: " . $transactionInfo->getTranxId() . "<br />";
+        $transactionNotes .= "PayU Transaction state: " . $transactionState . "<br /><br />";
+
+        switch ($transactionState) {
             case 'SUCCESSFUL':
                 $this->invoiceOperation->invoice($order, $this->processId, $this->processClass);
-                $this->transactionUpdateOperation->update($order, $payment, new TransferObject($data));
+                $this->transactionUpdateOperation->update(
+                    $order,
+                    $payment,
+                    $transactionInfo
+                );
                 break;
             case 'FAILED':
             case 'TIMEOUT':
@@ -240,17 +250,20 @@ class CheckTransactionStatus
                             "PAYU GATEWAY TXN STATUS CRON: ($processId) already invoiced, skip processing. order id = "
                             . $order->getIncrementId()
                         );
+                        $order->setState('processing');
+                        $order->setStatus('processing');
+                        $this->orderRepository->save($order);
 
                         continue;
                     }
 
                     try {
-                        $payUAdapter = $this->apiFactory->create($storeId, $code);
-                        $result = $payUAdapter->search($payUReference);
-                        $this->processReturn($result, $order, $payment);
+                        $method = $payment->getMethodInstance();
+                        $method->fetchTransactionInfo($payment, $payUReference);
+
+                        $this->processReturn($order, $payment);
                     } catch (Exception $exception) {
                         $this->logger->info('PAYU GATEWAY TXN STATUS CRON: ' . $exception->getMessage());
-                        $this->logger->info($result->toJSON());
                     }
 
                     $order->setUpdatedAt(null);
@@ -273,8 +286,8 @@ class CheckTransactionStatus
 
         $now = time();
 
-        $minutesCreated = (int) ceil(($now - $createdAt) / 60);
-        $minutesUpdated = $minutesCreated - (int) ceil(($now - $updatedAt) / 60);
+        $minutesSinceCreated = (int) ceil(($now - $createdAt) / 60);
+        $minutesSinceUpdated = $minutesSinceCreated - (int) ceil(($now - $updatedAt) / 60);
 
         $cronDelay = $this->getCronConfigData('cron_delay');
 
@@ -283,14 +296,14 @@ class CheckTransactionStatus
         }
 
         $this->logger->info(
-            "PAYU GATEWAY TXN STATUS CRON: ($this->processId) Minutes created: $minutesCreated - Delay: $cronDelay mins"
+            "PAYU GATEWAY TXN STATUS CRON: ($this->processId) Minutes created: $minutesSinceCreated - Delay: $cronDelay mins"
         );
         $this->logger->info(
-            "PAYU GATEWAY TXN STATUS CRON: ($this->processId) Minutes updated: $minutesUpdated - Delay: $cronDelay mins"
+            "PAYU GATEWAY TXN STATUS CRON: ($this->processId) Minutes updated: $minutesSinceUpdated - Delay: $cronDelay mins"
         );
 
-        $minutesCreated = $minutesCreated - $cronDelay;
-        $minutesUpdated = $minutesUpdated - $cronDelay;
+        $minutesSinceCreated = $minutesSinceCreated - $cronDelay;
+        $minutesSinceUpdated = $minutesSinceUpdated - $cronDelay;
 
         $ranges = [];
         $ranges[] = [1, 4];
@@ -311,14 +324,14 @@ class CheckTransactionStatus
 
         foreach ($ranges as $v) {
             if ((
-                ($v[0] <= $minutesCreated) && ($minutesCreated <= $v[1])
-            )  && (!(($v[0]  <= $minutesUpdated) && ($minutesUpdated <= $v[1])))
+                ($v[0] <= $minutesSinceCreated) && ($minutesSinceCreated <= $v[1])
+            )  && (!(($v[0] <= $minutesSinceUpdated) && ($minutesSinceUpdated <= $v[1])))
             ) {
                 return true;
             }
         }
 
-        if (((744 <= $minutesCreated))  && (!((744<= $minutesUpdated)))) {
+        if (((744 <= $minutesSinceCreated))  && (!((744 <= $minutesSinceUpdated)))) {
             return true;
         }
 

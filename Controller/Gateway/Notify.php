@@ -31,19 +31,16 @@ class Notify extends AbstractAction implements HttpPostActionInterface, CsrfAwar
     public function execute(): Json
     {
         $processId = uniqid();
-        $processString = self::class;
-
-        $this->getSession()->setPayUProcessId($processId);
-        $this->getSession()->setPayUProcessString($processString);
-
-        $this->logger->info("($processId) START $processString");
+        $processClass = self::class;
 
         $postData = file_get_contents("php://input");
         $sxe = simplexml_load_string($postData);
 
-        $resultJson = $this->resultFactory->create(ResultFactory::TYPE_JSON)->setJsonData('{}');
+        $resultJson = $this->resultFactory
+            ->create(ResultFactory::TYPE_JSON)
+            ->setJsonData('{}');
 
-        if (empty($sxe)) {
+        if (!$sxe) {
             $this->respond('500', 'Instant Payment Notification data is empty');
 
             return $resultJson;
@@ -57,14 +54,37 @@ class Notify extends AbstractAction implements HttpPostActionInterface, CsrfAwar
             return $resultJson;
         }
 
-        $this->respond();
+        $incrementId = $ipnData->MerchantReference;
+        $canProceed = $this->responseProcessor->canProceed(
+            $incrementId,
+            $processId,
+            $processClass
+        );
 
-        $incrementId = $ipnData['MerchantReference'];
-        $order = $incrementId ? $this->orderFactory->create()->loadByIncrementId($incrementId) : false;
+        if (!$canProceed) {
+            $this->respond('200', 'OK');
 
-        if ($order) {
-            $this->responseProcessor->notify($order, $ipnData);
+            return $resultJson;
         }
+
+        $this->logger->debug([
+            'info' => "START processing ($incrementId) => ($processId) ($processClass)"
+        ]);
+
+        $order = $incrementId ? $this->orderFactory->create()->loadByIncrementIdAndStoreId(
+            $incrementId,
+            $this->storeManager->getStore()->getId()
+        ) : false;
+
+        if (!$order || ((int)$order->getId() <= 0)) {
+            $this->respond('500', 'Failed to load order.');
+
+            return $resultJson;
+        }
+
+        $this->respond('200', 'OK');
+        $this->responseProcessor->notify($order, $ipnData, $processId, $processClass);
+        $this->responseProcessor->updateTransactionLog($incrementId, $processId);
 
         return $resultJson;
     }

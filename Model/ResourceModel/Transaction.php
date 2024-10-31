@@ -8,7 +8,6 @@ namespace PayU\Gateway\Model\ResourceModel;
 
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use Magento\Framework\Model\ResourceModel\Db\Context;
-use Magento\Framework\Stdlib\DateTime\DateTime;
 
 /**
  * Resource model

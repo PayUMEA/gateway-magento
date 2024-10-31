@@ -9,13 +9,10 @@ declare(strict_types=1);
 namespace PayU\Gateway\Model\Payment\Operations;
 
 use Exception;
-use Magento\Framework\DataObject;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Model\InfoInterface;
-use Magento\Sales\Model\Order;
-use PayU\Gateway\Model\Constants\TransactionType;
+use Magento\Sales\Api\Data\OrderPaymentInterface;
 use PayU\Gateway\Model\Payment\AbstractOperation;
-use PayU\Gateway\Model\Payment\TransferObject;
 
 /**
  * class AcceptPaymentOperation
@@ -25,16 +22,18 @@ class AcceptPaymentOperation extends AbstractOperation
 {
     /**
      * @param InfoInterface $payment
+     * @param string $processId
+     * @param string $processClass
      * @return void
      * @throws LocalizedException
      */
-    public function accept(InfoInterface $payment): void
+    public function accept(OrderPaymentInterface $payment): void
     {
         $isError = false;
-        $transactionAdditionalInfo = $payment->getTransactionAdditionalInfo();
+        $transactionInfo = $payment->getTransactionAdditionalInfo()['transactionInfo'];
 
-        /** @var TransferObject $transactionInfo */
-        $transactionInfo = $transactionAdditionalInfo['transactionInfo'];
+        $processId = $transactionInfo->getProcessId();
+        $processClass = $transactionInfo->getProcessClass();
         $orderIncrementId = $transactionInfo->getMerchantReference();
 
         if ($orderIncrementId) {
@@ -44,7 +43,7 @@ class AcceptPaymentOperation extends AbstractOperation
 
             if (!$orderPayment || $orderPayment->getMethod() !== $payment->getMethodInstance()->getCode()) {
                 throw new LocalizedException(
-                    __("This payment didn't work out because we can't find this order.")
+                    __("The payment transaction didn't work out because we can't find order.")
                 );
             }
 
@@ -56,10 +55,10 @@ class AcceptPaymentOperation extends AbstractOperation
                     $this->addStatusCommentOnUpdate($payment, $order, $transactionInfo);
                     $this->updatePayment($payment, $transactionInfo);
 
-                    $this->invoiceOperation->invoice($order);
+                    $this->invoiceOperation->invoice($order, $processId, $processClass);
                     $this->transactionOperation->update($order, $payment, $transactionInfo);
                 } catch (LocalizedException|Exception $exception) {
-                    $this->declineOrder($order, $transactionInfo, true, $exception->getMessage());
+                    $order->addCommentToStatusHistory($exception->getMessage());
 
                     $isError = true;
                 }
@@ -70,45 +69,15 @@ class AcceptPaymentOperation extends AbstractOperation
             $isError = true;
         }
 
+        $this->orderRepository->save($order);
+
         if ($isError) {
-            $responseText = $transactionInfo->getResultMessage();
-            $responseText = $responseText && !$transactionInfo->isPaymentComplete()
-                ? __($responseText)
-                : __("This payment didn't work out because we can't find this order.");
+            $responseText = "The payment transaction didn't work out.";
+            $responseText = !$transactionInfo->isPaymentComplete()
+                ? __($transactionInfo->getResultMessage())
+                : __($responseText);
 
             throw new LocalizedException($responseText);
-        }
-    }
-
-    /**
-     * Register order cancellation. Return money to customer if needed.
-     *
-     * @param Order $order
-     * @param DataObject $transactionInfo
-     * @param bool $voidPayment
-     * @param ?string $message
-     * @return void
-     */
-    private function declineOrder(
-        Order $order,
-        DataObject $transactionInfo,
-        bool $voidPayment = false,
-        ?string $message = ''
-    ): void {
-        $payment = $order->getPayment();
-
-        try {
-            if (
-                $voidPayment &&
-                $transactionInfo->getTranxId() &&
-                strtoupper($transactionInfo->getTransactionType()) === TransactionType::PAYMENT->value
-            ) {
-                $this->addStatusCommentOnUpdate($payment, $order, $transactionInfo);
-                $order->registerCancellation($message);
-                $this->orderRepository->save($order);
-            }
-        } catch (Exception $e) {
-            $this->logger->critical($e->getMessage());
         }
     }
 }

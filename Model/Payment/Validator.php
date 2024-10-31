@@ -61,10 +61,13 @@ class Validator
             return;
         }
 
+        $totalDue = $transactionInfo->getTotalDue();
+        $totalPaid = $transactionInfo->getTotalCaptured();
+
         // Amounts should be equal for capturing order.
-        if (!$this->amountValid($transactionInfo->getTotalCaptured(), (float)$payment->getBaseAmountOrdered())) {
+        if (!$this->amountValid($totalPaid, $totalDue)) {
             $message = __(
-                'Something went wrong: the paid amount does not match the order amount.'
+                "Something went wrong: the paid ({$totalPaid}) amount does not match the order amount ({$totalDue})."
                 . ' Please correct this and try again.'
             );
 
@@ -85,16 +88,13 @@ class Validator
             case TransactionState::SUCCESSFUL->value:
             case TransactionState::PROCESSING->value:
             case TransactionState::AWAITING_PAYMENT->value:
-                break;
             case TransactionState::FAILED->value:
             case TransactionState::EXPIRED->value:
             case TransactionState::TIMEOUT->value:
-                throw new LocalizedException(
-                    $this->dataFactory->create()->wrapGatewayError($transactionInfo->getResultMessage())
-                );
+                break;
             default:
                 throw new LocalizedException(
-                    __('There was a payment validation error.')
+                    __('Payment validation error: invalid PayU transaction state.')
                 );
         }
     }

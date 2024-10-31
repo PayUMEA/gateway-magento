@@ -28,14 +28,15 @@ use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\Phrase;
 use Magento\Framework\Session\Generic;
 use Magento\Framework\Url\Helper\Data;
+use Magento\Payment\Model\Method\Logger;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Model\Quote;
-use Magento\Sales\Model\Order;
+use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Store\Model\ScopeInterface;
+use Magento\Store\Model\StoreManagerInterface;
 use PayU\Gateway\Gateway\Config\Config;
 use PayU\Gateway\Model\Payment\Processor;
-use Psr\Log\LoggerInterface;
 
 /**
  * class Response
@@ -85,12 +86,15 @@ abstract class AbstractAction implements ActionInterface, RedirectLoginInterface
      * @param Url $customerUrl
      * @param Config $config
      * @param Generic $payuSession
-     * @param LoggerInterface $logger
+     * @param Logger $logger
      * @param Session $checkoutSession
      * @param OrderFactory $orderFactory
      * @param Processor $responseProcessor
      * @param CustomerSession $customerSession
      * @param ScopeConfigInterface $scopeConfig
+     * @param StoreManagerInterface $storeManager
+     * @param CartRepositoryInterface $quoteRepository
+     * @param OrderRepositoryInterface $orderRepository
      */
     public function __construct(
         protected Context $context,
@@ -98,12 +102,15 @@ abstract class AbstractAction implements ActionInterface, RedirectLoginInterface
         protected Url $customerUrl,
         protected Config $config,
         protected Generic $payuSession,
-        protected LoggerInterface $logger,
+        protected Logger $logger,
         protected Session $checkoutSession,
         protected OrderFactory $orderFactory,
         protected Processor $responseProcessor,
         protected CustomerSession $customerSession,
-        protected ScopeConfigInterface $scopeConfig
+        protected ScopeConfigInterface $scopeConfig,
+        protected StoreManagerInterface $storeManager,
+        protected CartRepositoryInterface $quoteRepository,
+        protected OrderRepositoryInterface $orderRepository
     ) {
         $this->redirect = $this->context->getRedirect();
         $this->actionFlag = $this->context->getActionFlag();
@@ -173,10 +180,12 @@ abstract class AbstractAction implements ActionInterface, RedirectLoginInterface
      */
     public function redirectLogin(): void
     {
-        $this->actionFlag->set('', 'no-dispatch', true);
+        $this->actionFlag->set('', 'no-dispatch', 'true');
         $this->customerSession->setBeforeAuthUrl($this->redirect->getRefererUrl());
         $this->getResponse()->setRedirect(
-            $this->urlHelper->addRequestParam($this->customerUrl->getLoginUrl(), ['context' => 'checkout'])
+            $this->urlHelper->addRequestParam(
+                $this->customerUrl->getLoginUrl(), ['context' => 'checkout']
+            )
         );
     }
 
@@ -204,35 +213,27 @@ abstract class AbstractAction implements ActionInterface, RedirectLoginInterface
      * @return ?string
      * @throws LocalizedException
      */
-    protected function initPayUReference(?string $payUReference = null): ?string
+    protected function getPayUReference(?string $payUReference = null): ?string
     {
-        if (null !== $payUReference) {
-            if (!$payUReference) {
-                // security measure for avoid unsetting reference twice
-                if (!$this->getSession()->getCheckoutReference()) {
-                    throw new LocalizedException(
-                        __('PayU reference does not exist.')
-                    );
-                }
-                $this->getSession()->unsCheckoutReference();
-            } else {
-                $this->getSession()->setCheckoutReference($payUReference);
-            }
-
-            return $payUReference;
-        }
-
         $reference = $this->getRequest()->getParam('PayUReference') ?:
-            $this->getRequest()->getParam('payUReference');
+        $this->getRequest()->getParam('payUReference');
 
         if ($reference) {
-            if ($reference !== $this->getSession()->getCheckoutReference()) {
+            $payUReference = $this->getSession()->getCheckoutReference() ??
+                $this->getSession()->getData('checkout_reference');
+
+            if ($payUReference && $reference !== $payUReference) {
+                $this->logger->debug([
+                    'info' => "PayU reference from request parameter: {$reference}, PayU reference in Magento session: "
+                    . $payUReference
+                ]);
                 throw new LocalizedException(
-                    __('Invalid PayU transaction id.')
+                    __('A wrong PayU Checkout Reference was specified.')
                 );
             }
         } else {
-            $reference = $this->getSession()->getCheckoutReference();
+            $reference = $this->getSession()->getCheckoutReference() ??
+                $this->getSession()->getData('checkout_reference');
         }
 
         return $reference;
@@ -243,6 +244,7 @@ abstract class AbstractAction implements ActionInterface, RedirectLoginInterface
      */
     protected function clearSessionData(): void
     {
+        $this->getSession()->unsQuoteId();
         $this->getSession()->unsCheckoutReference();
         $this->getSession()->unsCheckoutRedirectUrl();
         $this->getSession()->unsCheckoutOrderIncrementId();
@@ -263,21 +265,11 @@ abstract class AbstractAction implements ActionInterface, RedirectLoginInterface
     }
 
     /**
-     * @param Order $order
      * @return ResponseInterface
      */
-    protected function sendPendingPage(Order $order): ResponseInterface
+    protected function sendPendingPage(): ResponseInterface
     {
-        $this->getCheckoutSession()
-            ->setLastQuoteId($order->getQuoteId())
-            ->setLastSuccessQuoteId($order->getQuoteId());
-
-        $this->getCheckoutSession()
-            ->setLastOrderId($order->getId())
-            ->setLastRealOrderId($order->getIncrementId())
-            ->setLastOrderStatus($order->getStatus());
-
-        $this->messageManager->addSuccessMessage(
+        $this->messageManager->addNoticeMessage(
             __('Your order was placed and will be processed once payment is confirmed.')
         );
 
@@ -287,22 +279,12 @@ abstract class AbstractAction implements ActionInterface, RedirectLoginInterface
     }
 
     /**
-     * @param Order $order
      * @return ResponseInterface
      */
-    protected function sendSuccessPage(Order $order): ResponseInterface
+    protected function sendSuccessPage(): ResponseInterface
     {
-        $this->getCheckoutSession()
-            ->setLastQuoteId($order->getQuoteId())
-            ->setLastSuccessQuoteId($order->getQuoteId());
-
-        $this->getCheckoutSession()
-            ->setLastOrderId($order->getId())
-            ->setLastRealOrderId($order->getIncrementId())
-            ->setLastOrderStatus($order->getStatus());
-
         $this->messageManager->addSuccessMessage(
-            __('Payment was successful and we received your order with much fanfare!')
+            __('Payment was successful and we received your order with much fanfare')
         );
 
         $this->clearSessionData();
@@ -311,13 +293,28 @@ abstract class AbstractAction implements ActionInterface, RedirectLoginInterface
     }
 
     /**
+     * @param string|null $message
+     * @return ResponseInterface
+     */
+    protected function sendFailedPage(?string $message = null): ResponseInterface
+    {
+        $this->messageManager->addErrorMessage(
+            __($message ?? 'Payment was unsuccessful')
+        );
+
+        $this->clearSessionData();
+
+        return $this->redirect('checkout/onepage/failure');
+    }
+
+    /**
      * @param string $field
-     * @param null $storeId
+     * @param int $storeId
      * @return mixed
      */
-    public function getRedirectConfigData(string $field, $storeId = null): mixed
+    public function getRedirectConfigData(string $field, int $storeId = null): mixed
     {
-        $path = 'payment/payu_gateway/' . $field;
+        $path = 'payu_gateway/bypass_redirect/' . $field;
 
         return $this->scopeConfig->getValue($path, ScopeInterface::SCOPE_STORE, $storeId);
     }
@@ -331,33 +328,43 @@ abstract class AbstractAction implements ActionInterface, RedirectLoginInterface
      */
     protected function returnCustomerQuote(bool $cancelOrder = false, ?Phrase $errorMsg = null): void
     {
-        $incrementId = $this->getCheckoutSession()->getLastRealOrderId()
-            ?? $this->getCheckoutSession()->getData('last_real_order_id');
+        $incrementId = $this->getCheckoutSession()->getLastRealOrderId() ??
+            $this->getCheckoutSession()->getData('last_real_order_id');
+        $quoteId = $this->getCheckoutSession()->getLastSuccessQuoteId() ??
+            $this->getCheckoutSession()->getData('last_success_quote_id');
 
-        if ($incrementId) {
-            $order = $this->orderFactory->create()->loadByIncrementId($incrementId);
+        $order = $incrementId ? $this->orderFactory->create()->loadByIncrementId($incrementId) : null;
 
-            if ($order->getId()) {
-                try {
-                    /** @var CartRepositoryInterface $quoteRepository */
-                    $quoteRepository = $this->objectManager->create(CartRepositoryInterface::class);
-                    /** @var Quote $quote */
-                    $quote = $quoteRepository->get($order->getQuoteId());
+        if (
+            $order &&
+            $order->getId() &&
+            $order->getQuoteId() == $quoteId
+        ) {
+            try {
+                /** @var Quote $quote */
+                $quote = $this->quoteRepository->get($order->getQuoteId());
+                $quote->setIsActive(true)->setReservedOrderId(null);
+                $this->quoteRepository->save($quote);
+                $this->getCheckoutSession()->replaceQuote($quote);
 
-                    $quote->setIsActive(true)->setReservedOrderId(null);
-                    $quoteRepository->save($quote);
-                    $this->getCheckoutSession()->replaceQuote($quote);
+                $this->clearSessionData();
 
-                    $this->getSession()->unsCheckoutOrderIncrementId($incrementId);
-                    $this->getSession()->unsetData('quote_id');
-
-                    $this->clearSessionData();
-
-                    if ($cancelOrder) {
-                        $order->registerCancellation($errorMsg)->save();
-                    }
-                } catch (NoSuchEntityException|LocalizedException|Exception $e) {
+                if ($cancelOrder) {
+                    $order->cancel();
+                    $this->orderRepository->save($order);
                 }
+            } catch (NoSuchEntityException $exception) {
+                $this->logger->debug(
+                    [
+                        'error' => ['message' => 'NoSuchEntityException: ' . $exception->getMessage()]
+                    ]
+                );
+            } catch (Exception $exception) {
+                $this->logger->debug(
+                    [
+                        'error' => ['message' => 'Exception: ' . $exception->getMessage()]
+                    ]
+                );
             }
         }
     }
@@ -398,5 +405,14 @@ abstract class AbstractAction implements ActionInterface, RedirectLoginInterface
         ob_end_flush();
         ob_flush();
         flush();
+    }
+
+    protected function returnToCart()
+    {
+        $this->returnCustomerQuote();
+
+        return $this->resultFactory
+            ->create(ResultFactory::TYPE_REDIRECT)
+            ->setPath('checkout/cart');
     }
 }
