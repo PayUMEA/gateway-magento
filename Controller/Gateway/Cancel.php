@@ -10,7 +10,6 @@ namespace PayU\Gateway\Controller\Gateway;
 
 use Exception;
 use Magento\Framework\App\Action\HttpGetActionInterface;
-use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Exception\LocalizedException;
 use PayU\Gateway\Controller\AbstractAction;
@@ -28,37 +27,33 @@ class Cancel extends AbstractAction implements HttpGetActionInterface
      */
     public function execute(): Redirect
     {
-        /** @var Redirect $resultRedirect */
-        $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
-
         try {
-            $payUReference = $this->initPayUReference();
-            $orderId = $this->getCheckoutSession()->getLastOrderId();
+            $payUReference = $this->getPayUReference();
+            $orderId = $this->getCheckoutSession()->getLastOrderId() ??
+                $this->getCheckoutSession()->getData('last_order_id');
+            $quoteId = $this->getCheckoutSession()->getLastSuccessQuoteId() ??
+                $this->getCheckoutSession()->getData('last_success_quote_id');
 
             $order = $orderId ? $this->orderFactory->create()->load($orderId) : false;
 
             if ($payUReference &&
                 $order &&
-                $order->getQuoteId() == $this->getCheckoutSession()->getLastSuccessQuoteId()
+                $order->getQuoteId() == $quoteId
             ) {
                 $this->responseProcessor->cancel($order, $payUReference);
-
-                $this->messageManager->addErrorMessage(
-                    __('Payment transaction unsuccessful. User canceled payment transaction.')
-                );
-            } else {
-                $this->messageManager->addErrorMessage(
-                    __('Payment transaction unsuccessful.')
-                );
             }
-        } catch (LocalizedException $e) {
-            $this->messageManager->addExceptionMessage($e, $e->getMessage());
-        } catch (Exception $e) {
-            $this->messageManager->addExceptionMessage($e, __('Unable to cancel Checkout'));
+
+            $this->messageManager->addErrorMessage(
+                __(['Payment transaction unsuccessful. User canceled payment transaction.'])
+            );
+        } catch (LocalizedException $ex) {
+            $this->messageManager->addExceptionMessage($ex, $ex->getMessage());
+            $this->logger->debug(['error' => "$orderId: " . $ex->getMessage()]);
+        } catch (Exception $ex) {
+            $this->messageManager->addExceptionMessage($ex, __(['Unable to cancel Checkout']));
+            $this->logger->debug(['error' => "$orderId: " . $ex->getMessage()]);
         }
 
-        $this->returnCustomerQuote(true);
-
-        return $resultRedirect->setPath('checkout/cart');
+        return $this->returnToCart();
     }
 }

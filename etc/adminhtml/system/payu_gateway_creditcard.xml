@@ -95,7 +95,7 @@
             <source_model>Magento\Config\Model\Config\Source\Locale\Currency</source_model>
             <config_path>payment/payu_gateway_creditcard/currency</config_path>
         </field>
-        <field id="payment_methods" translate="label" type="multiselect" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="0">
+        <field id="payment_methods" translate="label" type="multiselect" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Payment Methods Code</label>
             <source_model>PayU\Gateway\Model\Adminhtml\System\Config\Source\Payment\Method</source_model>
             <config_path>payment/payu_gateway_creditcard/payment_methods</config_path>

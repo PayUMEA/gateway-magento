@@ -7,6 +7,20 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../Store/etc/config.xsd">
     <default>
+        <payu_gateway>
+            <txn_status>
+                <enable>0</enable>
+                <order_status>pending,pending_payment</order_status>
+                <cron_delay>5</cron_delay>
+            </txn_status>
+            <txn_lock>
+                <enable>0</enable>
+                <keep_log>30</keep_log>
+            </txn_lock>
+            <bypass_redirect>
+                <enable>0</enable>
+            </bypass_redirect>
+        </payu_gateway>
         <payment>
             <payu_gateway_creditcard>
                 <model>PayUGatewayCreditCardFacade</model>
@@ -30,7 +44,7 @@
                 <can_edit>0</can_edit>
                 <can_accept_payment>1</can_accept_payment>
                 <can_review_payment>0</can_review_payment>
-                <can_deny_payment>0</can_deny_payment>
+                <can_deny_payment>1</can_deny_payment>
                 <can_fetch_transaction_information>1</can_fetch_transaction_information>
                 <privateInfoKeys>cardExpiry,cardNumber,gatewayReference,information,nameOnCard</privateInfoKeys>
                 <paymentInfoKeys>pmId,amountInCents,cardExpiry,cardNumber,gatewayReference,information,nameOnCard</paymentInfoKeys>
@@ -80,7 +94,7 @@
                 <can_edit>0</can_edit>
                 <can_accept_payment>1</can_accept_payment>
                 <can_review_payment>0</can_review_payment>
-                <can_deny_payment>0</can_deny_payment>
+                <can_deny_payment>1</can_deny_payment>
                 <can_fetch_transaction_information>1</can_fetch_transaction_information>
                 <paymentInfoKeys>amountInCents</paymentInfoKeys>
                 <order_status>pending_payment</order_status>

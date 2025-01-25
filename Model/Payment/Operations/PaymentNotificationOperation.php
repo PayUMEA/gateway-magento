@@ -8,24 +8,27 @@ declare(strict_types=1);
 
 namespace PayU\Gateway\Model\Payment\Operations;
 
-use Magento\Framework\DataObject;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Payment\Model\Method\Logger;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\Data\OrderPaymentInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use PayU\Gateway\Model\Constants\TransactionState;
+use stdClass;
 
 /**
- * class HandleInstantPaymentNotification
+ * class PaymentNotificationOperation
  * @package PayU\Gateway\Model\Payment\Operations
  */
-class HandleInstantPaymentNotification
+class PaymentNotificationOperation
 {
     /**
+     * @param Logger $logger
      * @param OrderRepositoryInterface $orderRepository
      * @param AcceptPaymentOperation $acceptPaymentOperation
      */
     public function __construct(
+        private readonly Logger $logger,
         private readonly OrderRepositoryInterface $orderRepository,
         private readonly AcceptPaymentOperation $acceptPaymentOperation
     ) {
@@ -34,12 +37,17 @@ class HandleInstantPaymentNotification
     /**
      * @param OrderInterface $order
      * @param OrderPaymentInterface $payment
-     * @param DataObject $transactionInfo
+     * @param stdClass $ipnData
      * @return void
      * @throws LocalizedException
      */
-    public function notify(OrderInterface $order, OrderPaymentInterface $payment, DataObject $transactionInfo): void
-    {
+    public function notify(
+        OrderInterface $order,
+        OrderPaymentInterface $payment,
+        stdClass $ipnData
+    ): void {
+        $transactionInfo = $payment->getTransactionAdditionalInfo()['transactionInfo'];
+
         if (
             in_array(
                 $transactionInfo->getTransactionState(),
@@ -47,32 +55,30 @@ class HandleInstantPaymentNotification
             )
         ) {
             $comment = "<strong>-----PAYU NOTIFICATION RECEIVED---</strong><br />";
-            $amountBasket = $transactionInfo->getBasket()['amountInCents'] / 100;
-            $amountPaid = ($transactionInfo->getCreditCardData()['amountInCents'] / 100) ?? 0;
+            $totalDue = $transactionInfo->getTotalDue();
+            $totalPaid = $transactionInfo->getTotalCaptured();
 
-            if (empty($amountPaid)) {
-                $amountPaid = ($transactionInfo->getEftData()['amountInCents'] / 100) ?? 0;
-            }
-
-            $comment .= "Order Amount: " . $amountBasket . "<br />";
-            $comment .= "Amount Paid: " . $amountPaid . "<br />";
+            $comment .= "Order Amount: " . $totalDue . "<br />";
+            $comment .= "Amount Paid: " . $totalPaid . "<br />";
             $comment .= "Merchant Reference : " . $transactionInfo->getMerchantReference() . "<br />";
             $comment .= "PayU Reference: " . $transactionInfo->getTranxId() . "<br />";
             $comment .= "PayU Payment Status: " . $transactionInfo->getTransactionState() . "<br /><br />";
 
-            $paymentMethod = $transactionInfo->getCreditCardData() ?? [];
+            if ($transactionInfo->hasPaymentMethod()) {
+                $paymentMethods = $ipnData->PaymentMethodsUsed;
 
-            if (empty($paymentMethod)) {
-                $paymentMethod = $transactionInfo->getEftData() ?? [];
-            }
+                if (!is_a($paymentMethods, \stdClass::class, true)) {
+                    $paymentMethods = [$paymentMethods];
+                }
 
-            if (!empty($paymentMethod)) {
-                if (is_array($paymentMethod)) {
-                    $comment .= "<strong>Payment Method Details:</strong>";
+                $comment .= "<strong>Payment Method Details:</strong>";
 
+                foreach ($paymentMethods as $type => $paymentMethod) {
+                    $comment .= "<br />===" . $type . "===";
                     foreach ($paymentMethod as $key => $value) {
-                        $comment .= "<br />&nbsp;&nbsp;- " . $key . ":" . $value . " , ";
+                        $comment .= "<br />&nbsp;&nbsp;=> " . $key . ": " . $value;
                     }
+                    $comment .= '<br />';
                 }
             }
 
@@ -80,12 +86,16 @@ class HandleInstantPaymentNotification
             switch ($transactionInfo->getTransactionState()) {
                 // Payment completed
                 case 'SUCCESSFUL':
-                    $order->addCommentToStatusHistory($comment);
+                    $order->addCommentToStatusHistory($comment, 'processing');
                     $this->acceptPaymentOperation->accept($payment);
+                    break;
+                case 'PROCESSING':
+                    $order->addCommentToStatusHistory($comment);
                     break;
                 case 'FAILED':
                 case 'TIMEOUT':
                 case 'EXPIRED':
+                    $order->addCommentToStatusHistory($comment);
                     $order->cancel();
                     break;
                 default:
@@ -94,6 +104,9 @@ class HandleInstantPaymentNotification
             }
 
             $this->orderRepository->save($order);
+            $processId = $transactionInfo->getProcessId();
+            $processClass = $transactionInfo->getProcessClass();
+            $this->logger->debug(['info' => "IPN => ($processId) ($processClass): Processing complete."]);
         }
     }
 }
