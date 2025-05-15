@@ -372,7 +372,7 @@ class TransferObject extends DataObject
         $payment = $order->getPayment();
         $method = $payment->getMethodInstance();
 
-        return $method->getCode() === Payflex::CODE && $this->isPaymentProcessing();
+        return $method->getCode() === Payflex::CODE && ($this->isPaymentProcessing() || $this->isPaymentFailed());
     }
 
     /**
@@ -386,6 +386,6 @@ class TransferObject extends DataObject
         $payment = $order->getPayment();
         $method = $payment->getMethodInstance();
 
-        return $method->getCode() === Masterpass::CODE && $this->isPaymentProcessing();
+        return $method->getCode() === Masterpass::CODE && ($this->isPaymentProcessing() || $this->isPaymentFailed());
     }
 }
