@@ -109,19 +109,19 @@
             <comment>Only update URLs if there are external integration outside of Magento</comment>
             <field id="notify_url" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Notification Url (IPN)</label>
-                <config_path>payment/payu_gateway_fasta/payment_url/notify_url</config_path>
+                <config_path>payment/payu_gateway_fasta/payment_url_notify_url</config_path>
             </field>
             <field id="return_url" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Return Url</label>
-                <config_path>payment/payu_gateway_fasta/payment_url/return_url</config_path>
+                <config_path>payment/payu_gateway_fasta/payment_url_return_url</config_path>
             </field>
             <field id="cancel_url" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Cancel Url</label>
-                <config_path>payment/payu_gateway_fasta/payment_url/cancel_url</config_path>
+                <config_path>payment/payu_gateway_fasta/payment_url_cancel_url</config_path>
             </field>
             <field id="redirect_url" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Redirect Url</label>
-                <config_path>payment/payu_gateway_fasta/payment_url/redirect_url</config_path>
+                <config_path>payment/payu_gateway_fasta/payment_url_redirect_url</config_path>
             </field>
         </group>
     </group>

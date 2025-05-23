@@ -28,10 +28,10 @@ class Config extends CoreConfig
     private const KEY_API_PASSWORD = 'api_password';
     private const KEY_TRANSACTION_TYPE = 'payment_action';
     private const KEY_PAYMENT_METHODS = 'payment_methods';
-    private const KEY_PAYMENT_RETURN_URL = 'payment_url/return_url';
-    private const KEY_PAYMENT_CANCEL_URL = 'payment_url/cancel_url';
-    private const KEY_PAYMENT_NOTIFY_URL = 'payment_url/notify_url';
-    private const KEY_PAYMENT_REDIRECT_URL = 'payment_url/redirect_url';
+    private const KEY_PAYMENT_RETURN_URL = 'payment_url_return_url';
+    private const KEY_PAYMENT_CANCEL_URL = 'payment_url_cancel_url';
+    private const KEY_PAYMENT_NOTIFY_URL = 'payment_url_notify_url';
+    private const KEY_PAYMENT_REDIRECT_URL = 'payment_url_redirect_url';
     private const KEY_USE_CVV = 'useccv';
     private const KEY_CC_TYPES = 'cctypes';
     private const KEY_COUNTRY_CREDIT_CARD = 'country_creditcard';
