@@ -1128,10 +1128,10 @@
     <virtualType name="PayUGatewayAuthorizationHandler" type="Magento\Payment\Gateway\Response\HandlerChain">
         <arguments>
             <argument name="handlers" xsi:type="array">
-                <item name="payment" xsi:type="string">Payu\Gateway\Gateway\Response\PaymentDetailsHandler</item>
-                <item name="txn" xsi:type="string">Payu\Gateway\Gateway\Response\TransactionHandler</item>
-                <item name="card_details" xsi:type="string">Payu\Gateway\Gateway\Response\CardDetailsHandler</item>
-                <item name="3d_secure" xsi:type="string">Payu\Gateway\Gateway\Response\ThreeDSecureDetailsHandler</item>
+                <item name="payment" xsi:type="string">PayU\Gateway\Gateway\Response\PaymentDetailsHandler</item>
+                <item name="txn" xsi:type="string">PayU\Gateway\Gateway\Response\TransactionHandler</item>
+                <item name="card_details" xsi:type="string">PayU\Gateway\Gateway\Response\CardDetailsHandler</item>
+                <item name="3d_secure" xsi:type="string">PayU\Gateway\Gateway\Response\ThreeDSecureDetailsHandler</item>
             </argument>
         </arguments>
     </virtualType>
