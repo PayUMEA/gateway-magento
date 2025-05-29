@@ -53,26 +53,41 @@ class PaymentCardDetailsDataBuilder implements BuilderInterface
         $cardTypeMapper = $this->config->getCcTypesMapper();
         $cardData = $payment->getAdditionalInformation(PaymentInterface::KEY_ADDITIONAL_DATA);
 
-        if ($cardData) {
-            $card = new CreditCard();
-            $card->setType(
-                str_replace('-', '', strtoupper(array_flip($cardTypeMapper)[$cardData['cc_type']]))
-            )
-                ->setNumber($cardData['cc_number'])
-                ->setExpiryMonth($this->addZeroPrefix($cardData['cc_exp_month']))
-                ->setExpiryYear($cardData['cc_exp_year'])
-                ->setCvv($cardData['cc_cid'])
-                ->setNameOnCard(join(' ', [$billingAddress->getFirstname(), $billingAddress->getLastname()]))
-                ->setBudget($this->config->isBudgetAllowed((int)$storeId))
-                ->setSecure3D($this->config->isSecure3ds((int)$storeId));
+        // For the redirect payments, credit card details are only needed during the actual
+        // payment step after redirect to the gateway, not during any earlier API calls in the checkout process.
+        // We need to handle the case where credit card details are not yet available.
+        
+        if ($cardData && is_array($cardData)) {
+            // Check if we have the necessary credit card data
+            if (isset($cardData['cc_type']) && 
+                isset($cardData['cc_number']) && 
+                isset($cardData['cc_exp_month']) && 
+                isset($cardData['cc_exp_year']) && 
+                isset($cardData['cc_cid']) &&
+                isset($cardTypeMapper) && 
+                is_array($cardTypeMapper) && 
+                isset(array_flip($cardTypeMapper)[$cardData['cc_type']])) {
+                
+                $card = new CreditCard();
+                $card->setType(
+                    str_replace('-', '', strtoupper(array_flip($cardTypeMapper)[$cardData['cc_type']]))
+                )
+                    ->setNumber($cardData['cc_number'])
+                    ->setExpiryMonth($this->addZeroPrefix($cardData['cc_exp_month']))
+                    ->setExpiryYear($cardData['cc_exp_year'])
+                    ->setCvv($cardData['cc_cid'])
+                    ->setNameOnCard(join(' ', [$billingAddress->getFirstname(), $billingAddress->getLastname()]))
+                    ->setBudget($this->config->isBudgetAllowed((int)$storeId))
+                    ->setSecure3D($this->config->isSecure3ds((int)$storeId));
 
-            $funding = new FundingInstrument();
-            $funding->setCreditCard($card)
-                ->setSaveCard(true);
+                $funding = new FundingInstrument();
+                $funding->setCreditCard($card)
+                    ->setSaveCard(true);
 
-            $result[self::CARD] = $funding;
+                $result[self::CARD] = $funding;
+            }
         }
-
+        
         return $result;
     }
 
