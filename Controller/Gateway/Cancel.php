@@ -44,13 +44,13 @@ class Cancel extends AbstractAction implements HttpGetActionInterface
             }
 
             $this->messageManager->addErrorMessage(
-                __(['Payment transaction unsuccessful. User canceled payment transaction.'])
+                __('Payment transaction unsuccessful. User canceled payment transaction.')
             );
         } catch (LocalizedException $ex) {
             $this->messageManager->addExceptionMessage($ex, $ex->getMessage());
             $this->logger->debug(['error' => "$orderId: " . $ex->getMessage()]);
         } catch (Exception $ex) {
-            $this->messageManager->addExceptionMessage($ex, __(['Unable to cancel Checkout']));
+            $this->messageManager->addExceptionMessage($ex, __('Unable to cancel Checkout'));
             $this->logger->debug(['error' => "$orderId: " . $ex->getMessage()]);
         }
 

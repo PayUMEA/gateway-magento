@@ -37,19 +37,19 @@ class Redirect extends AbstractAction implements HttpGetActionInterface
                 return $resultRedirect->setPath($url);
             } else {
                 $this->messageManager->addErrorMessage(
-                    __(['Unable to redirect to PayU: invalid redirect url.'])
+                    __('Unable to redirect to PayU: invalid redirect url.')
                 );
             }
         } catch (Exception $e) {
             $this->messageManager->addExceptionMessage(
                 $e,
-                __(['Unable to redirect to PayU: server error encountered'])
+                __('Unable to redirect to PayU: server error encountered')
             );
         }
 
         $this->returnCustomerQuote(
             true,
-            __(['Unable to redirect to PayU: server error encountered'])
+            __('Unable to redirect to PayU: server error encountered')
         );
 
         return $resultRedirect->setPath('checkout/cart');
