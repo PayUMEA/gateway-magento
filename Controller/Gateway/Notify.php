@@ -16,7 +16,7 @@ use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Exception\LocalizedException;
 use PayU\Gateway\Controller\AbstractAction;
-use PayUSdk\Framework\XmlHelper;
+use PayUSdk\Framework\XMLHelper;
 
 /**
  * class Notify
@@ -46,7 +46,7 @@ class Notify extends AbstractAction implements HttpPostActionInterface, CsrfAwar
             return $resultJson;
         }
 
-        $ipnData = XmlHelper::parseXMLToArray($sxe);
+        $ipnData = XMLHelper::parseXMLToArray($sxe);
 
         if (!$ipnData) {
             $this->respond('500', 'Failed to decode Instant Payment Notification data.');
