@@ -34,6 +34,27 @@
                             <comment>The status of orders to be processed</comment>
                             <source_model>PayU\Gateway\Model\Adminhtml\System\Config\Source\Order\Status\PendingPayment</source_model>
                             <config_path>payu_gateway/txn_status/order_status</config_path>
+                            <depends>
+                                <field id="enable">1</field>
+                            </depends>
+                        </field>
+                        <field id="time" translate="label" type="time" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Start Time</label>
+                            <comment>Hour in 24-hour format is formatted as 00 0/01 * * * cron expression</comment>
+                            <config_path>payu_gateway/txn_status/time</config_path>
+                            <depends>
+                                <field id="enable">1</field>
+                            </depends>
+                        </field>
+                        <field id="frequency" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Frequency</label>
+                            <comment>Magento schedule for running cron</comment>
+                            <source_model>Magento\Cron\Model\Config\Source\Frequency</source_model>
+                            <backend_model>PayU\Gateway\Model\Adminhtml\System\Config\Backend\TxnStatus\Cron</backend_model>
+                            <config_path>payu_gateway/txn_status/frequency</config_path>
+                            <depends>
+                                <field id="enable">1</field>
+                            </depends>
                         </field>
                         <field id="cron_delay" translate="label" type="text" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
                             <label>Delay (Minutes)</label>
@@ -41,6 +62,9 @@
                                 How long after order placement will the CRON start checking the order status, leave empty for default
                             </comment>
                             <config_path>payu_gateway/txn_status/cron_delay</config_path>
+                            <depends>
+                                <field id="enable">1</field>
+                            </depends>
                         </field>
                     </group>
                     <group id="payu_gateway_txn_lock" translate="label" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="0">
@@ -50,10 +74,30 @@
                             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                             <config_path>payu_gateway/txn_lock/enable</config_path>
                         </field>
-                        <field id="keep_log" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <field id="time" translate="label" type="time" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Start Time</label>
+                            <config_path>payu_gateway/txn_lock/time</config_path>
+                            <depends>
+                                <field id="enable">1</field>
+                            </depends>
+                        </field>
+                        <field id="frequency" translate="label" type="multiselect" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Frequency</label>
+                            <comment>Magento schedule for running cron</comment>
+                            <source_model>Magento\Cron\Model\Config\Source\Frequency</source_model>
+                            <backend_model>PayU\Gateway\Model\Adminhtml\System\Config\Backend\Lock\Cron</backend_model>
+                            <config_path>payu_gateway/txn_lock/frequency</config_path>
+                            <depends>
+                                <field id="enable">1</field>
+                            </depends>
+                        </field>
+                        <field id="keep_log" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
                             <label>Keep Log (Days)</label>
-                            <comment>How many days logs can be kept</comment>
+                            <comment>Number of days logs can be kept</comment>
                             <config_path>payu_gateway/txn_lock/keep_log</config_path>
+                            <depends>
+                                <field id="enable">1</field>
+                            </depends>
                         </field>
                     </group>
                     <group id="payu_gateway_redirect_config" translate="label" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">

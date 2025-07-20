@@ -6,12 +6,12 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
-    <group id="default">
+    <group id="payu_gateway">
         <job name="payu_gateway_txn_status" instance="PayU\Gateway\Cron\CheckTransactionStatus" method="execute">
-            <schedule>* * * * *</schedule>
+            <config_path>crontab/payu_gateway/jobs/payu_gateway_txn_status/schedule/cron_expr</config_path>
         </job>
-        <job name="payu_gateway_txn_locks" instance="PayU\Gateway\Cron\CleanTransactionLock" method="execute">
-            <schedule>* * * * *</schedule>
+        <job name="payu_gateway_txn_lock" instance="PayU\Gateway\Cron\CleanTransactionLock" method="execute">
+            <config_path>crontab/payu_gateway/jobs/payu_gateway_txn_lock/schedule/cron_expr</config_path>
         </job>
     </group>
 </config>
