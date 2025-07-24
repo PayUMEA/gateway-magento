@@ -26,9 +26,14 @@ class OrderStatusUpdateObserver implements ObserverInterface
         $event = $observer->getEvent();
         $payment = $event->getDataByKey('payment');
         $order = $payment->getOrder();
+        $method = $payment->getMethodInstance();
+
+        if (!$method || str_contains($method->getCode(), 'payu_gateway') === false) {
+            return;
+        }
 
         if ($order->getIncrementId()) {
-            $orderStatus = $payment->getMethodInstance()->getConfigData('order_status', $order->getStoreId());
+            $orderStatus = $method->getConfigData('order_status', $order->getStoreId());
             $order->setState($orderStatus);
             $order->setStatus($orderStatus);
             $order->setCanSendNewEmailFlag(false);
