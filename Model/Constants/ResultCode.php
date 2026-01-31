@@ -20,4 +20,6 @@ enum ResultCode: string
     case TRIPLE_NINE = '999';
     case THREE_ZERO_FIVE = '305';
     case PEE_ZERO_FIFTEEN = 'P015';
+    case PEE_ZERO_SEVENTY_NINE = 'P079';
+    case NINE_NINE_ZERO = '990';
 }
