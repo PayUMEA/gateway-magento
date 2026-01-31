@@ -312,7 +312,7 @@ abstract class AbstractAction implements ActionInterface, RedirectLoginInterface
      * @param int $storeId
      * @return mixed
      */
-    public function getRedirectConfigData(string $field, int $storeId = null): mixed
+    public function getRedirectConfigData(string $field, int|null $storeId = null): mixed
     {
         $path = 'payu_gateway/bypass_redirect/' . $field;
 

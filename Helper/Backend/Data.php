@@ -93,7 +93,7 @@ class Data extends FrontendDataHelper
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function getRelayUrl(int|string $storeId = null): string
+    public function getRelayUrl(int|string|null $storeId = null): string
     {
         $defaultStore = $this->storeManager->getDefaultStoreView();
 

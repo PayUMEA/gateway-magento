@@ -40,11 +40,12 @@ class Cron extends \Magento\Framework\App\Config\Value
         \Magento\Framework\App\Config\ScopeConfigInterface $config,
         \Magento\Framework\App\Cache\TypeListInterface $cacheTypeList,
         \Magento\Framework\App\Config\ValueFactory $configValueFactory,
-        \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
-        \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
+        \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource = null,
+        \Magento\Framework\Data\Collection\AbstractDb|null $resourceCollection = null,
         array $data = []
     ) {
         $this->_configValueFactory = $configValueFactory;
+
         parent::__construct($context, $registry, $config, $cacheTypeList, $resource, $resourceCollection, $data);
     }
 
@@ -82,8 +83,9 @@ class Cron extends \Magento\Framework\App\Config\Value
             $configValue->load(self::CRON_STRING_PATH, 'path');
             $configValue->setValue($cronExprString)->setPath(self::CRON_STRING_PATH)->save();
         } catch (\Exception $e) {
-            throw new \Magento\Framework\Exception\LocalizedException(__('We can\'t save the Cron expression.'));
+            throw new LocalizedException(__('We can\'t save the Cron expression.'));
         }
+
         return parent::afterSave();
     }
 }
