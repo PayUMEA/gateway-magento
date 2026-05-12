@@ -13,10 +13,6 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Api\Data\OrderPaymentInterface;
 use PayU\Gateway\Model\Payment\AbstractOperation;
 
-/**
- * class AcceptPaymentOperation
- * @package PayU\Gateway\Model\Payment\Operations
- */
 class AcceptPaymentOperation extends AbstractOperation
 {
     /**

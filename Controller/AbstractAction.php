@@ -184,7 +184,8 @@ abstract class AbstractAction implements ActionInterface, RedirectLoginInterface
         $this->customerSession->setBeforeAuthUrl($this->redirect->getRefererUrl());
         $this->getResponse()->setRedirect(
             $this->urlHelper->addRequestParam(
-                $this->customerUrl->getLoginUrl(), ['context' => 'checkout']
+                $this->customerUrl->getLoginUrl(),
+                ['context' => 'checkout']
             )
         );
     }
@@ -335,8 +336,7 @@ abstract class AbstractAction implements ActionInterface, RedirectLoginInterface
 
         $order = $incrementId ? $this->orderFactory->create()->loadByIncrementId($incrementId) : null;
 
-        if (
-            $order &&
+        if ($order &&
             $order->getId() &&
             $order->getQuoteId() == $quoteId
         ) {
@@ -396,7 +396,10 @@ abstract class AbstractAction implements ActionInterface, RedirectLoginInterface
             echo $text;
         }
 
-        $serverProtocol = filter_input(INPUT_SERVER, 'SERVER_PROTOCOL', FILTER_SANITIZE_STRING);
+        $serverProtocol = filter_input(INPUT_SERVER, 'SERVER_PROTOCOL', FILTER_VALIDATE_REGEXP, [
+            'options' => ['regexp' => '/^HTTP\/\d+(\.\d+)?$/'],
+            'flags'   => FILTER_NULL_ON_FAILURE,
+        ]) ?? 'HTTP/1.1';
         header($serverProtocol . " {$httpCode} OK");
         header('Content-Encoding: none');
         header('Content-Length: ' . ob_get_length());

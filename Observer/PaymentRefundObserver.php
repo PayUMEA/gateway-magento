@@ -29,7 +29,8 @@ class PaymentRefundObserver implements ObserverInterface
         protected readonly FilterBuilder $filterBuilder,
         protected readonly SearchCriteriaBuilder $searchCriteriaBuilder,
         protected readonly TransactionRepositoryInterface $transactionRepository
-    ) {}
+    ) {
+    }
 
     /**
      * @inheritDoc

@@ -17,10 +17,6 @@ use PayU\Gateway\Gateway\SubjectReader;
 use PayU\Gateway\Model\Payment\TransferObjectFactory;
 use PayU\Gateway\Model\Payment\Operations\TransactionUpdateOperation;
 
-/**
- * class CancelHandler
- * @package PayU\Gateway\Gateway\Response
- */
 class CancelHandler implements HandlerInterface
 {
     /**

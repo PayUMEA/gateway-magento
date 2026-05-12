@@ -20,17 +20,11 @@ use Magento\Sales\Model\ResourceModel\Order\Collection;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use PayUSdk\Api\ResponseInterface;
 use PayU\Gateway\Model\Adapter\PayUAdapterFactory;
 use PayU\Gateway\Model\Payment\Operations\CreateInvoiceOperation;
 use PayU\Gateway\Model\Payment\Operations\TransactionUpdateOperation;
-use PayU\Gateway\Model\Payment\TransferObject;
 use Psr\Log\LoggerInterface;
 
-/**
- * class CheckTransactionStatus
- * @package PayU\Gateway\Cron
- */
 class CheckTransactionStatus
 {
     private const CRON_CONFIG_PATTERN = 'payu_gateway/txn_status/%s';
@@ -52,8 +46,6 @@ class CheckTransactionStatus
 
     /**
      * @param LoggerInterface $logger
-     * @param PayUAdapterFactory $apiFactory
-     * @param EncryptorInterface $encryptor
      * @param ScopeConfigInterface $scopeConfig
      * @param OrderRepositoryInterface $orderRepository
      * @param CollectionFactory $orderCollectionFactory
@@ -63,8 +55,6 @@ class CheckTransactionStatus
      */
     public function __construct(
         private readonly LoggerInterface $logger,
-        private readonly PayUAdapterFactory $apiFactory,
-        private readonly EncryptorInterface $encryptor,
         private readonly ScopeConfigInterface $scopeConfig,
         private readonly OrderRepositoryInterface $orderRepository,
         private readonly CollectionFactory $orderCollectionFactory,
@@ -75,13 +65,14 @@ class CheckTransactionStatus
     }
 
     /**
-     * @param OrderInterface $order
+     * @param OrderInterface|Order $order
      * @param InfoInterface $payment
      * @return void
      * @throws LocalizedException
      */
-    public function processReturn(OrderInterface $order, InfoInterface $payment): void
+    public function processReturn(OrderInterface|Order $order, InfoInterface $payment): void
     {
+        /** @var \Magento\Sales\Model\Order\Payment $payment */
         $transactionAdditionalInfo = $payment->getTransactionAdditionalInfo();
         $transactionInfo = $transactionAdditionalInfo['transactionInfo'] ?? null;
 
@@ -89,7 +80,7 @@ class CheckTransactionStatus
             return;
         }
 
-        $transactionNotes = "<strong>-----PAYU GATEWAY TXN STATUS CRON: STATUS CHECKED ---</strong><br />";
+        $transactionNotes = "<strong>-----PAYU GATEWAY TXN STATUS CRON: STATUS CHECK-----</strong><br />";
         $resultCode = $transactionInfo->getResultCode();
 
         if (in_array($resultCode, ['POO5', 'EFTPRO_003', '999', '305'])) {
@@ -104,25 +95,44 @@ class CheckTransactionStatus
 
         if (!in_array(
             $transactionState,
-            ['PROCESSING', 'SUCCESSFUL', 'AWAITING_PAYMENT', 'FAILED', 'TIMEOUT', 'EXPIRED']
-            )
+            [
+                'PROCESSING',
+                'SUCCESSFUL',
+                'AWAITING_PAYMENT',
+                'FAILED',
+                'TIMEOUT',
+                'EXPIRED'
+            ]
+        )
         ) {
             $this->logger->info(
-                "PAYU GATEWAY TXN STATUS CRON: ($this->processId) Invalid  transaction state: $transactionState"
+                sprintf(
+                    "PAYU GATEWAY TXN STATUS CRON: (%s) Invalid  transaction state: %s",
+                    $this->processId,
+                    $transactionState
+                )
             );
 
             return;
         }
 
-        $transactionNotes .= "PayU Reference: " . $transactionInfo->getTranxId() . "<br />";
-        $transactionNotes .= "PayU Transaction state: " . $transactionState . "<br /><br />";
+        $totalDue = $transactionInfo->getTotalDue();
+        $totalPaid = $transactionInfo->getTotalCaptured();
+
+        $comment = "PayU Reference: " . $transactionInfo->getTranxId() . "<br />";
+        $comment .= "PayU Transaction state: " . $transactionState . "<br /><br />";
+        $comment .= "Order Amount: " . $totalDue . "<br />";
+        $comment .= "Amount Paid: " . $totalPaid . "<br />";
+        $comment .= "Merchant Reference : " . $transactionInfo->getMerchantReference() . "<br />";
+        $comment .= "Transaction Type: " . $transactionInfo->getTransactionType() . "<br />";
+        $comment .= "PayU Reference: " . $transactionInfo->getTranxId() . "<br />";
+        $comment .= "Payment Status: " . $transactionInfo->getTransactionState() . "<br /><br />";
 
         switch ($transactionState) {
             case 'SUCCESSFUL':
-                $this->invoiceOperation->invoice($order, $this->processId, $this->processClass);
+                $this->invoiceOperation->invoice($order, $transactionInfo);
                 $this->transactionUpdateOperation->update(
                     $order,
-                    $payment,
                     $transactionInfo
                 );
                 break;
@@ -131,7 +141,11 @@ class CheckTransactionStatus
             case 'EXPIRED':
                 $order->cancel();
                 $this->logger->info(
-                    "PAYU GATEWAY TXN STATUS CRON: ({$order->getEntityId()}) Transaction state prevents processing order"
+                    sprintf(
+                        'PAYU GATEWAY TXN STATUS CRON: Unprocessable order (%s), Status (%s)',
+                        $order->getIncrementId(),
+                        $transactionState
+                    )
                 );
                 break;
         }
@@ -172,11 +186,12 @@ class CheckTransactionStatus
 
         $websites = $this->storeManager->getWebsites();
 
-        foreach($websites as $website) {
-            $websiteStores = $website->getStores();
+        foreach ($websites as $website) {
+            /** @var \Magento\Store\Api\Data\WebsiteInterface $website */
+            $websiteStores = $this->storeManager->getStores(false);
 
             foreach ($websiteStores as $store) {
-                $storeId = $store->getId();
+                $storeId = (int)$store->getId();
                 $cronEnabled = (bool)$this->getCronConfigData('enable', $storeId);
 
                 if (!$cronEnabled) {
@@ -191,9 +206,11 @@ class CheckTransactionStatus
                     "PAYU GATEWAY TXN STATUS CRON: Started for website ({$website->getName()}), store ({$store->getName()}), PID: $processId"
                 );
 
-                $orders = $this->getOrderCollection($storeId);
+                $orders = $this->getOrderCollection((string)$storeId);
 
+                /** @var \Magento\Sales\Model\Order $order */
                 foreach ($orders->getItems() as $order) {
+                    /** @var \Magento\Sales\Model\Order\Payment $payment */
                     $payment = $order->getPayment();
                     $additionalInfo = $payment->getAdditionalInformation();
                     $transactionId = $payment->getLastTransId();
@@ -204,7 +221,7 @@ class CheckTransactionStatus
                     $this->logger->info("PAYU GATEWAY TXN STATUS CRON: ($processId) checking: $id");
 
                     if (!str_contains($code, 'payu_gateway')) {
-                        $this->logger->info("PAYU GATEWAY TXN STATUS CRON: ($processId) not a PayU payment method");
+                        $this->logger->info("PAYU GATEWAY TXN STATUS CRON: ($processId) not a PayU Gateway payment method");
 
                         continue;
                     }
@@ -276,10 +293,10 @@ class CheckTransactionStatus
     }
 
     /**
-     * @param $order
+     * @param OrderInterface|Order $order
      * @return bool
      */
-    protected function shouldDoCheck($order): bool
+    protected function shouldDoCheck(OrderInterface|Order $order): bool
     {
         $createdAt = strtotime($order->getCreatedAt());
         $updatedAt = strtotime($order->getUpdatedAt());
@@ -325,13 +342,13 @@ class CheckTransactionStatus
         foreach ($ranges as $v) {
             if ((
                 ($v[0] <= $minutesSinceCreated) && ($minutesSinceCreated <= $v[1])
-            )  && (!(($v[0] <= $minutesSinceUpdated) && ($minutesSinceUpdated <= $v[1])))
+            ) && (!(($v[0] <= $minutesSinceUpdated) && ($minutesSinceUpdated <= $v[1])))
             ) {
                 return true;
             }
         }
 
-        if (((744 <= $minutesSinceCreated))  && (!((744 <= $minutesSinceUpdated)))) {
+        if (((744 <= $minutesSinceCreated)) && (!((744 <= $minutesSinceUpdated)))) {
             return true;
         }
 
@@ -342,10 +359,10 @@ class CheckTransactionStatus
 
     /**
      * @param string $field
-     * @param $storeId
+     * @param int|null $storeId
      * @return mixed
      */
-    public function getCronConfigData(string $field, $storeId = null): mixed
+    public function getCronConfigData(string $field, int|null $storeId = null): mixed
     {
         $path = sprintf(self::CRON_CONFIG_PATTERN, $field);
 

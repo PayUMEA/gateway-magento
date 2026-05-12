@@ -16,10 +16,6 @@ use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\OrderFactory;
 use PayU\Gateway\Gateway\SubjectReader;
 
-/**
- * class CancelHandler
- * @package PayU\Gateway\Gateway\Response\Adminhtml
- */
 class CancelHandler implements HandlerInterface
 {
     /**

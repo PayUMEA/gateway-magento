@@ -13,10 +13,6 @@ use Magento\Sales\Api\Data\OrderPaymentInterface;
 use PayU\Gateway\Model\Payment\AbstractOperation;
 use PayU\Gateway\Model\Payment\TransferObject;
 
-/**
- * class DenyPaymentOperation
- * @package PayU\Gateway\Model\Payment
- */
 class DenyPaymentOperation extends AbstractOperation
 {
     /**
@@ -36,8 +32,8 @@ class DenyPaymentOperation extends AbstractOperation
         if (!$order->canCancel()) {
             $this->logger->debug(
                 "IPN => ($processId) ($processClass) : order already canceled.",
-            ['info' => "", 'response' => $transactionInfo]
-        );
+                ['info' => "", 'response' => $transactionInfo]
+            );
 
             return;
         }

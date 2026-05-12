@@ -12,10 +12,6 @@ use Magento\Payment\Gateway\Helper\ContextHelper;
 use Magento\Payment\Gateway\Response\HandlerInterface;
 use PayU\Gateway\Gateway\SubjectReader;
 
-/**
- * class CardDetailsHandler
- * @package PayU\Gateway\Gateway\Response
- */
 class CardDetailsHandler implements HandlerInterface
 {
     private const TOKEN = 'pmId';

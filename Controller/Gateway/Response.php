@@ -20,10 +20,6 @@ use PayU\Gateway\Controller\AbstractAction;
 use PayU\Gateway\Model\Constants\RedirectPage;
 use PayU\Gateway\Model\Constants\TransactionState;
 
-/**
- * class Response
- * @package PayU\Gateway\Controller\Gateway
- */
 class Response extends AbstractAction implements HttpGetActionInterface, HttpPostActionInterface
 {
     /**
@@ -84,8 +80,7 @@ class Response extends AbstractAction implements HttpGetActionInterface, HttpPos
             $orderStatus = $order->getStatus();
 
             // If the order is already a success
-            if (
-                $order->hasInvoices() ||
+            if ($order->hasInvoices() ||
                 in_array(
                     $orderState,
                     [
@@ -167,8 +162,7 @@ class Response extends AbstractAction implements HttpGetActionInterface, HttpPos
 
                 $message = $successful[1];
 
-                if (
-                    $this->responseProcessor->isCancelPayflex($order) ||
+                if ($this->responseProcessor->isCancelPayflex($order) ||
                     $this->responseProcessor->isMasterpassTimeout($order)
                 ) {
                     $this->messageManager->addErrorMessage($message);

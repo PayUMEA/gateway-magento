@@ -15,10 +15,6 @@ use PayU\Gateway\Gateway\SubjectReader;
 use PayUSdk\Model\CreditCard;
 use PayUSdk\Model\FundingInstrument;
 
-/**
- * class PaymentCardDetailsDataBuilder
- * @package PayU\Gateway\Gateway\Request
- */
 class PaymentCardDetailsDataBuilder implements BuilderInterface
 {
     public const CARD = 'card';
@@ -59,13 +55,13 @@ class PaymentCardDetailsDataBuilder implements BuilderInterface
         
         if ($cardData && is_array($cardData)) {
             // Check if we have the necessary credit card data
-            if (isset($cardData['cc_type']) && 
-                isset($cardData['cc_number']) && 
-                isset($cardData['cc_exp_month']) && 
-                isset($cardData['cc_exp_year']) && 
+            if (isset($cardData['cc_type']) &&
+                isset($cardData['cc_number']) &&
+                isset($cardData['cc_exp_month']) &&
+                isset($cardData['cc_exp_year']) &&
                 isset($cardData['cc_cid']) &&
-                isset($cardTypeMapper) && 
-                is_array($cardTypeMapper) && 
+                isset($cardTypeMapper) &&
+                is_array($cardTypeMapper) &&
                 isset(array_flip($cardTypeMapper)[$cardData['cc_type']])) {
                 
                 $card = new CreditCard();

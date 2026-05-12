@@ -18,10 +18,6 @@ use PayU\Gateway\Model\Payment\Operations\AcceptPaymentOperation;
 use PayU\Gateway\Model\Payment\TransferObjectFactory;
 use Psr\Log\LoggerInterface;
 
-/**
- * class AcceptPayment
- * @package PayU\Gateway\Gateway\Http\Client
- */
 class AcceptPayment extends AbstractTransaction
 {
     /**

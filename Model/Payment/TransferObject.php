@@ -16,10 +16,6 @@ use PayU\Gateway\Model\Constants\TransactionState;
 use PayU\Gateway\Model\Payment\Method\Masterpass;
 use PayU\Gateway\Model\Payment\Method\Payflex;
 
-/**
- * class TransferObject
- * @package PayU\Gateway\Model\Payment
- */
 class TransferObject extends DataObject
 {
     /**
@@ -244,15 +240,13 @@ class TransferObject extends DataObject
             return $total;
         }
 
-        if (
-            is_a($paymentMethods, \stdClass::class, true) &&
+        if (is_a($paymentMethods, \stdClass::class, true) &&
             !property_exists($paymentMethods, 'amountInCents')
         ) {
             return $total;
         }
 
-        if (
-            is_a($paymentMethods, \stdClass::class, true) &&
+        if (is_a($paymentMethods, \stdClass::class, true) &&
             property_exists($paymentMethods, 'amountInCents')
         ) {
             return ($paymentMethods->amountInCents / 100);
@@ -370,7 +364,8 @@ class TransferObject extends DataObject
             json_decode(
                 json_encode(
                     $this->toArray()['txn']
-                ), true
+                ),
+                true
             )
         );
     }

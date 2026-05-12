@@ -23,10 +23,6 @@ use PayU\Gateway\Model\Payment\Operations\PaymentNotificationOperation;
 use PayU\Gateway\Model\ResourceModel\TransactionFactory as TransactionLockResourceFactory;
 use stdClass;
 
-/**
- * class Processor
- * @package PayU\Gateway\Model\Payment
- */
 class Processor
 {
     /**

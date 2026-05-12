@@ -8,10 +8,6 @@ declare(strict_types=1);
 
 namespace PayU\Gateway\Gateway\Validator;
 
-/**
- * class CancelResponseValidator
- * @package PayU\Gateway\Gateway\Validator
- */
 class CancelResponseValidator extends DefaultResponseValidator
 {
     /**

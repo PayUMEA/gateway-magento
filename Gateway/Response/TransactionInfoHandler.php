@@ -12,10 +12,6 @@ use Magento\Payment\Gateway\Response\HandlerInterface;
 use PayU\Gateway\Gateway\SubjectReader;
 use PayU\Gateway\Model\Payment\TransferObjectFactory;
 
-/**
- * class TransactionInfoHandler
- * @package PayU\Gateway\Gateway\Response
- */
 class TransactionInfoHandler implements HandlerInterface
 {
     /**
@@ -39,8 +35,7 @@ class TransactionInfoHandler implements HandlerInterface
         $paymentDO = $this->subjectReader->readPayment($handlingSubject);
         $responseObj = $this->subjectReader->readResponse($response);
         $transferObject = $this->transferFactory->create([
-            'data' => ['txn' => json_decode($responseObj->toJson())]]
-        );
+            'data' => ['txn' => json_decode($responseObj->toJson())]]);
         $payment = $paymentDO->getPayment();
 
         $transferObject->importTransactionInfo($payment);

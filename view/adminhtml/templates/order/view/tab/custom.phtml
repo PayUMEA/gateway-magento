@@ -8,9 +8,9 @@
         "prototype"
     ], function () {
         if (!window.PayUAjaxCheck) {
-            window.PayUAjaxCheck = '<?php echo $block->getAjaxUrl(); ?>';
-            window.PayUAjaxFormKey = '<?php echo $block->getFormKey(); ?>';
-            window.PayUAjaxOrderId = '<?php echo $this->getOrder()->getId(); ?>';
+            window.PayUAjaxCheck = '<?= $block->getAjaxUrl(); ?>';
+            window.PayUAjaxFormKey = '<?= $block->getFormKey(); ?>';
+            window.PayUAjaxOrderId = '<?= $block->getOrder()->getId(); ?>';
         }
     });
 </script>

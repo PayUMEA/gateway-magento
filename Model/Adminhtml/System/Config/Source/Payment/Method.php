@@ -10,10 +10,6 @@ namespace PayU\Gateway\Model\Adminhtml\System\Config\Source\Payment;
 
 use Magento\Framework\Data\OptionSourceInterface;
 
-/**
- * class Method
- * @package PayU\Gateway\Model\Adminhtml\System\Config\Source\Payment
- */
 class Method implements OptionSourceInterface
 {
     /**

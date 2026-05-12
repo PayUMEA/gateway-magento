@@ -16,10 +16,6 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 use PayU\Gateway\Model\Constants\TransactionState;
 use stdClass;
 
-/**
- * class PaymentNotificationOperation
- * @package PayU\Gateway\Model\Payment\Operations
- */
 class PaymentNotificationOperation
 {
     /**
@@ -50,8 +46,7 @@ class PaymentNotificationOperation
     ): void {
         $transactionInfo = $payment->getTransactionAdditionalInfo()['transactionInfo'] ?? null;
 
-        if (
-            $transactionInfo &&
+        if ($transactionInfo &&
             in_array(
                 $transactionInfo->getTransactionState(),
                 array_column(TransactionState::cases(), 'value')

@@ -10,10 +10,6 @@ namespace PayU\Gateway\Gateway\Validator\Adminhtml;
 
 use PayU\Gateway\Gateway\Validator\DefaultResponseValidator;
 
-/**
- * class ResponseValidator
- * @package PayU\Gateway\Gateway\Validator
- */
 class ResponseValidator extends DefaultResponseValidator
 {
     /**

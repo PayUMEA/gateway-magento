@@ -1,10 +1,8 @@
 <?php
-
 /**
  * Copyright © 2024 PayU Financial Services. All rights reserved.
  * See COPYING.txt for license details.
  */
-
 
 namespace PayU\Gateway\Model\Config\Source\UiComponent;
 
@@ -14,6 +12,7 @@ class Status implements OptionSourceInterface
 {
     /**
      * Get Grid row status type labels array.
+     *
      * @return array
      */
     public function getOptionArray()
@@ -24,6 +23,7 @@ class Status implements OptionSourceInterface
             'complete' => __('Completed'),
             'error' => __('Error')
         ];
+
         return $options;
     }
 
@@ -36,24 +36,28 @@ class Status implements OptionSourceInterface
     {
         $res = $this->getOptions();
         array_unshift($res, ['value' => '', 'label' => '']);
+
         return $res;
     }
 
     /**
      * Get Grid row type array for option element.
+     *
      * @return array
      */
     public function getOptions()
     {
         $res = [];
+
         foreach ($this->getOptionArray() as $index => $value) {
             $res[] = ['value' => $index, 'label' => $value];
         }
+
         return $res;
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function toOptionArray()
     {

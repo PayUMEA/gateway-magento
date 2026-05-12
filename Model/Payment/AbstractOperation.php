@@ -49,7 +49,6 @@ abstract class AbstractOperation
         protected readonly OrderRepositoryInterface $orderRepository,
         protected readonly TransactionUpdateOperation $transactionOperation,
         protected readonly OrderPaymentRepositoryInterface $paymentRepository,
-
     ) {
     }
 

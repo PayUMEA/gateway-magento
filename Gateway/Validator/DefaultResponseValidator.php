@@ -14,10 +14,6 @@ use Magento\Payment\Gateway\Validator\ResultInterfaceFactory;
 use PayUSdk\Api\ResponseInterface;
 use PayU\Gateway\Gateway\SubjectReader;
 
-/**
- * class DefaultResponseValidator
- * @package PayU\Gateway\Gateway\Validator
- */
 class DefaultResponseValidator extends AbstractValidator
 {
     /**

@@ -22,10 +22,6 @@ use Magento\Sales\Api\TransactionRepositoryInterface;
 use PayU\Gateway\Gateway\SubjectReader;
 use PayU\Gateway\Model\Adapter\PayUAdapterFactory;
 
-/**
- * class CaptureStrategyCommand
- * @package PayU\Gateway\Gateway\Command
- */
 class CaptureStrategyCommand implements CommandInterface
 {
     private const AUTHORIZE = 'authorize';
@@ -90,8 +86,7 @@ class CaptureStrategyCommand implements CommandInterface
         }
 
         // do capture for authorization transaction
-        if (
-            !$existsCapture &&
+        if (!$existsCapture &&
             $authorizeTxn &&
             !$this->isExpiredAuthorization($payment, $paymentDO->getOrder())
         ) {

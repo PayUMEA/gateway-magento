@@ -10,10 +10,6 @@ namespace PayU\Gateway\Gateway\Validator\Adminhtml;
 
 use PayU\Gateway\Gateway\Validator\DefaultResponseValidator;
 
-/**
- * class CancelResponseValidator
- * @package PayU\Gateway\Gateway\Validator\Adminhtml
- */
 class CancelResponseValidator extends DefaultResponseValidator
 {
     /**

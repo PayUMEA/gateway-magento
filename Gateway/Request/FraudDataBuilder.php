@@ -19,7 +19,6 @@ use PayUSdk\Model\ItemList;
 
 /**
  * class PaymentCardDetailsDataBuilder
- * @package PayU\Gateway\Gateway\Request
  */
 class FraudDataBuilder implements BuilderInterface
 {

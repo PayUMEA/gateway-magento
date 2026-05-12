@@ -10,8 +10,10 @@ namespace PayU\Gateway\Model\Constants;
 
 /**
  * class TransactionState
+ *
  * @package PayU\Gateway\Model\Constants
  */
+// phpcs:disable Generic.Classes.ConstantVisibility.MissingFound
 enum TransactionState: string
 {
     case NEW = 'NEW';

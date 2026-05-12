@@ -11,10 +11,6 @@ namespace PayU\Gateway\Gateway\Http\Client;
 use PayUSdk\Api\ResponseInterface;
 use PayU\Gateway\Gateway\Request\StoreConfigBuilder;
 
-/**
- * class TransactionCapture
- * @package PayU\Gateway\Gateway\Http\Client
- */
 class TransactionCapture extends AbstractTransaction
 {
     /**

@@ -14,10 +14,6 @@ use PayUSdk\Model\Address;
 use PayUSdk\Model\Phone;
 use PayUSdk\Model\ShippingAddress;
 
-/**
- * class AddressDataBuilder
- * @package PayU\Gateway\Gateway\Request
- */
 class AddressDataBuilder implements BuilderInterface
 {
     public const SHIPPING_INFO = 'shipping_info';

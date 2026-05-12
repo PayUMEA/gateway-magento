@@ -11,10 +11,6 @@ namespace PayU\Gateway\Observer;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 
-/**
- * class OrderStatusUpdateObserver
- * @package PayU\Gateway\Observer
- */
 class OrderStatusUpdateObserver implements ObserverInterface
 {
     /**

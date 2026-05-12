@@ -11,10 +11,6 @@ namespace PayU\Gateway\Model\Adminhtml\System\Config;
 use Magento\Directory\Model\ResourceModel\Country\Collection;
 use Magento\Framework\Data\OptionSourceInterface;
 
-/**
- * class Country
- * @package PayU\Gateway\Model\Adminhtml\System\Config
- */
 class Country implements OptionSourceInterface
 {
     /**

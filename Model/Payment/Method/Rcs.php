@@ -8,10 +8,6 @@ declare(strict_types=1);
 
 namespace PayU\Gateway\Model\Payment\Method;
 
-/**
- * class Rcs
- * @package PayU\Gateway\Model\Payment\Method
- */
 class Rcs extends AbstractMethod
 {
     public const CODE = 'payu_gateway_rcs';

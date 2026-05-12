@@ -14,10 +14,6 @@ use PayU\Gateway\Model\ResourceModel\Transaction\Collection;
 use PayU\Gateway\Model\ResourceModel\Transaction\CollectionFactory;
 use Psr\Log\LoggerInterface;
 
-/**
- * class CleanTransactionLock
- * @package PayU\Gateway\Cron
- */
 class CleanTransactionLock
 {
     private const CRON_CONFIG_PATTERN = 'payu_gateway/txn_lock/%s';

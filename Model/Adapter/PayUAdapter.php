@@ -40,10 +40,6 @@ use PayUSdk\Framework\Soap\Context;
 use PayUSdk\Model\Cart;
 use PayUSdk\Model\Transaction;
 
-/**
- * class PayUAdapter
- * @package PayU\Gateway\Model\Adapter
- */
 class PayUAdapter
 {
     /**
@@ -77,6 +73,7 @@ class PayUAdapter
     }
 
     /**
+     *
      * @return void
      */
     private function initApi(): void

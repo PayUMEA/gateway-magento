@@ -10,8 +10,7 @@ use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Model\AbstractModel;
 use PayU\Gateway\Model\Api\Data\GridInterface;
 use PayU\Gateway\Model\ResourceModel;
-/**
- */
+
 class Transaction extends AbstractModel implements IdentityInterface, GridInterface
 {
     /**

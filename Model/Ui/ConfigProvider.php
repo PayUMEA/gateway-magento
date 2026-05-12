@@ -33,10 +33,6 @@ use PayU\Gateway\Model\Payment\Method\RcsPlc;
 use PayU\Gateway\Model\Payment\Method\Tigopesa;
 use PayU\Gateway\Model\Payment\Method\Ucount;
 
-/**
- * class ConfigProvider
- * @package PayU\Gateway\Model\Ui
- */
 class ConfigProvider implements ConfigProviderInterface
 {
     const CREDIT_CARD_CODE = Creditcard::CODE;

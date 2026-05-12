@@ -13,10 +13,6 @@ use PayUSdk\Api\Data\TransactionInterface;
 use PayU\Gateway\Gateway\Config\Config;
 use PayU\Gateway\Gateway\SubjectReader;
 
-/**
- * class TransactionTypeBuilder
- * @package PayU\Gateway\Gateway\Request
- */
 class TransactionTypeBuilder implements BuilderInterface
 {
     /**
