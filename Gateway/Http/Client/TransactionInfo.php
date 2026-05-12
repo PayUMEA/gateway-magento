@@ -15,6 +15,8 @@ use PayU\Gateway\Gateway\Request\StoreConfigBuilder;
 class TransactionInfo extends AbstractTransaction
 {
     /**
+     * Description
+     *
      * @inheritdoc
      * @throws LocalizedException
      */

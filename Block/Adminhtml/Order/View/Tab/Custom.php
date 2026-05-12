@@ -32,11 +32,15 @@ class Custom extends Template implements TabInterface
     protected $coreRegistry = null;
 
     /**
+     * Description
+     *
      * @var FormKey
      */
     protected $formKey;
 
     /**
+     * Description
+     *
      * @param Context $context
      * @param Registry $registry
      * @param FormKey $formKey
@@ -66,7 +70,7 @@ class Custom extends Template implements TabInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getTabLabel()
     {
@@ -74,7 +78,7 @@ class Custom extends Template implements TabInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getTabTitle()
     {
@@ -82,7 +86,7 @@ class Custom extends Template implements TabInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function canShowTab()
     {
@@ -90,7 +94,7 @@ class Custom extends Template implements TabInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function isHidden()
     {

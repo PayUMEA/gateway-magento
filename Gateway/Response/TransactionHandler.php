@@ -31,6 +31,8 @@ class TransactionHandler implements HandlerInterface
     }
 
     /**
+     * Description
+     *
      * @param array $handlingSubject
      * @param array $response
      * @return void
@@ -64,6 +66,8 @@ class TransactionHandler implements HandlerInterface
     }
 
     /**
+     * Description
+     *
      * @param OrderAdapterInterface $order
      * @param InfoInterface|Payment $orderPayment
      * @param ResponseInterface|TransferObject $response
@@ -113,6 +117,8 @@ class TransactionHandler implements HandlerInterface
     }
 
     /**
+     * Description
+     *
      * @param int $storeId
      * @return bool
      */

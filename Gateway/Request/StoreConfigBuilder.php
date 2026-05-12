@@ -23,11 +23,15 @@ class StoreConfigBuilder implements BuilderInterface
     public const METHOD_CODE = 'methodCode';
 
     /**
+     * Description
+     *
      * @var SubjectReader
      */
     private SubjectReader $subjectReader;
 
     /**
+     * Description
+     *
      * @param SubjectReader $subjectReader
      */
     public function __construct(SubjectReader $subjectReader)
@@ -36,6 +40,8 @@ class StoreConfigBuilder implements BuilderInterface
     }
 
     /**
+     * Description
+     *
      * @param array $buildSubject
      * @return array
      */

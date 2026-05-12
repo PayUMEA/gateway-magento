@@ -15,6 +15,8 @@ use PayU\Gateway\Gateway\SubjectReader;
 class RefundHandler implements HandlerInterface
 {
     /**
+     * Description
+     *
      * @param SubjectReader $subjectReader
      */
     public function __construct(private readonly SubjectReader $subjectReader)
@@ -22,6 +24,8 @@ class RefundHandler implements HandlerInterface
     }
 
     /**
+     * Description
+     *
      * @inheritDoc
      */
     public function handle(array $handlingSubject, array $response)

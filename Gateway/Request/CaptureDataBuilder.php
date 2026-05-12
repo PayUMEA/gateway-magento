@@ -34,6 +34,8 @@ class CaptureDataBuilder implements BuilderInterface
     }
 
     /**
+     * Description
+     *
      * @param array $buildSubject
      * @return array
      * @throws LocalizedException

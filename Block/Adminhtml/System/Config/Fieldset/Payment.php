@@ -20,16 +20,22 @@ use Magento\Framework\View\Helper\SecureHtmlRenderer;
 class Payment extends Fieldset
 {
     /**
+     * Description
+     *
      * @var Config
      */
     protected Config $_backendConfig;
 
     /**
+     * Description
+     *
      * @var ?SecureHtmlRenderer
      */
     private ?SecureHtmlRenderer $secureRenderer;
 
     /**
+     * Description
+     *
      * @param Context $context
      * @param Session $authSession
      * @param Js $jsHelper

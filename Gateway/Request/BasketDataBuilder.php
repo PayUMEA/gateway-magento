@@ -21,6 +21,8 @@ class BasketDataBuilder implements BuilderInterface
     public const MERCHANT_REFERENCE = 'merchantReference';
 
     /**
+     * Description
+     *
      * @param SubjectReader $subjectReader
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -29,6 +31,8 @@ class BasketDataBuilder implements BuilderInterface
     }
 
     /**
+     * Description
+     *
      * @inheritdoc
      */
     public function build(array $buildSubject): array

@@ -19,6 +19,8 @@ class CleanTransactionLock
     private const CRON_CONFIG_PATTERN = 'payu_gateway/txn_lock/%s';
 
     /**
+     * Description
+     *
      * @param LoggerInterface $logger
      * @param ScopeConfigInterface $scopeConfig
      * @param CollectionFactory $collectionFactory
@@ -54,6 +56,8 @@ class CleanTransactionLock
     }
 
     /**
+     * Description
+     *
      * @return Collection
      */
     public function getLockCollection(): Collection
@@ -70,6 +74,8 @@ class CleanTransactionLock
     }
 
     /**
+     * Description
+     *
      * @return false|string
      */
     protected function daysFilter()
@@ -82,6 +88,8 @@ class CleanTransactionLock
     }
 
     /**
+     * Description
+     *
      * @param string $field
      * @param ?string $storeId
      * @return mixed

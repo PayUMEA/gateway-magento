@@ -15,6 +15,8 @@ use PayU\Gateway\Gateway\SubjectReader;
 class RedirectUrlHandler implements HandlerInterface
 {
     /**
+     * Description
+     *
      * @param SubjectReader $subjectReader
      * @param Generic $payuSession
      */
@@ -25,6 +27,8 @@ class RedirectUrlHandler implements HandlerInterface
     }
 
     /**
+     * Description
+     *
      * @param array $handlingSubject
      * @param array $response
      * @return void

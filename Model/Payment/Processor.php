@@ -26,6 +26,8 @@ use stdClass;
 class Processor
 {
     /**
+     * Description
+     *
      * @param Logger $logger
      * @param OrderFactory $orderFactory
      * @param OrderRepository $orderRepository
@@ -92,6 +94,8 @@ class Processor
     }
 
     /**
+     * Description
+     *
      * @param OrderInterface $order
      * @param stdClass $ipnData
      * @param string $processId
@@ -147,6 +151,8 @@ class Processor
     }
 
     /**
+     * Description
+     *
      * @param OrderInterface $order
      * @param string $payUReference
      * @return void
@@ -160,6 +166,8 @@ class Processor
     }
 
     /**
+     * Description
+     *
      * @param string $incrementId
      * @param string $processId
      * @param string $processClass
@@ -196,6 +204,8 @@ class Processor
     }
 
     /**
+     * Description
+     *
      * @param string $incrementId
      * @param string $processId
      * @param string $status
@@ -226,6 +236,8 @@ class Processor
     }
 
     /**
+     * Description
+     *
      * @param string $incrementId
      * @param string $payUReference
      * @return int
@@ -270,6 +282,8 @@ class Processor
     }
 
     /**
+     * Description
+     *
      * @param OrderInterface $order
      * @return bool
      */
@@ -279,6 +293,8 @@ class Processor
     }
 
     /**
+     * Description
+     *
      * @param OrderInterface $order
      * @return bool
      */
@@ -288,6 +304,8 @@ class Processor
     }
 
     /**
+     * Description
+     *
      * @return bool
      */
     public function isPaymentPending(): bool
@@ -296,6 +314,8 @@ class Processor
     }
 
     /**
+     * Description
+     *
      * @return bool
      */
     public function isPaymentProcessing(): bool
@@ -304,6 +324,8 @@ class Processor
     }
 
     /**
+     * Description
+     *
      * @return bool
      */
     public function isPaymentFailed(): bool

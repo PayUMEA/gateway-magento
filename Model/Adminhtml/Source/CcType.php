@@ -29,6 +29,8 @@ class CcType extends \Magento\Payment\Model\Source\Cctype
     }
 
     /**
+     * Description
+     *
      * @return array
      */
     public function getCcTypeLabelMap(): array
@@ -37,6 +39,8 @@ class CcType extends \Magento\Payment\Model\Source\Cctype
     }
 
     /**
+     * Description
+     *
      * @return array
      */
     public function toOptionArray(): array

@@ -15,6 +15,8 @@ use Magento\Framework\Model\ResourceModel\Db\Context;
 class Transaction extends AbstractDb
 {
     /**
+     * Description
+     *
      * @var string
      */
     protected $_idFieldName = 'entity_id';

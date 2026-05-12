@@ -27,6 +27,8 @@ class AdditionalInfoDataBuilder implements BuilderInterface
     public const DEMO_MODE = 'demoMode';
 
     /**
+     * Description
+     *
      * @param Config $config
      * @param SubjectReader $subjectReader
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -36,6 +38,8 @@ class AdditionalInfoDataBuilder implements BuilderInterface
     }
 
     /**
+     * Description
+     *
      * @param array $buildSubject
      * @return array[]
      */

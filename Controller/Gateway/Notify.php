@@ -94,6 +94,8 @@ class Notify extends AbstractAction implements HttpPostActionInterface, CsrfAwar
     }
 
     /**
+     * Description
+     *
      * @param RequestInterface $request
      * @return bool|null
      */
@@ -103,6 +105,8 @@ class Notify extends AbstractAction implements HttpPostActionInterface, CsrfAwar
     }
 
     /**
+     * Description
+     *
      * @param RequestInterface $request
      * @return InvalidRequestException|null
      */

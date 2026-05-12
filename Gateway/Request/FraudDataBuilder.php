@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PayU\Gateway\Gateway\Request;
 
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Payment\Gateway\Request\BuilderInterface;
 use PayU\Gateway\Gateway\Config\Config;
@@ -17,28 +18,31 @@ use PayUSdk\Model\FraudService;
 use PayUSdk\Model\Item;
 use PayUSdk\Model\ItemList;
 
-/**
- * class PaymentCardDetailsDataBuilder
- */
 class FraudDataBuilder implements BuilderInterface
 {
     public const FRAUD = 'fraudManagement';
     public const ITEM_LIST = 'itemList';
 
     /**
+     * Description
+     *
      * @param Data $helper
      * @param Config $config
      * @param SubjectReader $subjectReader
+     * @param RequestInterface $request
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __construct(
         private readonly Data $helper,
         private readonly Config $config,
-        private readonly SubjectReader $subjectReader
+        private readonly SubjectReader $subjectReader,
+        private readonly RequestInterface $request
     ) {
     }
 
     /**
+     * Build
+     *
      * @param array $buildSubject
      * @return array
      * @throws NoSuchEntityException
@@ -82,10 +86,12 @@ class FraudDataBuilder implements BuilderInterface
     }
 
     /**
+     * Get finger print
+     *
      * @return string
      */
     private function getFingerPrint(): string
     {
-        return md5(implode('', $_SERVER));
+        return hash('sha256', implode('', $this->request->getServer()));
     }
 }

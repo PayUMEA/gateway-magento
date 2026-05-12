@@ -20,6 +20,8 @@ class CustomerAttribute implements OptionSourceInterface
     }
 
     /**
+     * Description
+     *
      * @throws LocalizedException
      */
     public function toOptionArray(): array

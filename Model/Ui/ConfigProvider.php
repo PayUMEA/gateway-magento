@@ -35,26 +35,28 @@ use PayU\Gateway\Model\Payment\Method\Ucount;
 
 class ConfigProvider implements ConfigProviderInterface
 {
-    const CREDIT_CARD_CODE = Creditcard::CODE;
-    const DISCOVERY_MILES_CODE = DiscoveryMiles::CODE;
-    const EBUCKS_CODE = Ebucks::CODE;
-    const EFT_PRO_CODE = EftPro::CODE;
-    const MOBICRED_CODE = Mobicred::CODE;
-    const PAYFLEX_CODE = Payflex::CODE;
-    const AIRTEL_MONEY_CODE = AirtelMoney::CODE;
-    const CAPITEC_PAY_CODE = CapitecPay::CODE;
-    const EQUITEL_CODE = Equitel::CODE;
-    const FASTA_CODE = Fasta::CODE;
-    const MORE_TYME_CODE = MoreTyme::CODE;
-    const UCOUNT_CODE = Ucount::CODE;
-    const TIGOPESA_CODE = Tigopesa::CODE;
-    const RCS_CODE = Rcs::CODE;
-    const RCS_PLC_CODE = RcsPlc::CODE;
-    const MPESA_CODE = Mpesa::CODE;
-    const MTN_MOBILE_CODE = MtnMobile::CODE;
-    const MOBILE_BANKING_CODE = MobileBanking::CODE;
+    public const CREDIT_CARD_CODE = Creditcard::CODE;
+    public const DISCOVERY_MILES_CODE = DiscoveryMiles::CODE;
+    public const EBUCKS_CODE = Ebucks::CODE;
+    public const EFT_PRO_CODE = EftPro::CODE;
+    public const MOBICRED_CODE = Mobicred::CODE;
+    public const PAYFLEX_CODE = Payflex::CODE;
+    public const AIRTEL_MONEY_CODE = AirtelMoney::CODE;
+    public const CAPITEC_PAY_CODE = CapitecPay::CODE;
+    public const EQUITEL_CODE = Equitel::CODE;
+    public const FASTA_CODE = Fasta::CODE;
+    public const MORE_TYME_CODE = MoreTyme::CODE;
+    public const UCOUNT_CODE = Ucount::CODE;
+    public const TIGOPESA_CODE = Tigopesa::CODE;
+    public const RCS_CODE = Rcs::CODE;
+    public const RCS_PLC_CODE = RcsPlc::CODE;
+    public const MPESA_CODE = Mpesa::CODE;
+    public const MTN_MOBILE_CODE = MtnMobile::CODE;
+    public const MOBILE_BANKING_CODE = MobileBanking::CODE;
 
     /**
+     * Description
+     *
      * @var string[]
      */
     protected array $methodCodes = [
@@ -95,6 +97,8 @@ class ConfigProvider implements ConfigProviderInterface
     }
 
     /**
+     * Description
+     *
      * @return array
      * @throws NoSuchEntityException
      */
@@ -114,7 +118,7 @@ class ConfigProvider implements ConfigProviderInterface
             ];
 
             if ($code === self::CREDIT_CARD_CODE) {
-                array_merge(
+                $config['payment'][$code] = array_merge(
                     $config['payment'][$code],
                     [
                         'ccTypesMapper' => $this->config->getCcTypesMapper(),
@@ -129,6 +133,8 @@ class ConfigProvider implements ConfigProviderInterface
     }
 
     /**
+     * Description
+     *
      * @param string $code
      * @return string
      */

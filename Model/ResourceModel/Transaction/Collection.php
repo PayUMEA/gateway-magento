@@ -14,6 +14,8 @@ use PayU\Gateway\Model\Lock\Transaction;
 class Collection extends AbstractCollection
 {
     /**
+     * Description
+     *
      * @var string
      */
     protected $_idFieldName = 'entity_id';

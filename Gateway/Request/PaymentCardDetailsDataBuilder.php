@@ -20,6 +20,8 @@ class PaymentCardDetailsDataBuilder implements BuilderInterface
     public const CARD = 'card';
 
     /**
+     * Description
+     *
      * @param Config $config
      * @param SubjectReader $subjectReader
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -31,6 +33,8 @@ class PaymentCardDetailsDataBuilder implements BuilderInterface
     }
 
     /**
+     * Description
+     *
      * @param array $buildSubject
      * @return array
      */
@@ -88,6 +92,8 @@ class PaymentCardDetailsDataBuilder implements BuilderInterface
     }
 
     /**
+     * Description
+     *
      * @param string $month
      * @return string
      */

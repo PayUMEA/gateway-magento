@@ -13,6 +13,8 @@ use PayU\Gateway\Gateway\Validator\DefaultResponseValidator;
 class ResponseValidator extends DefaultResponseValidator
 {
     /**
+     * Description
+     *
      * @return array
      */
     protected function getResponseValidators(): array

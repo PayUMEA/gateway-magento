@@ -37,6 +37,8 @@ abstract class AbstractTransaction implements ClientInterface
     }
 
     /**
+     * Description
+     *
      * @inheritdoc
      */
     public function placeRequest(TransferInterface $transferObject): array

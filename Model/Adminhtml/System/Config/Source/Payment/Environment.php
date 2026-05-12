@@ -13,6 +13,8 @@ use Magento\Framework\Data\OptionSourceInterface;
 class Environment implements OptionSourceInterface
 {
     /**
+     * Description
+     *
      * @return array[]
      */
     public function toOptionArray(): array

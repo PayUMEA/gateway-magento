@@ -21,6 +21,8 @@ class PaymentRefundObserver implements ObserverInterface
     use GetTransactionTrait;
 
     /**
+     * Description
+     *
      * @param FilterBuilder $filterBuilder
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param TransactionRepositoryInterface $transactionRepository
@@ -33,6 +35,8 @@ class PaymentRefundObserver implements ObserverInterface
     }
 
     /**
+     * Description
+     *
      * @inheritDoc
      */
     public function execute(Observer $observer)

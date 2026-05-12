@@ -20,6 +20,8 @@ use Psr\Log\LoggerInterface;
 class Validator
 {
     /**
+     * Description
+     *
      * @param LoggerInterface $logger
      * @param DataFactory $dataFactory
      * @param OrderRepositoryInterface $orderRepository
@@ -32,6 +34,8 @@ class Validator
     }
 
     /**
+     * Description
+     *
      * @param Order $order
      * @param DataObject $transactionInfo
      * @return void
@@ -72,6 +76,8 @@ class Validator
     }
 
     /**
+     * Description
+     *
      * @param DataObject $transactionInfo
      * @return void
      * @throws LocalizedException
@@ -96,6 +102,8 @@ class Validator
     }
 
     /**
+     * Description
+     *
      * @param DataObject $transactionInfo
      * @return void
      * @throws LocalizedException
@@ -110,6 +118,8 @@ class Validator
     }
 
     /**
+     * Description
+     *
      * @param float $amountPaid
      * @param float $amountOrdered
      * @return bool

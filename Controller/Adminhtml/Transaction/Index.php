@@ -18,11 +18,15 @@ use Magento\Framework\View\Result\PageFactory;
 class Index extends Action
 {
     /**
+     * Description
+     *
      * @var bool|PageFactory
      */
     protected $resultPageFactory = false;
 
     /**
+     * Description
+     *
      * @param Context $context
      * @param PageFactory $resultPageFactory
      */
@@ -36,6 +40,8 @@ class Index extends Action
     }
 
     /**
+     * Description
+     *
      * @return ResponseInterface|ResultInterface|Page
      */
     public function execute()

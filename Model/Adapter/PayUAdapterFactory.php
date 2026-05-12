@@ -17,11 +17,15 @@ use PayU\Gateway\Gateway\Config\Config;
 class PayUAdapterFactory
 {
     /**
+     * Description
+     *
      * @var string
      */
     private readonly string $class;
 
     /**
+     * Description
+     *
      * @param Config $config
      * @param FrontendInterface $cache
      * @param ObjectManagerInterface $objectManager

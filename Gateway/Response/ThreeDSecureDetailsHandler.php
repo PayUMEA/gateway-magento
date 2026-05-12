@@ -28,6 +28,8 @@ class ThreeDSecureDetailsHandler implements HandlerInterface
     }
 
     /**
+     * Description
+     *
      * @param array $handlingSubject
      * @param array $response
      * @return void

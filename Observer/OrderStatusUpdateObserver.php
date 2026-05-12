@@ -14,6 +14,8 @@ use Magento\Framework\Event\ObserverInterface;
 class OrderStatusUpdateObserver implements ObserverInterface
 {
     /**
+     * Description
+     *
      * @param Observer $observer
      * @return void
      */

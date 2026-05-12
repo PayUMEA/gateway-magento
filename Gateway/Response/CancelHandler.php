@@ -20,6 +20,8 @@ use PayU\Gateway\Model\Payment\Operations\TransactionUpdateOperation;
 class CancelHandler implements HandlerInterface
 {
     /**
+     * Description
+     *
      * @param SubjectReader $subjectReader
      * @param OrderFactory $orderFactory
      * @param TransferObjectFactory $transferFactory
@@ -36,6 +38,8 @@ class CancelHandler implements HandlerInterface
     }
 
     /**
+     * Description
+     *
      * @param array $handlingSubject
      * @param array $response
      * @return void

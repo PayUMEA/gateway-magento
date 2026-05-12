@@ -12,6 +12,8 @@ use PayU\Gateway\Gateway\SubjectReader;
 class GlobalValidator extends AbstractValidator
 {
     /**
+     * Description
+     *
      * @param ResultInterfaceFactory $resultFactory
      * @param SubjectReader $subjectReader
      * @param Config $config
@@ -25,6 +27,8 @@ class GlobalValidator extends AbstractValidator
     }
 
     /**
+     * Description
+     *
      * @param array $validationSubject
      * @return ResultInterface
      */
@@ -38,6 +42,8 @@ class GlobalValidator extends AbstractValidator
     }
 
     /**
+     * Description
+     *
      * @param int $storeId
      * @return array
      */

@@ -15,12 +15,16 @@ use Magento\Framework\Data\Form\Element\Renderer\RendererInterface;
 class Hint extends Template implements RendererInterface
 {
     /**
+     * Description
+     *
      * @var string
      * @deprecated 100.1.0
      */
     protected $_template = 'PayU_Gateway::system/config/fieldset/hint.phtml';
 
     /**
+     * Description
+     *
      * @param AbstractElement $element
      * @return string
      */

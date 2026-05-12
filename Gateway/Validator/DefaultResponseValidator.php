@@ -17,11 +17,15 @@ use PayU\Gateway\Gateway\SubjectReader;
 class DefaultResponseValidator extends AbstractValidator
 {
     /**
+     * Description
+     *
      * @var SubjectReader
      */
     protected SubjectReader $subjectReader;
 
     /**
+     * Description
+     *
      * @param ResultInterfaceFactory $resultFactory
      * @param SubjectReader $subjectReader
      */
@@ -34,6 +38,8 @@ class DefaultResponseValidator extends AbstractValidator
     }
 
     /**
+     * Description
+     *
      * @param array $validationSubject
      * @return ResultInterface
      */
@@ -50,8 +56,12 @@ class DefaultResponseValidator extends AbstractValidator
 
             if (!$validationResult[0]) {
                 $isValid = $validationResult[0];
-                $errorMessages = array_merge($errorMessages, $validationResult[1]);
-                $errorCodes = array_merge($errorCodes, $validationResult[2]);
+                foreach ($validationResult[1] as $message) {
+                    $errorMessages[] = $message;
+                }
+                foreach ($validationResult[2] as $code) {
+                    $errorCodes[] = $code;
+                }
             }
         }
 
@@ -59,6 +69,8 @@ class DefaultResponseValidator extends AbstractValidator
     }
 
     /**
+     * Description
+     *
      * @return array
      */
     protected function getResponseValidators(): array

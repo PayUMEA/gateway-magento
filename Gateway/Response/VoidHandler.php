@@ -26,6 +26,8 @@ class VoidHandler implements HandlerInterface
     }
 
     /**
+     * Description
+     *
      * @param array $handlingSubject
      * @param array $response
      * @return void
@@ -49,6 +51,8 @@ class VoidHandler implements HandlerInterface
     }
 
     /**
+     * Description
+     *
      * @param OrderAdapterInterface $order
      * @param InfoInterface $orderPayment
      * @param ResponseInterface $response
@@ -68,6 +72,8 @@ class VoidHandler implements HandlerInterface
     }
 
     /**
+     * Description
+     *
      * @param OrderAdapterInterface $order
      * @return bool
      */
@@ -77,6 +83,8 @@ class VoidHandler implements HandlerInterface
     }
 
     /**
+     * Description
+     *
      * @param InfoInterface $orderPayment
      * @return bool
      */

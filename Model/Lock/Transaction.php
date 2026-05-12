@@ -23,18 +23,24 @@ class Transaction extends AbstractModel implements IdentityInterface, GridInterf
     /**
      * BlogManager Blog cache tag.
      */
-    const CACHE_TAG = 'payu_payu_gateway_transaction';
+    public const CACHE_TAG = 'payu_payu_gateway_transaction';
 
     /**
+     * Description
+     *
      * @var string
      */
     protected $_cacheTag = 'payu_payu_gateway_transaction';
     /**
+     * Description
+     *
      * @var string
      */
     protected $_eventPrefix = 'payu_payu_gateway_transaction';
 
     /**
+     * Description
+     *
      * @return void
      */
     protected function _construct()

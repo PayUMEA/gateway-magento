@@ -26,6 +26,8 @@ class TransactionUpdateOperation
     use GetTransactionTrait;
 
     /**
+     * Description
+     *
      * @param Config $config
      * @param FilterBuilder $filterBuilder
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
@@ -44,6 +46,8 @@ class TransactionUpdateOperation
     }
 
     /**
+     * Description
+     *
      * @param OrderInterface $order
      * @param DataObject $transactionInfo
      * @return void
@@ -93,6 +97,8 @@ class TransactionUpdateOperation
     }
 
     /**
+     * Description
+     *
      * @param int $storeId
      * @return string
      */

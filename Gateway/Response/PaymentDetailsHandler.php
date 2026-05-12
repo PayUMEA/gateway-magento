@@ -24,6 +24,8 @@ class PaymentDetailsHandler implements HandlerInterface
     }
 
     /**
+     * Description
+     *
      * @param array $handlingSubject
      * @param array $response
      * @return void

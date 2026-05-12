@@ -49,6 +49,8 @@ class CaptureStrategyCommand implements CommandInterface
     }
 
     /**
+     * Description
+     *
      * @inheritdoc
      */
     public function execute(array $commandSubject)

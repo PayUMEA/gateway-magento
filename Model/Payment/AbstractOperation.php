@@ -29,6 +29,8 @@ use Psr\Log\LoggerInterface;
 abstract class AbstractOperation
 {
     /**
+     * Description
+     *
      * @param Validator $validator
      * @param LoggerInterface $logger
      * @param OrderFactory $orderFactory
@@ -53,6 +55,8 @@ abstract class AbstractOperation
     }
 
     /**
+     * Description
+     *
      * @param OrderInterface $order
      * @param OrderPaymentInterface $payment
      * @param DataObject $transactionInfo
