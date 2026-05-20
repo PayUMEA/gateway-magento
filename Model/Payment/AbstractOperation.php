@@ -119,7 +119,7 @@ abstract class AbstractOperation
                 $payment->getAdditionalInformation() +
                 [Order\Payment\Transaction::RAW_DETAILS => $transactionInfo->getPaymentData()]
             )
-            ->setTransactionAdditionalInfo(TransactionState::REAL_TRANSACTION_ID_KEY->value, $transactionInfo->getTranxId());
+            ->setTransactionAdditionalInfo(TransactionState::REAL_TRANSACTION_ID_KEY, $transactionInfo->getTranxId());
 
         if ($transactionInfo->hasCreditCard()) {
             $cardData = $transactionInfo->getCardData();

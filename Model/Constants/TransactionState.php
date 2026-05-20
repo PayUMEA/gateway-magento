@@ -23,6 +23,7 @@ enum TransactionState: string
     case TIMEOUT = 'TIMEOUT';
     case EXPIRED = 'EXPIRED';
     case AWAITING_PAYMENT = 'AWAITING_PAYMENT';
+
     public const MAGENTO_ORDER_STATE_PENDING = 'pending';
-    case REAL_TRANSACTION_ID_KEY = 'real_transaction_id';
+    public const REAL_TRANSACTION_ID_KEY = 'real_transaction_id';
 }

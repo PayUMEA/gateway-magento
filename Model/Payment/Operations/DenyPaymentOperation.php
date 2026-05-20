@@ -26,7 +26,9 @@ class DenyPaymentOperation extends AbstractOperation
     public function deny(OrderPaymentInterface $payment, ?string $comment = null): void
     {
         $order = $payment->getOrder();
-        $transactionInfo = $payment->getTransactionAdditionalInfo()['transactionInfo'];
+        $transactionAdditionalInfo = $payment->getTransactionAdditionalInfo();
+        /** @var TransferObject $transactionInfo */
+        $transactionInfo = $transactionAdditionalInfo['transactionInfo'];
 
         $processId = $transactionInfo->getProcessId();
         $processClass = $transactionInfo->getProcessClass();
@@ -40,18 +42,14 @@ class DenyPaymentOperation extends AbstractOperation
             return;
         }
 
-        $transactionAdditionalInfo = $payment->getTransactionAdditionalInfo();
-        /** @var TransferObject $transactionInfo */
-        $transactionInfo = $transactionAdditionalInfo['transactionInfo'];
-
         $order->cancel();
+        $this->addStatusCommentOnUpdate($order, $payment, $transactionInfo);
 
         if ($comment) {
             $order->addCommentToStatusHistory($comment, true);
         }
 
         $this->transactionOperation->update($order, $transactionInfo);
-        $this->addStatusCommentOnUpdate($order, $payment, $transactionInfo);
         $this->orderRepository->save($order);
     }
 }

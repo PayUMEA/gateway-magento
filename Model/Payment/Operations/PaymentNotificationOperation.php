@@ -56,10 +56,10 @@ class PaymentNotificationOperation
                 array_column(TransactionState::cases(), 'value')
             )
         ) {
-            $comment = "<strong>-----PAYU NOTIFICATION RECEIVED---</strong><br />";
             $totalDue = $transactionInfo->getTotalDue();
             $totalPaid = $transactionInfo->getTotalCaptured();
 
+            $comment = "<strong>-----PAYU NOTIFICATION RECEIVED-----</strong><br />";
             $comment .= "Order Amount: " . $totalDue . "<br />";
             $comment .= "Amount Paid: " . $totalPaid . "<br />";
             $comment .= "Merchant Reference : " . $transactionInfo->getMerchantReference() . "<br />";

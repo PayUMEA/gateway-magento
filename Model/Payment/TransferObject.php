@@ -25,8 +25,10 @@ class TransferObject extends DataObject
      */
     public function isPaymentComplete(): bool
     {
+        $state = TransactionState::tryFrom($this->getTransactionState());
+
         return $this->_getData('txn')->successful
-            && $this->getTransactionState() === TransactionState::SUCCESSFUL->value;
+            && $state === TransactionState::SUCCESSFUL;
     }
 
     /**
@@ -36,8 +38,10 @@ class TransferObject extends DataObject
      */
     public function isAwaitingPayment(): bool
     {
+        $state = TransactionState::tryFrom($this->getTransactionState());
+
         return $this->_getData('txn')->successful
-            && $this->getTransactionState() === TransactionState::AWAITING_PAYMENT->value;
+            && $state === TransactionState::AWAITING_PAYMENT;
     }
 
     /**
@@ -47,8 +51,10 @@ class TransferObject extends DataObject
      */
     public function isPaymentProcessing(): bool
     {
+        $state = TransactionState::tryFrom($this->getTransactionState());
+
         return $this->_getData('txn')->successful
-            && $this->getTransactionState() === TransactionState::PROCESSING->value;
+            && $state === TransactionState::PROCESSING;
     }
 
     /**
@@ -58,8 +64,10 @@ class TransferObject extends DataObject
      */
     public function isPaymentNew(): bool
     {
+        $state = TransactionState::tryFrom($this->getTransactionState());
+
         return $this->_getData('txn')->successful
-            && $this->getTransactionState() === TransactionState::NEW->value;
+            && $state === TransactionState::NEW;
     }
 
     /**
@@ -69,9 +77,11 @@ class TransferObject extends DataObject
      */
     public function isPaymentFailed(): bool
     {
+        $state = TransactionState::tryFrom($this->getTransactionState());
+
         return ($this->_getData('txn')->successful === true || $this->_getData('txn')->successful === false)
             && in_array(
-                $this->getTransactionState(),
+                $state,
                 [TransactionState::FAILED, TransactionState::EXPIRED, TransactionState::TIMEOUT]
             );
     }
@@ -253,7 +263,7 @@ class TransferObject extends DataObject
     {
         $total = 0.0;
 
-        if ($this->isPaymentNew()) {
+        if ($this->isPaymentNew() || $this->isPaymentFailed()) {
             return $total;
         }
 
@@ -383,7 +393,7 @@ class TransferObject extends DataObject
 
         $to->setTransactionAdditionalInfo('transactionInfo', $this);
 
-        if ($to->getCaptureOperationCalled()) {
+        if ($to->getCaptureOperationCalled() || $to->getCheckTransactionStatus()) {
             $to->setTransactionAdditionalInfo(
                 Order\Payment\Transaction::RAW_DETAILS,
                 $this->getPaymentData()

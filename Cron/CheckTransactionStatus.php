@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright © 2022 PayU Financial Services. All rights reserved.
  * See COPYING.txt for license details.
@@ -16,13 +17,15 @@ use Magento\Payment\Model\InfoInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\ResourceModel\Order\Collection;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use PayU\Gateway\Model\Adapter\PayUAdapterFactory;
-use PayU\Gateway\Model\Payment\Operations\CreateInvoiceOperation;
-use PayU\Gateway\Model\Payment\Operations\TransactionUpdateOperation;
+use PayU\Gateway\Model\Constants\TransactionState;
+use PayU\Gateway\Model\Payment\Operations\AcceptPaymentOperation;
+use PayU\Gateway\Model\Payment\Operations\DenyPaymentOperation;
 use Psr\Log\LoggerInterface;
 
 class CheckTransactionStatus
@@ -57,18 +60,18 @@ class CheckTransactionStatus
      * @param ScopeConfigInterface $scopeConfig
      * @param OrderRepositoryInterface $orderRepository
      * @param CollectionFactory $orderCollectionFactory
-     * @param CreateInvoiceOperation $invoiceOperation
      * @param StoreManagerInterface $storeManager
-     * @param TransactionUpdateOperation $transactionUpdateOperation
+     * @param AcceptPaymentOperation $acceptPaymentOperation
+     * @param DenyPaymentOperation $denyPaymentOperation
      */
     public function __construct(
         private readonly LoggerInterface $logger,
         private readonly ScopeConfigInterface $scopeConfig,
         private readonly OrderRepositoryInterface $orderRepository,
         private readonly CollectionFactory $orderCollectionFactory,
-        private readonly CreateInvoiceOperation $invoiceOperation,
         private readonly StoreManagerInterface $storeManager,
-        private readonly TransactionUpdateOperation $transactionUpdateOperation
+        private readonly AcceptPaymentOperation $acceptPaymentOperation,
+        private readonly DenyPaymentOperation $denyPaymentOperation
     ) {
     }
 
@@ -90,7 +93,6 @@ class CheckTransactionStatus
             return;
         }
 
-        $transactionNotes = "<strong>-----PAYU GATEWAY TXN STATUS CRON: STATUS CHECK-----</strong><br />";
         $resultCode = $transactionInfo->getResultCode();
 
         if (in_array($resultCode, ['POO5', 'EFTPRO_003', '999', '305'])) {
@@ -102,17 +104,11 @@ class CheckTransactionStatus
         }
 
         $transactionState = $transactionInfo->getTransactionState();
+        $txnState = TransactionState::tryFrom($transactionState);
 
         if (!in_array(
-            $transactionState,
-            [
-                'PROCESSING',
-                'SUCCESSFUL',
-                'AWAITING_PAYMENT',
-                'FAILED',
-                'TIMEOUT',
-                'EXPIRED'
-            ]
+            $txnState,
+            TransactionState::cases()
         )
         ) {
             $this->logger->info(
@@ -126,30 +122,45 @@ class CheckTransactionStatus
             return;
         }
 
+        $txnId = $transactionInfo->getTranxId();
         $totalDue = $transactionInfo->getTotalDue();
         $totalPaid = $transactionInfo->getTotalCaptured();
 
-        $comment = "PayU Reference: " . $transactionInfo->getTranxId() . "<br />";
-        $comment .= "PayU Transaction state: " . $transactionState . "<br /><br />";
+        $comment = "<strong>-----PAYU GATEWAY TXN STATUS CRON: STATUS CHECK-----</strong><br />";
         $comment .= "Order Amount: " . $totalDue . "<br />";
         $comment .= "Amount Paid: " . $totalPaid . "<br />";
         $comment .= "Merchant Reference : " . $transactionInfo->getMerchantReference() . "<br />";
         $comment .= "Transaction Type: " . $transactionInfo->getTransactionType() . "<br />";
-        $comment .= "PayU Reference: " . $transactionInfo->getTranxId() . "<br />";
+        $comment .= "PayU Reference: " . $txnId . "<br />";
         $comment .= "Payment Status: " . $transactionInfo->getTransactionState() . "<br /><br />";
+
+        if ($transactionInfo->hasPaymentMethod()) {
+            $paymentMethods = $transactionInfo->getPaymentMethods();
+            $comment .= "<strong>Payment Method Details:</strong>";
+
+            if (!is_array($paymentMethods)) {
+                $paymentMethods = [$paymentMethods];
+            }
+
+            foreach ($paymentMethods as $type => $paymentMethod) {
+                $comment .= "<br />===Payment Method " . $type + 1 . "===";
+                foreach ($paymentMethod as $key => $value) {
+                    $comment .= "<br />&nbsp;&nbsp;=> " . $key . ": " . $value;
+                }
+                $comment .= '<br />';
+            }
+        }
 
         switch ($transactionState) {
             case 'SUCCESSFUL':
-                $this->invoiceOperation->invoice($order, $transactionInfo);
-                $this->transactionUpdateOperation->update(
-                    $order,
-                    $transactionInfo
-                );
+                $this->acceptPaymentOperation->accept($payment, $comment);
                 break;
             case 'FAILED':
             case 'TIMEOUT':
             case 'EXPIRED':
-                $order->cancel();
+                $this->denyPaymentOperation->deny($payment, $comment);
+                break;
+            default:
                 $this->logger->info(
                     sprintf(
                         'PAYU GATEWAY TXN STATUS CRON: Unprocessable order (%s), Status (%s)',
@@ -157,11 +168,7 @@ class CheckTransactionStatus
                         $transactionState
                     )
                 );
-                break;
         }
-
-        $order->addCommentToStatusHistory($transactionNotes);
-        $this->orderRepository->save($order);
     }
 
     /**
@@ -281,9 +288,6 @@ class CheckTransactionStatus
                             "PAYU GATEWAY TXN STATUS CRON: ($processId) already invoiced, skip processing. order id = "
                             . $order->getIncrementId()
                         );
-                        $order->setState('processing');
-                        $order->setStatus('processing');
-                        $this->orderRepository->save($order);
 
                         continue;
                     }
@@ -292,13 +296,12 @@ class CheckTransactionStatus
                         $method = $payment->getMethodInstance();
                         $method->fetchTransactionInfo($payment, $payUReference);
 
+                        $this->configurePayment($order, $payment);
                         $this->processReturn($order, $payment);
                     } catch (Exception $exception) {
                         $this->logger->info('PAYU GATEWAY TXN STATUS CRON: ' . $exception->getMessage());
+                        continue;
                     }
-
-                    $order->setUpdatedAt(null);
-                    $this->orderRepository->save($order);
                 }
             }
         }
@@ -329,10 +332,10 @@ class CheckTransactionStatus
         }
 
         $this->logger->info(
-            "PAYU GATEWAY TXN STATUS CRON: ($this->processId) Minutes created: $minutesSinceCreated - Delay: $cronDelay mins"
+            "PAYU GATEWAY TXN STATUS CRON: ($this->processId) Minutes since created: $minutesSinceCreated - Delay: $cronDelay mins"
         );
         $this->logger->info(
-            "PAYU GATEWAY TXN STATUS CRON: ($this->processId) Minutes updated: $minutesSinceUpdated - Delay: $cronDelay mins"
+            "PAYU GATEWAY TXN STATUS CRON: ($this->processId) Minutes since updated: $minutesSinceUpdated - Delay: $cronDelay mins"
         );
 
         $minutesSinceCreated = $minutesSinceCreated - $cronDelay;
@@ -356,9 +359,9 @@ class CheckTransactionStatus
         }
 
         foreach ($ranges as $v) {
-            if ((
-                ($v[0] <= $minutesSinceCreated) && ($minutesSinceCreated <= $v[1])
-            ) && (!(($v[0] <= $minutesSinceUpdated) && ($minutesSinceUpdated <= $v[1])))
+            if (
+                (($v[0] <= $minutesSinceCreated) && ($minutesSinceCreated <= $v[1])) &&
+                (!(($v[0] <= $minutesSinceUpdated) && ($minutesSinceUpdated <= $v[1])))
             ) {
                 return true;
             }
@@ -385,5 +388,18 @@ class CheckTransactionStatus
         $path = sprintf(self::CRON_CONFIG_PATTERN, $field);
 
         return $this->scopeConfig->getValue($path, ScopeInterface::SCOPE_STORE, $storeId);
+    }
+
+    /**
+     * @param OrderInterface|Order $order
+     * @param Payment $payment
+     * @return void
+     */
+    protected function configurePayment(OrderInterface|Order $order, InfoInterface $payment): void
+    {
+        $payment->unsTransactionId();
+        $payment->setCheckTransactionStatus(true);
+        $payment->setParentTransactionId($payment->getLastTransId() ?? $transactionInfo->getTxnId());
+        $order->setPayment($payment);
     }
 }

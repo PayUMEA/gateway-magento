@@ -102,7 +102,7 @@ class PayUAdapter
                     'mode' => $this->environment,
                     'log.log_enabled' => $this->environment === 'sandbox',
                     'log.file_name' => $logFile,
-                    'log.log_level' => 'DEBUG',
+                    'log.log_level' => $this->environment === 'sandbox' ? 'DEBUG' : 'INFO',
                     'cache.enabled' => true,
                     'default_account.payment_methods' => $this->paymentMethods
                 ]

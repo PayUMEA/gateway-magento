@@ -57,8 +57,14 @@ class AcceptPaymentOperation extends AbstractOperation
                     $this->updatePayment($order, $transactionInfo);
                     $this->addStatusCommentOnUpdate($order, $payment, $transactionInfo);
 
+                    $status = $order->getConfig()->getStateDefaultStatus(
+                        \Magento\Sales\Model\Order::STATE_PROCESSING
+                    );
+                    $order->setStatus($status);
+                    $order->setState(\Magento\Sales\Model\Order::STATE_PROCESSING);
+
                     if ($comment) {
-                        $order->addCommentToStatusHistory($comment, 'processing');
+                        $order->addCommentToStatusHistory($comment);
                     }
 
                     $this->orderRepository->save($order);

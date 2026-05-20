@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.5.2] - 2026-05-19
+
+### Changed
+- Refactored `CheckTransactionStatus` cron to use `AcceptPaymentOperation` and `DenyPaymentOperation` for better order state management.
+- Improved payment method detail logging in order comments during transaction status checks.
+- Updated `CancelHandler` to support `check_transaction_status` flag and improved message handling.
+- Enhanced `VoidHandler` to correctly set parent transaction ID.
+- Switched `PayUAdapter` log level to `INFO` for production environments.
+- Optimized `TransferObject` state checks using `TransactionState` enum cases.
+- Improved admin UI for transaction data retrieval with better scoping of JS variables and HTML IDs.
+
+### Fixed
+- Issue with transaction ID mapping in `AbstractOperation` and `VoidHandler`.
+- Transaction state validation logic in `TransferObject`.
+- Case-sensitivity and type-safety in `TransactionState` enum usage.
+
 ## [0.5.1] - 2026-03-08
 
 ### Added
