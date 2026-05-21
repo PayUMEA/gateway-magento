@@ -1351,6 +1351,7 @@
         </arguments>
     </virtualType>
     <!-- END PayU Gateway error mapping  -->
+
     <virtualType name="PayU\Gateway\Model\ResourceModel\Transaction\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
         <arguments>
             <argument name="mainTable" xsi:type="string">payu_gateway_transaction</argument>

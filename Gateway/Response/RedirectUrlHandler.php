@@ -12,10 +12,6 @@ use Magento\Framework\Session\Generic;
 use Magento\Payment\Gateway\Response\HandlerInterface;
 use PayU\Gateway\Gateway\SubjectReader;
 
-/**
- * class RedirectUrlHandler
- * @package PayU\Gateway\Gateway\Response
- */
 class RedirectUrlHandler implements HandlerInterface
 {
     /**
@@ -35,6 +31,7 @@ class RedirectUrlHandler implements HandlerInterface
      */
     public function handle(array $handlingSubject, array $response): void
     {
+        /** @var \PayU\Gateway\Model\TransferObject $responseObj */
         $responseObj = $this->subjectReader->readResponse($response);
 
         if (!$responseObj) {
@@ -42,6 +39,7 @@ class RedirectUrlHandler implements HandlerInterface
         }
 
         $paymentDO = $this->subjectReader->readPayment($handlingSubject);
+        /** @var \Magento\Sales\Model\Order\Payment $payment */
         $payment = $paymentDO->getPayment();
         $order = $payment->getOrder();
 

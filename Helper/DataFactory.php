@@ -13,8 +13,8 @@ use Magento\Framework\ObjectManagerInterface;
 
 class DataFactory
 {
-    const AREA_FRONTEND = 'frontend';
-    const AREA_BACKEND = 'adminhtml';
+    public const AREA_FRONTEND = 'frontend';
+    public const AREA_BACKEND = 'adminhtml';
 
     /**
      * @var ObjectManagerInterface
@@ -25,8 +25,8 @@ class DataFactory
      * @var array
      */
     protected array $helperMap = [
-        self::AREA_FRONTEND => 'PayU\EasyPlus\Helper\Data',
-        self::AREA_BACKEND => 'PayU\EasyPlus\Helper\Backend\Data'
+        self::AREA_FRONTEND => \PayU\EasyPlus\Helper\Data::class,
+        self::AREA_BACKEND => \PayU\EasyPlus\Helper\Backend\Data::class
     ];
 
     /**

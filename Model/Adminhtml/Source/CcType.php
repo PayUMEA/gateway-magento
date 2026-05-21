@@ -8,10 +8,6 @@ declare(strict_types=1);
 
 namespace PayU\Gateway\Model\Adminhtml\Source;
 
-/**
- * class CcType
- * @package PayU\Gateway\Model\Adminhtml\Source
- */
 class CcType extends \Magento\Payment\Model\Source\Cctype
 {
     /**

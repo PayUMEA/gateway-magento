@@ -11,10 +11,6 @@ namespace PayU\Gateway\Model\Adminhtml\System\Config\Source\Payment;
 use Magento\Framework\Data\OptionSourceInterface;
 use Magento\Payment\Model\MethodInterface;
 
-/**
- * class DefaultAction
- * @package PayU\Gateway\Model\Adminhtml\System\Config\Source\Payment
- */
 class DefaultAction implements OptionSourceInterface
 {
     /**

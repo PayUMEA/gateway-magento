@@ -12,22 +12,20 @@ use Magento\Payment\Gateway\Response\HandlerInterface;
 use Magento\Sales\Model\Order\Payment\Transaction;
 use PayU\Gateway\Gateway\SubjectReader;
 
-/**
- * class RefundHandler
- * @package PayU\Gateway\Gateway\Response
- */
 class RefundHandler implements HandlerInterface
 {
     /**
      * @param SubjectReader $subjectReader
      */
     public function __construct(private readonly SubjectReader $subjectReader)
-    {}
+    {
+    }
 
     /**
      * @inheritDoc
      */
-    public function handle(array $handlingSubject, array $response) {
+    public function handle(array $handlingSubject, array $response)
+    {
         $responseDO = $this->subjectReader->readResponse($response);
 
         if (!$responseDO) {

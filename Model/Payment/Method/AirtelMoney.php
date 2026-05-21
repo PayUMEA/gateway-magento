@@ -8,10 +8,6 @@ declare(strict_types=1);
 
 namespace PayU\Gateway\Model\Payment\Method;
 
-/**
- * class AirtelMoney
- * @package PayU\Gateway\Model\Payment\Method
- */
 class AirtelMoney extends AbstractMethod
 {
     public const CODE = 'payu_gateway_airtel_money';

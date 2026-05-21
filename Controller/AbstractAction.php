@@ -184,7 +184,8 @@ abstract class AbstractAction implements ActionInterface, RedirectLoginInterface
         $this->customerSession->setBeforeAuthUrl($this->redirect->getRefererUrl());
         $this->getResponse()->setRedirect(
             $this->urlHelper->addRequestParam(
-                $this->customerUrl->getLoginUrl(), ['context' => 'checkout']
+                $this->customerUrl->getLoginUrl(),
+                ['context' => 'checkout']
             )
         );
     }
@@ -224,8 +225,8 @@ abstract class AbstractAction implements ActionInterface, RedirectLoginInterface
 
             if ($payUReference && $reference !== $payUReference) {
                 $this->logger->debug([
-                    'error' => "PayU reference from request parameter: {$reference}, PayU reference in Magento session: "
-                    . $payUReference
+                    'error' => "PayU reference from request parameter: {$reference}, " .
+                        "PayU reference in Magento session: " . $payUReference
                 ]);
                 throw new LocalizedException(
                     __('Invalid PayU Checkout Reference.')
@@ -335,8 +336,7 @@ abstract class AbstractAction implements ActionInterface, RedirectLoginInterface
 
         $order = $incrementId ? $this->orderFactory->create()->loadByIncrementId($incrementId) : null;
 
-        if (
-            $order &&
+        if ($order &&
             $order->getId() &&
             $order->getQuoteId() == $quoteId
         ) {
@@ -370,19 +370,24 @@ abstract class AbstractAction implements ActionInterface, RedirectLoginInterface
     }
 
     /**
+     * Set response
+     *
      * @param string $httpCode
-     * @param $text
+     * @param string|null $text
      * @return void
      */
     protected function respond(string $httpCode = '200', $text = null): void
     {
+        $this->response->setHttpResponseCode((int)$httpCode);
+
         if ($httpCode === '200') {
             if (is_callable('fastcgi_finish_request')) {
                 if ($text !== null) {
-                    echo $text;
+                    $this->response->setBody((string)$text);
                 }
 
                 session_write_close();
+                $this->response->sendResponse();
                 fastcgi_finish_request();
 
                 return;
@@ -393,20 +398,30 @@ abstract class AbstractAction implements ActionInterface, RedirectLoginInterface
         ob_start();
 
         if ($text !== null) {
-            echo $text;
+            $this->response->setBody((string)$text);
         }
 
-        $serverProtocol = filter_input(INPUT_SERVER, 'SERVER_PROTOCOL', FILTER_SANITIZE_STRING);
-        header($serverProtocol . " {$httpCode} OK");
-        header('Content-Encoding: none');
-        header('Content-Length: ' . ob_get_length());
-        header('Connection: close');
+        $serverProtocol = filter_input(INPUT_SERVER, 'SERVER_PROTOCOL', FILTER_VALIDATE_REGEXP, [
+            'options' => ['regexp' => '/^HTTP\/\d+(\.\d+)?$/'],
+            'flags'   => FILTER_NULL_ON_FAILURE,
+        ]) ?? 'HTTP/1.1';
+        $this->response->setHeader('HTTP/1.1', "{$httpCode} OK", true);
+        $this->response->setHeader('Content-Encoding', 'none');
+        $this->response->setHeader('Content-Length', (string)ob_get_length());
+        $this->response->setHeader('Connection', 'close');
+
+        $this->response->sendResponse();
 
         ob_end_flush();
         ob_flush();
         flush();
     }
 
+    /**
+     * Return to cart
+     *
+     * @return ResultInterface
+     */
     protected function returnToCart()
     {
         $this->returnCustomerQuote();

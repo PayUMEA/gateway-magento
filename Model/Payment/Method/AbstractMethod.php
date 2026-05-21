@@ -10,10 +10,6 @@ namespace PayU\Gateway\Model\Payment\Method;
 
 use Magento\Payment\Model\Method\Adapter;
 
-/**
- * class AbstractMethod
- * @package PayU\Gateway\Model\Payment\Method
- */
 class AbstractMethod extends Adapter
 {
     public const CODE = 'no_code';

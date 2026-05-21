@@ -17,10 +17,6 @@ use PayUSdk\Model\PaymentMethod;
 use PayUSdk\Model\Total;
 use PayUSdk\Model\Transaction;
 
-/**
- * class CaptureDataBuilder
- * @package PayU\Gateway\Gateway\Request
- */
 class CaptureDataBuilder implements BuilderInterface
 {
     public const CUSTOMER = 'customer';

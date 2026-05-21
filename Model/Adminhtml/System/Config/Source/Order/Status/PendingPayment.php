@@ -11,10 +11,6 @@ namespace PayU\Gateway\Model\Adminhtml\System\Config\Source\Order\Status;
 use Magento\Sales\Model\Config\Source\Order\Status;
 use Magento\Sales\Model\Order;
 
-/**
- * class PendingPayment
- * @package PayU\Gateway\Model\Adminhtml\System\Config\Source\Order\Status
- */
 class PendingPayment extends Status
 {
     /**

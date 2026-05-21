@@ -11,10 +11,6 @@ namespace PayU\Gateway\Gateway\Config;
 use Magento\Payment\Gateway\Config\ValueHandlerInterface;
 use PayU\Gateway\Gateway\SubjectReader;
 
-/**
- * class CanVoidHandler
- * @package PayU\Gateway\Gateway\Config
- */
 class CanVoidHandler implements ValueHandlerInterface
 {
     /**

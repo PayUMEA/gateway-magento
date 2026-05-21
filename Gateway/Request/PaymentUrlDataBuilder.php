@@ -15,10 +15,6 @@ use PayU\Gateway\Gateway\SubjectReader;
 use PayU\Gateway\Helper\Data;
 use PayUSdk\Model\TransactionUrl;
 
-/**
- * class PaymentUrlDataBuilder
- * @package PayU\Gateway\Gateway\Request
- */
 class PaymentUrlDataBuilder implements BuilderInterface
 {
     public const PAYMENT_URLS = 'paymentUrl';

@@ -21,10 +21,6 @@ use Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface;
 use PayU\Gateway\Gateway\Config\Config;
 use PayU\Gateway\Model\Trait\GetTransactionTrait;
 
-/**
- * class TransactionUpdateOperation
- * @package PayU\Gateway\Model\Payment\Operations
- */
 class TransactionUpdateOperation
 {
     use GetTransactionTrait;
@@ -53,7 +49,8 @@ class TransactionUpdateOperation
      * @return void
      * @throws LocalizedException
      */
-    public function update(OrderInterface $order, DataObject $transactionInfo): void {
+    public function update(OrderInterface $order, DataObject $transactionInfo): void
+    {
         $payment = $order->getPayment();
         $parentTransaction = $this->getTransaction($payment->getParentTransactionId());
         $currentTransaction = $this->getTransaction($payment->getTransactionId());
@@ -89,7 +86,7 @@ class TransactionUpdateOperation
             $data = $transaction->getAdditionalInformation();
             $transaction->setAdditionalInformation(
                 Order\Payment\Transaction::RAW_DETAILS,
-                 ($data[Order\Payment\Transaction::RAW_DETAILS] ?? [])+ $transactionInfo->getPaymentData()
+                ($data[Order\Payment\Transaction::RAW_DETAILS] ?? [])+ $transactionInfo->getPaymentData()
             );
             $this->transactionRepository->save($transaction);
         }

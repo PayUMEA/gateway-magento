@@ -11,10 +11,6 @@ namespace PayU\Gateway\Block;
 use Magento\Framework\Phrase;
 use Magento\Payment\Block\ConfigurableInfo;
 
-/**
- * class Info
- * @package PayU\Gateway\Block
- */
 class Info extends ConfigurableInfo
 {
     /**

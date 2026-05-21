@@ -12,10 +12,6 @@ use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Payment\Gateway\Config\Config as CoreConfig;
 
-/**
- * class Config
- * @package PayU\Gateway\Gateway\Config
- */
 class Config extends CoreConfig
 {
     private const KEY_ACTIVE = 'active';

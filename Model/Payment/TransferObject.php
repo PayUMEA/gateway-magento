@@ -16,70 +16,79 @@ use PayU\Gateway\Model\Constants\TransactionState;
 use PayU\Gateway\Model\Payment\Method\Masterpass;
 use PayU\Gateway\Model\Payment\Method\Payflex;
 
-/**
- * class TransferObject
- * @package PayU\Gateway\Model\Payment
- */
 class TransferObject extends DataObject
 {
     /**
-     * @param array $data
-     */
-    public function __construct(
-        array $data = []
-    ) {
-        parent::__construct($data);
-    }
-
-    /**
+     * Check if payment is complete
+     *
      * @return bool
      */
     public function isPaymentComplete(): bool
     {
+        $state = TransactionState::tryFrom($this->getTransactionState());
+
         return $this->_getData('txn')->successful
-            && $this->getTransactionState() === TransactionState::SUCCESSFUL->value;
+            && $state === TransactionState::SUCCESSFUL;
     }
 
     /**
+     * Check if awaiting payment
+     *
      * @return bool
      */
     public function isAwaitingPayment(): bool
     {
+        $state = TransactionState::tryFrom($this->getTransactionState());
+
         return $this->_getData('txn')->successful
-            && $this->getTransactionState() === TransactionState::AWAITING_PAYMENT->value;
+            && $state === TransactionState::AWAITING_PAYMENT;
     }
 
     /**
+     * Check if payment is processing
+     *
      * @return bool
      */
     public function isPaymentProcessing(): bool
     {
+        $state = TransactionState::tryFrom($this->getTransactionState());
+
         return $this->_getData('txn')->successful
-            && $this->getTransactionState() === TransactionState::PROCESSING->value;
+            && $state === TransactionState::PROCESSING;
     }
 
     /**
+     * Check if payment is new
+     *
      * @return bool
      */
     public function isPaymentNew(): bool
     {
+        $state = TransactionState::tryFrom($this->getTransactionState());
+
         return $this->_getData('txn')->successful
-            && $this->getTransactionState() === TransactionState::NEW->value;
+            && $state === TransactionState::NEW;
     }
 
     /**
+     * Check if payment failed
+     *
      * @return bool
      */
     public function isPaymentFailed(): bool
     {
+        $state = TransactionState::tryFrom($this->getTransactionState());
+
         return ($this->_getData('txn')->successful === true || $this->_getData('txn')->successful === false)
             && in_array(
-                $this->getTransactionState(),
+                $state,
                 [TransactionState::FAILED, TransactionState::EXPIRED, TransactionState::TIMEOUT]
             );
     }
 
     /**
+     * Get transaction id
+     *
      * @return string
      */
     public function getTranxId(): string
@@ -88,6 +97,8 @@ class TransferObject extends DataObject
     }
 
     /**
+     * Get PayU reference
+     *
      * @return string
      */
     public function getPayUReference(): string
@@ -96,6 +107,8 @@ class TransferObject extends DataObject
     }
 
     /**
+     * Get result code
+     *
      * @return string
      */
     public function getResultCode(): string
@@ -234,7 +247,7 @@ class TransferObject extends DataObject
     {
         $total = 0.0;
 
-        if ($this->isPaymentNew()) {
+        if ($this->isPaymentNew() || $this->isPaymentFailed()) {
             return $total;
         }
 
@@ -244,15 +257,13 @@ class TransferObject extends DataObject
             return $total;
         }
 
-        if (
-            is_a($paymentMethods, \stdClass::class, true) &&
+        if (is_a($paymentMethods, \stdClass::class, true) &&
             !property_exists($paymentMethods, 'amountInCents')
         ) {
             return $total;
         }
 
-        if (
-            is_a($paymentMethods, \stdClass::class, true) &&
+        if (is_a($paymentMethods, \stdClass::class, true) &&
             property_exists($paymentMethods, 'amountInCents')
         ) {
             return ($paymentMethods->amountInCents / 100);
@@ -352,7 +363,7 @@ class TransferObject extends DataObject
 
         $to->setTransactionAdditionalInfo('transactionInfo', $this);
 
-        if ($to->getCaptureOperationCalled()) {
+        if ($to->getCaptureOperationCalled() || $to->getCheckTransactionStatus()) {
             $to->setTransactionAdditionalInfo(
                 Order\Payment\Transaction::RAW_DETAILS,
                 $this->getPaymentData()
@@ -370,7 +381,8 @@ class TransferObject extends DataObject
             json_decode(
                 json_encode(
                     $this->toArray()['txn']
-                ), true
+                ),
+                true
             )
         );
     }
@@ -383,7 +395,10 @@ class TransferObject extends DataObject
             $flatKey = $prefix !== '' ? $prefix . '_' . $key : $key;
 
             if (is_array($value)) {
-                $result = array_merge($result, self::toFlatArray($value, $flatKey));
+                $flatArray = self::toFlatArray($value, $flatKey);
+                foreach ($flatArray as $flatKeySub => $flatValueSub) {
+                    $result[$flatKeySub] = $flatValueSub;
+                }
             } else {
                 $result[$flatKey] = $value;
             }

@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PayU\Gateway\Gateway\Response;
 
+use Magento\Framework\DataObject;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Gateway\Response\HandlerInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
@@ -17,12 +18,13 @@ use PayU\Gateway\Gateway\SubjectReader;
 use PayU\Gateway\Model\Payment\TransferObjectFactory;
 use PayU\Gateway\Model\Payment\Operations\TransactionUpdateOperation;
 
-/**
- * class CancelHandler
- * @package PayU\Gateway\Gateway\Response
- */
 class CancelHandler implements HandlerInterface
 {
+    /**
+     * @var DataObject
+     */
+    protected DataObject $transferObj;
+
     /**
      * @param SubjectReader $subjectReader
      * @param OrderFactory $orderFactory
@@ -37,6 +39,7 @@ class CancelHandler implements HandlerInterface
         private readonly OrderRepositoryInterface $orderRepository,
         private readonly TransactionUpdateOperation $transactionUpdateOps
     ) {
+        $this->transferObj = $this->transferFactory->create();
     }
 
     /**
@@ -51,10 +54,8 @@ class CancelHandler implements HandlerInterface
         /** @var Payment $orderPayment */
         $orderPayment = $paymentDO->getPayment();
 
-        $message = 'Payment transaction amount of %1 was canceled by user on PayU.<br/>' . 'PayU reference "%2"<br/>';
         $transactionInfo = $this->subjectReader->readResponse($response);
-
-        $payUReference = $transactionInfo->getPayUReference();
+        $message = $transactionInfo->getResultMessage();
         $incrementId = $transactionInfo->getMerchantReference();
 
         if ($incrementId) {
@@ -68,26 +69,21 @@ class CancelHandler implements HandlerInterface
             }
 
             if ((int)$order->getId() > 0) {
-                $message = __(
-                    $message,
-                    $order->getBaseCurrency()->formatTxt($order->getBaseTotalDue()),
-                    $payUReference
-                );
-
+                $message = __($message);
                 $payment->setAmountCanceled($payment->getBaseAmountOrdered());
                 $payment->setBaseAmountCanceled($payment->getBaseAmountOrdered());
-                $this->transactionUpdateOps->update(
-                    $order,
-                    $this->transferFactory->create(
-                        [
-                            'data' => ['txn' => json_decode($transactionInfo->toJson())]
-                        ]
-                    )
-                );
+                $this->transferObj->addData(['txn' => json_decode($transactionInfo->toJson())]);
+                $this->transactionUpdateOps->update($order, $this->transferObj);
 
                 $order->addCommentToStatusHistory($message);
-                $order->cancel();
-                $this->orderRepository->save($order);
+
+                if ($orderPayment->getCheckTransactionStatus()) {
+                    $this->transferObj->importTransactionInfo($orderPayment);
+                } else {
+                    $order->cancel();
+                }
+
+                $orderPayment->unsCheckTransactionStatus();
             }
         }
     }

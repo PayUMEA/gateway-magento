@@ -1,11 +1,20 @@
 # PayU MEA Magento v2.4+ payment module #
 
+[![Packagist Downloads](https://img.shields.io/packagist/dt/payumea/gateway-magento)](https://packagist.org/packages/payumea/gateway-magento)
+[![GitHub issues](https://img.shields.io/github/issues/payumea/gateway-magento)](https://github.com/payumea/gateway-magento/issues)
+[![GitHub last commit](https://img.shields.io/github/last-commit/payumea/gateway-magento)](https://github.com/payumea/gateway-magento/commits)
+
 This guide details how to install the PayU MEA payment module for Magento v2.4+. Plugin was tested on Magento v2.4+
 
 ## Prerequisites
 * Magento 2.4.4 and above
-* PHP 8.1
+* PHP 8.3 or 8.4
 * SSH access to server hosting Magento application
+
+> **PHP 8.2 support was dropped in version 0.5.0.** From `0.5.0` onward the module uses typed class
+> constants (a PHP 8.3 language feature), so PHP 8.2 will fail to parse. If you need to run on
+> PHP 8.2, pin to a release **below `0.5.0`** — those earlier versions work fine on PHP 8.2 with a
+> matching Magento release (e.g. Magento 2.4.4–2.4.6, which support PHP 8.1/8.2).
 
 ## Dependencies
 

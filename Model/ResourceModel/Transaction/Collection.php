@@ -11,10 +11,6 @@ namespace PayU\Gateway\Model\ResourceModel\Transaction;
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 use PayU\Gateway\Model\Lock\Transaction;
 
-/**
- * class Collection
- * @package PayU\Gateway\Model\ResourceModel\Transaction
- */
 class Collection extends AbstractCollection
 {
     /**

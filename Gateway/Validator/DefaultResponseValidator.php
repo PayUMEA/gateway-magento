@@ -14,10 +14,6 @@ use Magento\Payment\Gateway\Validator\ResultInterfaceFactory;
 use PayUSdk\Api\ResponseInterface;
 use PayU\Gateway\Gateway\SubjectReader;
 
-/**
- * class DefaultResponseValidator
- * @package PayU\Gateway\Gateway\Validator
- */
 class DefaultResponseValidator extends AbstractValidator
 {
     /**
@@ -54,8 +50,12 @@ class DefaultResponseValidator extends AbstractValidator
 
             if (!$validationResult[0]) {
                 $isValid = $validationResult[0];
-                $errorMessages = array_merge($errorMessages, $validationResult[1]);
-                $errorCodes = array_merge($errorCodes, $validationResult[2]);
+                foreach ($validationResult[1] as $message) {
+                    $errorMessages[] = $message;
+                }
+                foreach ($validationResult[2] as $code) {
+                    $errorCodes[] = $code;
+                }
             }
         }
 

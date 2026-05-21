@@ -12,10 +12,6 @@ use Magento\Framework\Exception\LocalizedException;
 use PayUSdk\Api\ResponseInterface;
 use PayU\Gateway\Gateway\Request\StoreConfigBuilder;
 
-/**
- * class TransactionInfo
- * @package PayU\Gateway\Gateway\Http\Client
- */
 class TransactionInfo extends AbstractTransaction
 {
     /**

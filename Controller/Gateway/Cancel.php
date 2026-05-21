@@ -14,10 +14,6 @@ use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Exception\LocalizedException;
 use PayU\Gateway\Controller\AbstractAction;
 
-/**
- * class Cancel
- * @package PayU\Gateway\Controller\Gateway
- */
 class Cancel extends AbstractAction implements HttpGetActionInterface
 {
     /**

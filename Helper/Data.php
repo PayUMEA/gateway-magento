@@ -16,10 +16,6 @@ use Magento\Framework\UrlInterface;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Store\Model\StoreManagerInterface;
 
-/**
- * class Data
- * @package PayU\Gateway\Helper
- */
 class Data extends AbstractHelper
 {
     /**

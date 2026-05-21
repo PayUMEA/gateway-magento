@@ -11,10 +11,6 @@ namespace PayU\Gateway\Gateway\Config;
 use Magento\Payment\Gateway\Config\ValueHandlerInterface;
 use PayU\Gateway\Gateway\SubjectReader;
 
-/**
- * class CanCancelHandler
- * @package PayU\Gateway\Gateway\Config
- */
 class CanCancelHandler implements ValueHandlerInterface
 {
     /**

@@ -12,10 +12,6 @@ use Magento\Backend\Block\Template;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Framework\Data\Form\Element\Renderer\RendererInterface;
 
-/**
- * class Hint
- * @package PayU\Gateway\Block\Adminhtml\System\Config\Fieldset
- */
 class Hint extends Template implements RendererInterface
 {
     /**

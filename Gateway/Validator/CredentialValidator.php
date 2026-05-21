@@ -14,10 +14,6 @@ use Magento\Payment\Gateway\Validator\ResultInterfaceFactory;
 use PayU\Gateway\Gateway\Config\Config;
 use PayU\Gateway\Gateway\SubjectReader;
 
-/**
- * class CredentialValidator
- * @package PayU\Gateway\Gateway\Validator
- */
 class CredentialValidator extends AbstractValidator
 {
     /**

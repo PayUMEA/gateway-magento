@@ -42,4 +42,3 @@ class Transaction extends AbstractDb
         $this->_init('payu_gateway_transaction', 'entity_id');
     }
 }
-

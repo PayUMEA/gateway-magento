@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace PayU\Gateway\Controller\Adminhtml\Order;
 
-
 use Magento\Backend\App\Action;
 use Magento\Framework\App\Response\Http\FileFactory;
 use Magento\Framework\Controller\Result\JsonFactory;

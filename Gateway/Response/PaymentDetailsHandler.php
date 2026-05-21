@@ -12,10 +12,6 @@ use Magento\Payment\Gateway\Response\HandlerInterface;
 use Magento\Sales\Api\Data\OrderPaymentInterface;
 use PayU\Gateway\Gateway\SubjectReader;
 
-/**
- * class PaymentDetailsHandler
- * @package PayU\Gateway\Gateway\Response
- */
 class PaymentDetailsHandler implements HandlerInterface
 {
     /**

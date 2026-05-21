@@ -20,10 +20,6 @@ use PayU\Gateway\Model\Payment\TransferObject;
 use PayU\Gateway\Model\Payment\TransferObjectFactory;
 use Psr\Log\LoggerInterface;
 
-/**
- * class DenyPayment
- * @package PayU\Gateway\Gateway\Http\Client
- */
 class DenyPayment extends AbstractTransaction
 {
     /**
@@ -69,8 +65,7 @@ class DenyPayment extends AbstractTransaction
         }
 
         try {
-            if (
-                $transactionInfo->getTranxId()
+            if ($transactionInfo->getTranxId()
                 && strtoupper($transactionInfo->getTransactionType()) == TransactionType::PAYMENT->value
             ) {
                 $this->denyOperation->deny($payment);

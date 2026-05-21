@@ -1,16 +1,16 @@
 <section class="admin__page-section custom-tab-content">
     <button class="button" id="payu_gateway_txn_status">Get Transaction Data</button>
-    <br />
-    <div id="txn_data"></div>
+    <br>
+    <div id="payu_gateway_txn_data"></div>
 </section>
 <script>
     require([
         "prototype"
     ], function () {
-        if (!window.PayUAjaxCheck) {
-            window.PayUAjaxCheck = '<?php echo $block->getAjaxUrl(); ?>';
-            window.PayUAjaxFormKey = '<?php echo $block->getFormKey(); ?>';
-            window.PayUAjaxOrderId = '<?php echo $this->getOrder()->getId(); ?>';
+        if (!window.PayUGatewayAjaxCheck) {
+            window.PayUGatewayAjaxCheck = '<?= $escaper->escapeUrl($block->getAjaxUrl()); ?>';
+            window.PayUGatewayAjaxFormKey = '<?= $escaper->escapeHtmlAttr($block->getFormKey()); ?>';
+            window.PayUGatewayAjaxOrderId = '<?= $escaper->escapeHtmlAttr($block->getOrder()->getId()); ?>';
         }
     });
 </script>
