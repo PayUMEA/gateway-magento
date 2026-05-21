@@ -4,7 +4,7 @@ This guide details how to install the PayU MEA payment module for Magento v2.4+.
 
 ## Prerequisites
 * Magento 2.4.4 and above
-* PHP 8.1
+* PHP 8.3 or 8.4 (PHP 8.2 is not supported — the module uses typed class constants introduced in PHP 8.3)
 * SSH access to server hosting Magento application
 
 ## Dependencies
