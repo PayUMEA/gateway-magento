@@ -32,15 +32,11 @@ class Custom extends Template implements TabInterface
     protected $coreRegistry = null;
 
     /**
-     * Description
-     *
      * @var FormKey
      */
     protected $formKey;
 
     /**
-     * Description
-     *
      * @param Context $context
      * @param Registry $registry
      * @param FormKey $formKey

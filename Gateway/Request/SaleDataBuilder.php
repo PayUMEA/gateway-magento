@@ -16,15 +16,11 @@ class SaleDataBuilder implements BuilderInterface
     public const PAYMENT = 'payment';
 
     /**
-     * Description
-     *
      * @var SubjectReader
      */
     private SubjectReader $subjectReader;
 
     /**
-     * Description
-     *
      * @param SubjectReader $subjectReader
      */
     public function __construct(SubjectReader $subjectReader)
@@ -33,8 +29,6 @@ class SaleDataBuilder implements BuilderInterface
     }
 
     /**
-     * Description
-     *
      * @param array $buildSubject
      * @return array
      */

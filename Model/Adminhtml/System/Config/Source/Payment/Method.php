@@ -13,8 +13,6 @@ use Magento\Framework\Data\OptionSourceInterface;
 class Method implements OptionSourceInterface
 {
     /**
-     * Description
-     *
      * @var array
      */
     protected array $paymentMethods = [
@@ -47,8 +45,6 @@ class Method implements OptionSourceInterface
     ];
 
     /**
-     * Description
-     *
      * @return array
      */
     public function toOptionArray(): array

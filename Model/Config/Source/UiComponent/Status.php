@@ -57,8 +57,6 @@ class Status implements OptionSourceInterface
     }
 
     /**
-     * Description
-     *
      * @inheritdoc
      */
     public function toOptionArray()

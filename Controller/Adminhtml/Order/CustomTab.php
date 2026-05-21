@@ -26,15 +26,11 @@ use Psr\Log\LoggerInterface;
 class CustomTab extends Order
 {
     /**
-     * Description
-     *
      * @var LayoutFactory
      */
     protected $layoutFactory;
 
     /**
-     * Description
-     *
      * @param Action\Context $context
      * @param Registry $coreRegistry
      * @param FileFactory $fileFactory

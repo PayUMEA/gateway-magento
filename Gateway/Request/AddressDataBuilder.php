@@ -19,8 +19,6 @@ class AddressDataBuilder implements BuilderInterface
     public const SHIPPING_INFO = 'shipping_info';
 
     /**
-     * Description
-     *
      * @param SubjectReader $subjectReader
      */
     public function __construct(private readonly SubjectReader $subjectReader)
@@ -28,8 +26,6 @@ class AddressDataBuilder implements BuilderInterface
     }
 
     /**
-     * Description
-     *
      * @param array $buildSubject
      * @return array
      */

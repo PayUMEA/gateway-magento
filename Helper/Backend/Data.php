@@ -20,8 +20,6 @@ use PayU\Gateway\Helper\Data as FrontendDataHelper;
 class Data extends FrontendDataHelper
 {
     /**
-     * Description
-     *
      * @param Context $context
      * @param StoreManagerInterface $storeManager
      * @param OrderFactory $orderFactory

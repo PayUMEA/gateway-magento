@@ -58,8 +58,6 @@ class Config extends CoreConfig
     }
 
     /**
-     * Description
-     *
      * @param int|null $storeId
      * @return bool
      */
@@ -69,8 +67,6 @@ class Config extends CoreConfig
     }
 
     /**
-     * Description
-     *
      * @param int|null $storeId
      * @return bool
      */
@@ -80,8 +76,6 @@ class Config extends CoreConfig
     }
 
     /**
-     * Description
-     *
      * @param int|null $storeId
      * @return string
      */
@@ -91,8 +85,6 @@ class Config extends CoreConfig
     }
 
     /**
-     * Description
-     *
      * @param int|null $storeId
      * @return bool
      */
@@ -102,8 +94,6 @@ class Config extends CoreConfig
     }
 
     /**
-     * Description
-     *
      * @param int|null $storeId
      * @return bool
      */
@@ -113,8 +103,6 @@ class Config extends CoreConfig
     }
 
     /**
-     * Description
-     *
      * @param int|null $storeId
      * @return string
      */
@@ -124,8 +112,6 @@ class Config extends CoreConfig
     }
 
     /**
-     * Description
-     *
      * @param int|null $storeId
      * @return string
      */
@@ -135,8 +121,6 @@ class Config extends CoreConfig
     }
 
     /**
-     * Description
-     *
      * @param int|null $storeId
      * @return string
      */
@@ -146,8 +130,6 @@ class Config extends CoreConfig
     }
 
     /**
-     * Description
-     *
      * @param int|null $storeId
      * @return string
      */
@@ -157,8 +139,6 @@ class Config extends CoreConfig
     }
 
     /**
-     * Description
-     *
      * @param int|null $storeId
      * @return string
      */
@@ -168,8 +148,6 @@ class Config extends CoreConfig
     }
 
     /**
-     * Description
-     *
      * @param int|null $storeId
      * @return string
      */
@@ -179,8 +157,6 @@ class Config extends CoreConfig
     }
 
     /**
-     * Description
-     *
      * @param int|null $storeId
      * @return bool
      */
@@ -190,8 +166,6 @@ class Config extends CoreConfig
     }
 
     /**
-     * Description
-     *
      * @param int|null $storeId
      * @return string
      */
@@ -201,8 +175,6 @@ class Config extends CoreConfig
     }
 
     /**
-     * Description
-     *
      * @param int|null $storeId
      * @return string
      */
@@ -212,8 +184,6 @@ class Config extends CoreConfig
     }
 
     /**
-     * Description
-     *
      * @param int|null $storeId
      * @return string
      */
@@ -223,8 +193,6 @@ class Config extends CoreConfig
     }
 
     /**
-     * Description
-     *
      * @param int|null $storeId
      * @return string
      */

@@ -15,8 +15,6 @@ use Magento\Quote\Api\Data\PaymentInterface;
 class PaymentDataAssignObserver extends AbstractDataAssignObserver
 {
     /**
-     * Description
-     *
      * @param Observer $observer
      * @return void
      */

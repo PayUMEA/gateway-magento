@@ -20,15 +20,11 @@ class Cron extends \Magento\Framework\App\Config\Value
 {
     public const CRON_STRING_PATH = 'crontab/payu_gateway/jobs/payu_gateway_txn_lock/schedule/cron_expr';
     /**
-     * Description
-     *
      * @var \Magento\Framework\App\Config\ValueFactory
      */
     protected $_configValueFactory;
 
     /**
-     * Description
-     *
      * @param \Magento\Framework\Model\Context $context
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $config

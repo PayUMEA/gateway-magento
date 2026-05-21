@@ -34,8 +34,6 @@ class PaymentUrlDataBuilder implements BuilderInterface
     }
 
     /**
-     * Description
-     *
      * @param array $buildSubject
      * @return array
      * @throws NoSuchEntityException

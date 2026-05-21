@@ -11,8 +11,6 @@ namespace PayU\Gateway\Gateway\Validator;
 class ResponseValidator extends DefaultResponseValidator
 {
     /**
-     * Description
-     *
      * @return array
      */
     protected function getResponseValidators(): array

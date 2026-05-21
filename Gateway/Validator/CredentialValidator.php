@@ -17,8 +17,6 @@ use PayU\Gateway\Gateway\SubjectReader;
 class CredentialValidator extends AbstractValidator
 {
     /**
-     * Description
-     *
      * @param ResultInterfaceFactory $resultFactory
      * @param SubjectReader $subjectReader
      * @param Config $config
@@ -32,8 +30,6 @@ class CredentialValidator extends AbstractValidator
     }
 
     /**
-     * Description
-     *
      * @param array $validationSubject
      * @return ResultInterface
      */
@@ -48,8 +44,6 @@ class CredentialValidator extends AbstractValidator
     }
 
     /**
-     * Description
-     *
      * @param int $storeId
      * @return array
      */

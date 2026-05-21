@@ -117,8 +117,6 @@ class TransferObject extends DataObject
     }
 
     /**
-     * Description
-     *
      * @return string
      */
     public function getResultMessage(): string
@@ -127,8 +125,6 @@ class TransferObject extends DataObject
     }
 
     /**
-     * Description
-     *
      * @return bool
      */
     public function hasPaymentMethod(): bool
@@ -142,8 +138,6 @@ class TransferObject extends DataObject
     }
 
     /**
-     * Description
-     *
      * @return bool
      */
     public function hasCreditCard(): bool
@@ -152,8 +146,6 @@ class TransferObject extends DataObject
     }
 
     /**
-     * Description
-     *
      * @return bool
      */
     public function isPaymentMethodCc(): bool
@@ -181,8 +173,6 @@ class TransferObject extends DataObject
     }
 
     /**
-     * Description
-     *
      * @return string
      */
     public function getGatewayReference(): string
@@ -206,8 +196,6 @@ class TransferObject extends DataObject
     }
 
     /**
-     * Description
-     *
      * @return array
      */
     public function getCardData(): array
@@ -243,8 +231,6 @@ class TransferObject extends DataObject
     }
 
     /**
-     * Description
-     *
      * @return float
      */
     public function getTotalDue(): float
@@ -255,8 +241,6 @@ class TransferObject extends DataObject
     }
 
     /**
-     * Description
-     *
      * @return float
      */
     public function getTotalCaptured(): float
@@ -294,8 +278,6 @@ class TransferObject extends DataObject
     }
 
     /**
-     * Description
-     *
      * @return string
      */
     public function getDisplayMessage(): string
@@ -304,8 +286,6 @@ class TransferObject extends DataObject
     }
 
     /**
-     * Description
-     *
      * @return bool
      */
     public function isFraudDetected(): bool
@@ -314,8 +294,6 @@ class TransferObject extends DataObject
     }
 
     /**
-     * Description
-     *
      * @return string
      */
     public function getMerchantReference(): string
@@ -324,8 +302,6 @@ class TransferObject extends DataObject
     }
 
     /**
-     * Description
-     *
      * @return string
      */
     public function getTransactionState(): string
@@ -334,8 +310,6 @@ class TransferObject extends DataObject
     }
 
     /**
-     * Description
-     *
      * @return string
      */
     public function getTransactionType(): string
@@ -344,8 +318,6 @@ class TransferObject extends DataObject
     }
 
     /**
-     * Description
-     *
      * @return mixed|null
      */
     public function getPointOfFailure(): mixed
@@ -354,8 +326,6 @@ class TransferObject extends DataObject
     }
 
     /**
-     * Description
-     *
      * @return mixed|null
      */
     public function getBasket(): mixed
@@ -403,8 +373,6 @@ class TransferObject extends DataObject
     }
 
     /**
-     * Description
-     *
      * @return array
      */
     public function getPaymentData(): array

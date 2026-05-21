@@ -23,8 +23,6 @@ use Psr\Log\LoggerInterface;
 class DenyPayment extends AbstractTransaction
 {
     /**
-     * Description
-     *
      * @param LoggerInterface $logger
      * @param Logger $customLogger
      * @param PayUAdapterFactory $adapterFactory
@@ -42,8 +40,6 @@ class DenyPayment extends AbstractTransaction
     }
 
     /**
-     * Description
-     *
      * @param array $data
      * @return DataObject
      * @throws LocalizedException

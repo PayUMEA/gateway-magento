@@ -14,8 +14,6 @@ use Magento\Payment\Model\MethodInterface;
 class DefaultAction implements OptionSourceInterface
 {
     /**
-     * Description
-     *
      * @var array
      */
     protected array $actions = [
@@ -23,8 +21,6 @@ class DefaultAction implements OptionSourceInterface
     ];
 
     /**
-     * Description
-     *
      * @return array
      */
     public function toOptionArray(): array

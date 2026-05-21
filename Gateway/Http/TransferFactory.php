@@ -15,15 +15,11 @@ use Magento\Payment\Gateway\Http\TransferInterface;
 class TransferFactory implements TransferFactoryInterface
 {
     /**
-     * Description
-     *
      * @var TransferBuilder
      */
     private TransferBuilder $transferBuilder;
 
     /**
-     * Description
-     *
      * @param TransferBuilder $transferBuilder
      */
     public function __construct(

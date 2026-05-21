@@ -43,15 +43,11 @@ use PayUSdk\Model\Transaction;
 class PayUAdapter
 {
     /**
-     * Description
-     *
      * @var ?Context
      */
     protected ?Context $apiContext = null;
 
     /**
-     * Description
-     *
      * @param string $safeKey
      * @param string $username
      * @param string $password
@@ -118,8 +114,6 @@ class PayUAdapter
     }
 
     /**
-     * Description
-     *
      * @param array $attributes
      * @return ResponseInterface
      */
@@ -132,8 +126,6 @@ class PayUAdapter
     }
 
     /**
-     * Description
-     *
      * @param array $attributes
      * @return Response
      */
@@ -143,8 +135,6 @@ class PayUAdapter
     }
 
     /**
-     * Description
-     *
      * @param string $reference
      * @param string $orderId
      * @return Response
@@ -186,8 +176,6 @@ class PayUAdapter
     }
 
     /**
-     * Description
-     *
      * @param array $attributes
      * @return Response
      * @throws LocalizedException
@@ -208,8 +196,6 @@ class PayUAdapter
     }
 
     /**
-     * Description
-     *
      * @param array $attributes
      * @return ResponseInterface
      */
@@ -227,8 +213,6 @@ class PayUAdapter
     }
 
     /**
-     * Description
-     *
      * @param array $attributes
      * @return ResponseInterface
      */
@@ -245,8 +229,6 @@ class PayUAdapter
     }
 
     /**
-     * Description
-     *
      * @param array $attributes
      * @return ResponseInterface
      */
@@ -263,8 +245,6 @@ class PayUAdapter
     }
 
     /**
-     * Description
-     *
      * @param array $attributes
      * @return ResponseInterface
      */
@@ -313,8 +293,6 @@ class PayUAdapter
     }
 
     /**
-     * Description
-     *
      * @param array $attributes
      * @return ResponseInterface
      */

@@ -23,8 +23,6 @@ class CardDetailsHandler implements HandlerInterface
     private const NAME_ON_CARD = 'nameOnCard';
 
     /**
-     * Description
-     *
      * @var array
      */
     protected array $additionalInformationMapping = [
@@ -46,8 +44,6 @@ class CardDetailsHandler implements HandlerInterface
     }
 
     /**
-     * Description
-     *
      * @param array $handlingSubject
      * @param array $response
      * @return void

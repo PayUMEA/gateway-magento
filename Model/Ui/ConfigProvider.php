@@ -55,8 +55,6 @@ class ConfigProvider implements ConfigProviderInterface
     public const MOBILE_BANKING_CODE = MobileBanking::CODE;
 
     /**
-     * Description
-     *
      * @var string[]
      */
     protected array $methodCodes = [
@@ -97,8 +95,6 @@ class ConfigProvider implements ConfigProviderInterface
     }
 
     /**
-     * Description
-     *
      * @return array
      * @throws NoSuchEntityException
      */
@@ -133,8 +129,6 @@ class ConfigProvider implements ConfigProviderInterface
     }
 
     /**
-     * Description
-     *
      * @param string $code
      * @return string
      */

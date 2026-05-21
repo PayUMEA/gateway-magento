@@ -15,8 +15,6 @@ use Magento\Payment\Model\InfoInterface;
 class ProcessFraudOperation
 {
     /**
-     * Description
-     *
      * @param DataObject $fraudData
      */
     public function __construct(protected DataObject $fraudData)
@@ -24,8 +22,6 @@ class ProcessFraudOperation
     }
 
     /**
-     * Description
-     *
      * @param InfoInterface $payment
      * @param DataObject $transactionInfo
      * @return void
@@ -46,8 +42,6 @@ class ProcessFraudOperation
     }
 
     /**
-     * Description
-     *
      * @param DataObject $transactionInfo
      * @return DataObject
      */

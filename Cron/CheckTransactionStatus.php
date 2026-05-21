@@ -33,29 +33,21 @@ class CheckTransactionStatus
     private const CRON_CONFIG_PATTERN = 'payu_gateway/txn_status/%s';
 
     /**
-     * Description
-     *
      * @var string|null
      */
     protected ?string $code = null;
 
     /**
-     * Description
-     *
      * @var string
      */
     protected string $processId = '';
 
     /**
-     * Description
-     *
      * @var string
      */
     protected string $processClass = '';
 
     /**
-     * Description
-     *
      * @param LoggerInterface $logger
      * @param ScopeConfigInterface $scopeConfig
      * @param OrderRepositoryInterface $orderRepository
@@ -76,8 +68,6 @@ class CheckTransactionStatus
     }
 
     /**
-     * Description
-     *
      * @param OrderInterface|Order $order
      * @param InfoInterface $payment
      * @return void
@@ -172,8 +162,6 @@ class CheckTransactionStatus
     }
 
     /**
-     * Description
-     *
      * @return Collection
      */
     public function getOrderCollection(string $storeId): Collection
@@ -192,8 +180,6 @@ class CheckTransactionStatus
     }
 
     /**
-     * Description
-     *
      * @return void
      * @throws LocalizedException|Exception
      */
@@ -310,8 +296,6 @@ class CheckTransactionStatus
     }
 
     /**
-     * Description
-     *
      * @param OrderInterface|Order $order
      * @return bool
      */
@@ -377,8 +361,6 @@ class CheckTransactionStatus
     }
 
     /**
-     * Description
-     *
      * @param string $field
      * @param int|null $storeId
      * @return mixed

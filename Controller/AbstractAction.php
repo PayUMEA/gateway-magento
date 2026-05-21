@@ -45,50 +45,36 @@ use PayU\Gateway\Model\Payment\Processor;
 abstract class AbstractAction implements ActionInterface, RedirectLoginInterface
 {
     /**
-     * Description
-     *
      * @var RedirectInterface
      */
     protected RedirectInterface $redirect;
 
     /**
-     * Description
-     *
      * @var ActionFlag
      */
     protected ActionFlag $actionFlag;
 
     /**
-     * Description
-     *
      * @var RequestInterface
      */
     protected RequestInterface $request;
 
     /**
-     * Description
-     *
      * @var ResponseInterface
      */
     protected ResponseInterface $response;
 
     /**
-     * Description
-     *
      * @var ResultFactory
      */
     protected ResultFactory $resultFactory;
 
     /**
-     * Description
-     *
      * @var ObjectManagerInterface
      */
     protected ObjectManagerInterface $objectManager;
 
     /**
-     * Description
-     *
      * @var MessageManagerInterface
      */
     protected MessageManagerInterface $messageManager;
@@ -136,8 +122,6 @@ abstract class AbstractAction implements ActionInterface, RedirectLoginInterface
     }
 
     /**
-     * Description
-     *
      * @return Generic
      */
     protected function getSession(): Generic
@@ -146,8 +130,6 @@ abstract class AbstractAction implements ActionInterface, RedirectLoginInterface
     }
 
     /**
-     * Description
-     *
      * @return Session
      */
     protected function getCheckoutSession(): Session
@@ -209,8 +191,6 @@ abstract class AbstractAction implements ActionInterface, RedirectLoginInterface
     }
 
     /**
-     * Description
-     *
      * @return RequestInterface
      */
     public function getRequest(): RequestInterface
@@ -219,8 +199,6 @@ abstract class AbstractAction implements ActionInterface, RedirectLoginInterface
     }
 
     /**
-     * Description
-     *
      * @return ResponseInterface
      */
     public function getResponse(): ResponseInterface
@@ -263,8 +241,6 @@ abstract class AbstractAction implements ActionInterface, RedirectLoginInterface
     }
 
     /**
-     * Description
-     *
      * @return void
      */
     protected function clearSessionData(): void
@@ -290,8 +266,6 @@ abstract class AbstractAction implements ActionInterface, RedirectLoginInterface
     }
 
     /**
-     * Description
-     *
      * @return ResponseInterface
      */
     protected function sendPendingPage(): ResponseInterface
@@ -306,8 +280,6 @@ abstract class AbstractAction implements ActionInterface, RedirectLoginInterface
     }
 
     /**
-     * Description
-     *
      * @return ResponseInterface
      */
     protected function sendSuccessPage(): ResponseInterface
@@ -322,8 +294,6 @@ abstract class AbstractAction implements ActionInterface, RedirectLoginInterface
     }
 
     /**
-     * Description
-     *
      * @param string|null $message
      * @return ResponseInterface
      */
@@ -339,8 +309,6 @@ abstract class AbstractAction implements ActionInterface, RedirectLoginInterface
     }
 
     /**
-     * Description
-     *
      * @param string $field
      * @param int $storeId
      * @return mixed

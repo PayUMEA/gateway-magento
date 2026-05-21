@@ -25,43 +25,31 @@ class Index extends Action
     use GetPayUReferenceTrait;
 
     /**
-     * Description
-     *
      * @var string?
      */
     protected $code = null;
 
     /**
-     * Description
-     *
      * @var EncryptorInterface
      */
     protected $encryptor;
 
     /**
-     * Description
-     *
      * @var StoreManagerInterface
      */
     protected $storeManager;
 
     /**
-     * Description
-     *
      * @var ScopeConfigInterface
      */
     protected $scopeConfig;
 
     /**
-     * Description
-     *
      * @var Registry?
      */
     protected $coreRegistry = null;
 
     /**
-     * Description
-     *
      * @var OrderRepositoryInterface
      */
     protected $orderRepository;
@@ -84,8 +72,6 @@ class Index extends Action
     }
 
     /**
-     * Description
-     *
      * @return ResponseInterface|ResultInterface
      */
     public function execute()

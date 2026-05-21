@@ -17,8 +17,6 @@ use PayU\Gateway\Controller\AbstractAction;
 class Redirect extends AbstractAction implements HttpGetActionInterface
 {
     /**
-     * Description
-     *
      * @return ResultRedirect
      */
     public function execute(): ResultRedirect

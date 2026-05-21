@@ -17,15 +17,11 @@ class DataFactory
     public const AREA_BACKEND = 'adminhtml';
 
     /**
-     * Description
-     *
      * @var ObjectManagerInterface
      */
     protected ObjectManagerInterface $objectManager;
 
     /**
-     * Description
-     *
      * @var array
      */
     protected array $helperMap = [

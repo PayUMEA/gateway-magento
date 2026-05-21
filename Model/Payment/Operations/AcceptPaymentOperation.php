@@ -16,8 +16,6 @@ use PayU\Gateway\Model\Payment\AbstractOperation;
 class AcceptPaymentOperation extends AbstractOperation
 {
     /**
-     * Description
-     *
      * @param OrderPaymentInterface $payment
      * @param ?string $comment
      * @return void

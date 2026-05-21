@@ -24,8 +24,6 @@ class FraudDataBuilder implements BuilderInterface
     public const ITEM_LIST = 'itemList';
 
     /**
-     * Description
-     *
      * @param Data $helper
      * @param Config $config
      * @param SubjectReader $subjectReader

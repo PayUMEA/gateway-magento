@@ -19,8 +19,6 @@ use PayU\Gateway\Gateway\SubjectReader;
 class CancelHandler implements HandlerInterface
 {
     /**
-     * Description
-     *
      * @param SubjectReader $subjectReader
      * @param OrderFactory $orderFactory
      * @param OrderRepositoryInterface $orderRepository
@@ -35,8 +33,6 @@ class CancelHandler implements HandlerInterface
     }
 
     /**
-     * Description
-     *
      * @param array $handlingSubject
      * @param array $response
      * @return void

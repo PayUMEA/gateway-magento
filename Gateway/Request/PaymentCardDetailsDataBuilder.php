@@ -20,8 +20,6 @@ class PaymentCardDetailsDataBuilder implements BuilderInterface
     public const CARD = 'card';
 
     /**
-     * Description
-     *
      * @param Config $config
      * @param SubjectReader $subjectReader
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -33,8 +31,6 @@ class PaymentCardDetailsDataBuilder implements BuilderInterface
     }
 
     /**
-     * Description
-     *
      * @param array $buildSubject
      * @return array
      */
@@ -56,7 +52,7 @@ class PaymentCardDetailsDataBuilder implements BuilderInterface
         // For the redirect payments, credit card details are only needed during the actual
         // payment step after redirect to the gateway, not during any earlier API calls in the checkout process.
         // We need to handle the case where credit card details are not yet available.
-        
+
         if ($cardData && is_array($cardData)) {
             // Check if we have the necessary credit card data
             if (isset($cardData['cc_type']) &&
@@ -67,7 +63,7 @@ class PaymentCardDetailsDataBuilder implements BuilderInterface
                 isset($cardTypeMapper) &&
                 is_array($cardTypeMapper) &&
                 isset(array_flip($cardTypeMapper)[$cardData['cc_type']])) {
-                
+
                 $card = new CreditCard();
                 $card->setType(
                     str_replace('-', '', strtoupper(array_flip($cardTypeMapper)[$cardData['cc_type']]))
@@ -87,13 +83,11 @@ class PaymentCardDetailsDataBuilder implements BuilderInterface
                 $result[self::CARD] = $funding;
             }
         }
-        
+
         return $result;
     }
 
     /**
-     * Description
-     *
      * @param string $month
      * @return string
      */

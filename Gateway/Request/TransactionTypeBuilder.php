@@ -33,8 +33,6 @@ class TransactionTypeBuilder implements BuilderInterface
     }
 
     /**
-     * Description
-     *
      * @param array $buildSubject
      * @return array
      */

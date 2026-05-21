@@ -16,8 +16,6 @@ use PayU\Gateway\Model\Payment\TransferObject;
 class DenyPaymentOperation extends AbstractOperation
 {
     /**
-     * Description
-     *
      * @param OrderPaymentInterface $payment
      * @param ?string $comment
      * @return void

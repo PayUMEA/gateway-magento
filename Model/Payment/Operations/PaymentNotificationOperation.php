@@ -19,8 +19,6 @@ use stdClass;
 class PaymentNotificationOperation
 {
     /**
-     * Description
-     *
      * @param Logger $logger
      * @param OrderRepositoryInterface $orderRepository
      * @param AcceptPaymentOperation $acceptPaymentOperation
@@ -35,8 +33,6 @@ class PaymentNotificationOperation
     }
 
     /**
-     * Description
-     *
      * @param OrderInterface $order
      * @param OrderPaymentInterface $payment
      * @param stdClass $ipnData

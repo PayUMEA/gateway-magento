@@ -14,8 +14,6 @@ use PayU\Gateway\Gateway\Request\StoreConfigBuilder;
 class TransactionCapture extends AbstractTransaction
 {
     /**
-     * Description
-     *
      * @param array $data
      * @return ResponseInterface
      */

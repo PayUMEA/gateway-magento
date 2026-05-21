@@ -52,8 +52,6 @@ class Lock implements OptionSourceInterface
     }
 
     /**
-     * Description
-     *
      * @inheritdoc
      */
     public function toOptionArray()

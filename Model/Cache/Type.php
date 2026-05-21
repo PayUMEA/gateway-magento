@@ -24,8 +24,6 @@ class Type extends TagScope
     public const string CACHE_TAG = 'PAYU_GATEWAY';
 
     /**
-     * Description
-     *
      * @param FrontendPool $cacheFrontendPool
      */
     public function __construct(

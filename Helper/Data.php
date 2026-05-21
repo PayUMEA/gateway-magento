@@ -19,8 +19,6 @@ use Magento\Store\Model\StoreManagerInterface;
 class Data extends AbstractHelper
 {
     /**
-     * Description
-     *
      * @param Context $context
      * @param OrderFactory $orderFactory
      * @param StoreManagerInterface $storeManager

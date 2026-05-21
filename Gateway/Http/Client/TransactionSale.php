@@ -14,8 +14,6 @@ use PayU\Gateway\Gateway\Request\StoreConfigBuilder;
 class TransactionSale extends AbstractTransaction
 {
     /**
-     * Description
-     *
      * @inheritdoc
      */
     protected function process(array $data): ResponseInterface

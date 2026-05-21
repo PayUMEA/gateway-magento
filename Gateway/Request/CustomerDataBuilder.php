@@ -40,8 +40,6 @@ class CustomerDataBuilder implements BuilderInterface
     }
 
     /**
-     * Description
-     *
      * @param array $buildSubject
      * @return array
      */

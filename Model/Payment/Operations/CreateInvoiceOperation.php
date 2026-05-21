@@ -27,8 +27,6 @@ use Magento\Sales\Model\Service\InvoiceService;
 class CreateInvoiceOperation
 {
     /**
-     * Description
-     *
      * @param InvoiceSender $invoiceSender
      * @param InvoiceService $invoiceService
      * @param OrderFactory $orderFactory
@@ -47,8 +45,6 @@ class CreateInvoiceOperation
     }
 
     /**
-     * Description
-     *
      * @param OrderInterface|Order $order
      * @param DataObject $transactionInfo
      * @return OrderInterface

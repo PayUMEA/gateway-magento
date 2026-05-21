@@ -17,15 +17,11 @@ use PayU\Gateway\Gateway\SubjectReader;
 class DefaultResponseValidator extends AbstractValidator
 {
     /**
-     * Description
-     *
      * @var SubjectReader
      */
     protected SubjectReader $subjectReader;
 
     /**
-     * Description
-     *
      * @param ResultInterfaceFactory $resultFactory
      * @param SubjectReader $subjectReader
      */
@@ -38,8 +34,6 @@ class DefaultResponseValidator extends AbstractValidator
     }
 
     /**
-     * Description
-     *
      * @param array $validationSubject
      * @return ResultInterface
      */
@@ -69,8 +63,6 @@ class DefaultResponseValidator extends AbstractValidator
     }
 
     /**
-     * Description
-     *
      * @return array
      */
     protected function getResponseValidators(): array

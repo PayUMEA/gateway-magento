@@ -14,8 +14,6 @@ use Magento\Framework\Data\OptionSourceInterface;
 class Country implements OptionSourceInterface
 {
     /**
-     * Description
-     *
      * @var array
      */
     protected array $options = [];
@@ -47,8 +45,6 @@ class Country implements OptionSourceInterface
     ];
 
     /**
-     * Description
-     *
      * @param Collection $countryCollection
      */
     public function __construct(private readonly Collection $countryCollection)
@@ -56,8 +52,6 @@ class Country implements OptionSourceInterface
     }
 
     /**
-     * Description
-     *
      * @param bool $isMultiselect
      * @return array
      */
