@@ -11,10 +11,6 @@ namespace PayU\Gateway\Gateway\Http\Client;
 use PayUSdk\Api\ResponseInterface;
 use PayU\Gateway\Gateway\Request\StoreConfigBuilder;
 
-/**
- * class TransactionRefund
- * @package PayU\Gateway\Gateway\Http\Client
- */
 class TransactionRefund extends AbstractTransaction
 {
     /**

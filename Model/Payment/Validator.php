@@ -17,10 +17,6 @@ use PayU\Gateway\Helper\DataFactory;
 use PayU\Gateway\Model\Constants\TransactionState;
 use Psr\Log\LoggerInterface;
 
-/**
- * class Validator
- * @package PayU\Gateway\Model\Payment\Operations
- */
 class Validator
 {
     /**

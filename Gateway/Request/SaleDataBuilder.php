@@ -11,10 +11,6 @@ namespace PayU\Gateway\Gateway\Request;
 use Magento\Payment\Gateway\Request\BuilderInterface;
 use PayU\Gateway\Gateway\SubjectReader;
 
-/**
- * class SaleDataBuilder
- * @package PayU\Gateway\Gateway\Request
- */
 class SaleDataBuilder implements BuilderInterface
 {
     public const PAYMENT = 'payment';

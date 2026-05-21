@@ -16,12 +16,12 @@ class Type extends TagScope
     /**
      * Type Code for Cache. It should be unique
      */
-    const TYPE_IDENTIFIER = 'payu_gateway';
+    public const string TYPE_IDENTIFIER = 'payu_gateway';
 
     /**
      * Tag of Cache
      */
-    const CACHE_TAG = 'PAYU_GATEWAY';
+    public const string CACHE_TAG = 'PAYU_GATEWAY';
 
     /**
      * @param FrontendPool $cacheFrontendPool

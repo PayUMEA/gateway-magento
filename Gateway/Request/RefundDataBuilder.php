@@ -16,10 +16,6 @@ use PayUSdk\Model\Currency;
 use PayUSdk\Model\Total;
 use PayUSdk\Model\Transaction;
 
-/**
- * class PayUAdapterFactory
- * @package PayU\Gateway\Model\Adapter
- */
 class RefundDataBuilder implements BuilderInterface
 {
     use GetPayUReferenceTrait;

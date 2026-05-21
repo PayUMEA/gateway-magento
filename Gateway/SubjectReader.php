@@ -13,10 +13,6 @@ use Magento\Payment\Gateway\Data\PaymentDataObjectInterface;
 use Magento\Payment\Gateway\Helper;
 use PayUSdk\Api\ResponseInterface;
 
-/**
- * class SubjectReader
- * @package PayU\Gateway\Gateway
- */
 class SubjectReader
 {
     /**

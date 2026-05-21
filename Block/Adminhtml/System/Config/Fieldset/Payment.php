@@ -17,10 +17,6 @@ use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Framework\View\Helper\Js;
 use Magento\Framework\View\Helper\SecureHtmlRenderer;
 
-/**
- * class Payment
- * @package PayU\Gateway\Block\Adminhtml\System\Config\Fieldset
- */
 class Payment extends Fieldset
 {
     /**

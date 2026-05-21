@@ -13,10 +13,6 @@ use Magento\Payment\Gateway\Request\BuilderInterface;
 use PayU\Gateway\Gateway\SubjectReader;
 use PayU\Gateway\Model\Trait\GetPayUReferenceTrait;
 
-/**
- * class TransactionInfoDataBuilder
- * @package PayU\Gateway\Gateway\Request
- */
 class TransactionInfoDataBuilder implements BuilderInterface
 {
     use GetPayUReferenceTrait;
@@ -45,7 +41,7 @@ class TransactionInfoDataBuilder implements BuilderInterface
 
         try {
             $txnId = $this->subjectReader->readTransactionId($buildSubject);
-        } catch(InvalidArgumentException $ex) {
+        } catch (InvalidArgumentException $ex) {
             $txnId = null;
         }
 

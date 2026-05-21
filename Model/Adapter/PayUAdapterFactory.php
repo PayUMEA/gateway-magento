@@ -14,10 +14,6 @@ use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\Serialize\SerializerInterface;
 use PayU\Gateway\Gateway\Config\Config;
 
-/**
- * class PayUAdapterFactory
- * @package PayU\Gateway\Model\Adapter
- */
 class PayUAdapterFactory
 {
     /**

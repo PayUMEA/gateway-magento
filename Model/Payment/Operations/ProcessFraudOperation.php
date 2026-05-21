@@ -12,10 +12,6 @@ use Magento\Framework\DataObject;
 use Magento\Framework\Simplexml\Element;
 use Magento\Payment\Model\InfoInterface;
 
-/**
- * class ProcessFraudOperation
- * @package PayU\Gateway\Model\Payment\Operations
- */
 class ProcessFraudOperation
 {
     /**

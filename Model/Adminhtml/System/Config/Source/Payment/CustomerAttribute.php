@@ -12,10 +12,6 @@ use Magento\Customer\Model\CustomerFactory;
 use Magento\Framework\Data\OptionSourceInterface;
 use Magento\Framework\Exception\LocalizedException;
 
-/**
- * class CustomerAttribute
- * @package PayU\Gateway\Model\Adminhtml\System\Config\Source\Payment
- */
 class CustomerAttribute implements OptionSourceInterface
 {
     public function __construct(

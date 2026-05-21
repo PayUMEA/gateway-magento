@@ -13,10 +13,6 @@ use Magento\Payment\Gateway\Response\HandlerInterface;
 use Magento\Sales\Api\Data\OrderPaymentInterface;
 use PayU\Gateway\Gateway\SubjectReader;
 
-/**
- * class ThreeDSecureDetailsHandler
- * @package PayU\Gateway\Gateway\Response
- */
 class ThreeDSecureDetailsHandler implements HandlerInterface
 {
     private const RESULT_CODE = 'resultCode';

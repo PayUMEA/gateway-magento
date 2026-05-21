@@ -14,10 +14,6 @@ use Magento\Framework\Controller\Result\Redirect as ResultRedirect;
 use Magento\Framework\Controller\ResultFactory;
 use PayU\Gateway\Controller\AbstractAction;
 
-/**
- * class Redirect
- * @package PayU\Gateway\Controller\Gateway
- */
 class Redirect extends AbstractAction implements HttpGetActionInterface
 {
     /**

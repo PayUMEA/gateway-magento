@@ -18,10 +18,6 @@ use Magento\Framework\Exception\LocalizedException;
 use PayU\Gateway\Controller\AbstractAction;
 use PayUSdk\Framework\XMLHelper;
 
-/**
- * class Notify
- * @package PayU\Gateway\Controller\Gateway
- */
 class Notify extends AbstractAction implements HttpPostActionInterface, CsrfAwareActionInterface
 {
     /**

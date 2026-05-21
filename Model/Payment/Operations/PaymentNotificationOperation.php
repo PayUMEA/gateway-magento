@@ -16,10 +16,6 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 use PayU\Gateway\Model\Constants\TransactionState;
 use stdClass;
 
-/**
- * class PaymentNotificationOperation
- * @package PayU\Gateway\Model\Payment\Operations
- */
 class PaymentNotificationOperation
 {
     /**
@@ -50,17 +46,16 @@ class PaymentNotificationOperation
     ): void {
         $transactionInfo = $payment->getTransactionAdditionalInfo()['transactionInfo'] ?? null;
 
-        if (
-            $transactionInfo &&
+        if ($transactionInfo &&
             in_array(
                 $transactionInfo->getTransactionState(),
                 array_column(TransactionState::cases(), 'value')
             )
         ) {
-            $comment = "<strong>-----PAYU NOTIFICATION RECEIVED---</strong><br />";
             $totalDue = $transactionInfo->getTotalDue();
             $totalPaid = $transactionInfo->getTotalCaptured();
 
+            $comment = "<strong>-----PAYU NOTIFICATION RECEIVED-----</strong><br />";
             $comment .= "Order Amount: " . $totalDue . "<br />";
             $comment .= "Amount Paid: " . $totalPaid . "<br />";
             $comment .= "Merchant Reference : " . $transactionInfo->getMerchantReference() . "<br />";

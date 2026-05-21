@@ -22,10 +22,6 @@ use PayUSdk\Model\Customer;
 use PayUSdk\Model\CustomerDetail;
 use PayUSdk\Model\Phone;
 
-/**
- * class CustomerDataBuilder
- * @package PayU\Gateway\Gateway\Request
- */
 class CustomerDataBuilder implements BuilderInterface
 {
     public const CUSTOMER = 'customer';

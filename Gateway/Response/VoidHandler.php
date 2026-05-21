@@ -15,10 +15,6 @@ use Magento\Sales\Model\Order\Payment;
 use PayUSdk\Api\ResponseInterface;
 use PayU\Gateway\Gateway\SubjectReader;
 
-/**
- * class VoidHandler
- * @package PayU\Gateway\Gateway\Response
- */
 class VoidHandler implements HandlerInterface
 {
     /**

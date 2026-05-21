@@ -13,10 +13,6 @@ use PayU\Gateway\Gateway\SubjectReader;
 use PayUSdk\Model\Currency;
 use PayUSdk\Model\Total;
 
-/**
- * class BasketDataBuilder
- * @package PayU\Gateway\Gateway\Request
- */
 class BasketDataBuilder implements BuilderInterface
 {
     public const BASKET = 'basket';

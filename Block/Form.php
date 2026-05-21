@@ -10,10 +10,6 @@ namespace PayU\Gateway\Block;
 
 use Magento\Payment\Block\Form\Cc;
 
-/**
- * class Form
- * @package PayU\Gateway\Block
- */
 class Form extends Cc
 {
 

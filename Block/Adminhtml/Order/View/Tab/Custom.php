@@ -66,7 +66,7 @@ class Custom extends Template implements TabInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getTabLabel()
     {
@@ -74,7 +74,7 @@ class Custom extends Template implements TabInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getTabTitle()
     {
@@ -82,7 +82,7 @@ class Custom extends Template implements TabInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function canShowTab()
     {
@@ -90,7 +90,7 @@ class Custom extends Template implements TabInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function isHidden()
     {

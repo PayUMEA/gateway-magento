@@ -12,10 +12,6 @@ use Magento\Payment\Gateway\Request\BuilderInterface;
 use PayU\Gateway\Gateway\Config\Config;
 use PayU\Gateway\Gateway\SubjectReader;
 
-/**
- * class AdditionalInfoDataBuilder
- * @package PayU\Gateway\Gateway\Request
- */
 class AdditionalInfoDataBuilder implements BuilderInterface
 {
     public const ADDITIONAL_INFO = 'AdditionalInformation';

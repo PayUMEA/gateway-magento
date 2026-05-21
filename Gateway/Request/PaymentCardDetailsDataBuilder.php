@@ -15,10 +15,6 @@ use PayU\Gateway\Gateway\SubjectReader;
 use PayUSdk\Model\CreditCard;
 use PayUSdk\Model\FundingInstrument;
 
-/**
- * class PaymentCardDetailsDataBuilder
- * @package PayU\Gateway\Gateway\Request
- */
 class PaymentCardDetailsDataBuilder implements BuilderInterface
 {
     public const CARD = 'card';
@@ -56,18 +52,18 @@ class PaymentCardDetailsDataBuilder implements BuilderInterface
         // For the redirect payments, credit card details are only needed during the actual
         // payment step after redirect to the gateway, not during any earlier API calls in the checkout process.
         // We need to handle the case where credit card details are not yet available.
-        
+
         if ($cardData && is_array($cardData)) {
             // Check if we have the necessary credit card data
-            if (isset($cardData['cc_type']) && 
-                isset($cardData['cc_number']) && 
-                isset($cardData['cc_exp_month']) && 
-                isset($cardData['cc_exp_year']) && 
+            if (isset($cardData['cc_type']) &&
+                isset($cardData['cc_number']) &&
+                isset($cardData['cc_exp_month']) &&
+                isset($cardData['cc_exp_year']) &&
                 isset($cardData['cc_cid']) &&
-                isset($cardTypeMapper) && 
-                is_array($cardTypeMapper) && 
+                isset($cardTypeMapper) &&
+                is_array($cardTypeMapper) &&
                 isset(array_flip($cardTypeMapper)[$cardData['cc_type']])) {
-                
+
                 $card = new CreditCard();
                 $card->setType(
                     str_replace('-', '', strtoupper(array_flip($cardTypeMapper)[$cardData['cc_type']]))
@@ -87,7 +83,7 @@ class PaymentCardDetailsDataBuilder implements BuilderInterface
                 $result[self::CARD] = $funding;
             }
         }
-        
+
         return $result;
     }
 

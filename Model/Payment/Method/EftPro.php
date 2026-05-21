@@ -8,10 +8,6 @@ declare(strict_types=1);
 
 namespace PayU\Gateway\Model\Payment\Method;
 
-/**
- * class EftPro
- * @package PayU\Gateway\Model\Payment\Method
- */
 class EftPro extends AbstractMethod
 {
     public const CODE = 'payu_gateway_eft_pro';

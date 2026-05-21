@@ -10,10 +10,6 @@ namespace PayU\Gateway\Model\ResourceModel\Transaction\Grid;
 
 use Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult;
 
-/**
- * class Collection
- * @package PayU\Gateway\Model\ResourceModel\Transaction\Grid
- */
 class Collection extends SearchResult
 {
     protected function _initSelect(): Collection

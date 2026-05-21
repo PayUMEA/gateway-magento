@@ -10,40 +10,36 @@ namespace PayU\Gateway\Model\Adminhtml\System\Config\Source\Payment;
 
 use Magento\Framework\Data\OptionSourceInterface;
 
-/**
- * class Method
- * @package PayU\Gateway\Model\Adminhtml\System\Config\Source\Payment
- */
 class Method implements OptionSourceInterface
 {
     /**
      * @var array
      */
     protected array $paymentMethods = [
-        'CREDITCARD' 		=> 'Credit Card',
-        'PAYFLEX' 		    => 'Payflex',
-        'CREDITCARD_PAYU' 	=> 'Credit Card (PayU)',
-        'LOYALTY' 			=> 'Loyalty',
-        'WALLET' 			=> 'Wallet',
-        'WALLET_PAYU' 		=> 'Wallet (PayU)',
-        'DISCOVERYMILES' 	=> 'Discovery Miles',
-        'GLOBALPAY' 		=> 'Global Pay',
-        'DEBITCARD' 		=> 'Debit Card',
-        'EBUCKS' 			=> 'eBucks',
-        'PAYPAL' 			=> 'Paypal',
-        //'EFT' 				=> 'EFT',
-        'EFT_PRO' 			=> 'Pay by EFT',
-        'MASTERPASS' 		=> 'Master Pass',
-        'RCS_PLC' 			=> 'RCS PLC',
-        'RCS'				=> 'RCS',
-        'FASTA'				=> 'FASTA Instant Credit',
-        'MPESA'				=> 'Mpesa',
-        'AIRTEL_MONEY'		=> 'Airtel Money',
-        'MOBILE_BANKING'	=> 'Mobile Banking',
-        'MTN_MOBILE'		=> 'MTN Mobile',
-        'TIGOPESA'			=> 'Tigopesa',
-        'EQUITEL'			=> 'Equitel',
-        'MOBICRED'			=> 'Mobicred',
+        'CREDITCARD'         => 'Credit Card',
+        'PAYFLEX'             => 'Payflex',
+        'CREDITCARD_PAYU'     => 'Credit Card (PayU)',
+        'LOYALTY'             => 'Loyalty',
+        'WALLET'             => 'Wallet',
+        'WALLET_PAYU'         => 'Wallet (PayU)',
+        'DISCOVERYMILES'     => 'Discovery Miles',
+        'GLOBALPAY'         => 'Global Pay',
+        'DEBITCARD'         => 'Debit Card',
+        'EBUCKS'             => 'eBucks',
+        'PAYPAL'             => 'Paypal',
+        //'EFT'                 => 'EFT',
+        'EFT_PRO'             => 'Pay by EFT',
+        'MASTERPASS'         => 'Master Pass',
+        'RCS_PLC'             => 'RCS PLC',
+        'RCS'                => 'RCS',
+        'FASTA'                => 'FASTA Instant Credit',
+        'MPESA'                => 'Mpesa',
+        'AIRTEL_MONEY'        => 'Airtel Money',
+        'MOBILE_BANKING'    => 'Mobile Banking',
+        'MTN_MOBILE'        => 'MTN Mobile',
+        'TIGOPESA'            => 'Tigopesa',
+        'EQUITEL'            => 'Equitel',
+        'MOBICRED'            => 'Mobicred',
         'OPEN_BANKING'      => 'Capitec Pay',
         'MORETYME'          => 'MoreTyme',
     ];

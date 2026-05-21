@@ -12,11 +12,10 @@ use Magento\Payment\Gateway\Request\BuilderInterface;
 use PayU\Gateway\Gateway\SubjectReader;
 
 /**
- * This builder is used for correct store resolving and used only to retrieve correct store ID.
- * The data from this build won't be sent to PayU Gateway.
+ * This builder is used for resolving correct store and used only to retrieve correct store config.
+ * The data from this builder won't be sent to PayU Gateway.
  *
  * class StoreConfigBuilder
- * @package PayU\Gateway\Gateway\Request
  */
 class StoreConfigBuilder implements BuilderInterface
 {

@@ -15,11 +15,8 @@ use Magento\Sales\Model\Order\Payment;
 use PayUSdk\Api\ResponseInterface;
 use PayU\Gateway\Gateway\Config\Config;
 use PayU\Gateway\Gateway\SubjectReader;
+use PayU\Gateway\Model\Payment\TransferObject;
 
-/**
- * class TransactionHandler
- * @package PayU\Gateway\Gateway\Response
- */
 class TransactionHandler implements HandlerInterface
 {
     /**
@@ -42,7 +39,9 @@ class TransactionHandler implements HandlerInterface
     {
         $paymentDO = $this->subjectReader->readPayment($handlingSubject);
 
+        /** @var Payment $orderPayment */
         if (($orderPayment = $paymentDO->getPayment()) instanceof Payment) {
+            /** @var TransferObject $transactionInfo */
             $transactionInfo = $this->subjectReader->readResponse($response);
 
             $this->setTransactionId(
@@ -66,14 +65,14 @@ class TransactionHandler implements HandlerInterface
 
     /**
      * @param OrderAdapterInterface $order
-     * @param InfoInterface $orderPayment
-     * @param ResponseInterface $response
+     * @param InfoInterface|Payment $orderPayment
+     * @param ResponseInterface|TransferObject $response
      * @return void
      */
     protected function setTransactionId(
         OrderAdapterInterface $order,
-        InfoInterface $orderPayment,
-        ResponseInterface $response
+        InfoInterface|Payment $orderPayment,
+        ResponseInterface|TransferObject $response
     ): void {
         $isCapture = $this->isCaptureTransaction((int)$order->getStoreId());
 

@@ -15,10 +15,6 @@ use PayUSdk\Model\Currency;
 use PayUSdk\Model\Total;
 use PayUSdk\Model\Transaction;
 
-/**
- * class VoidDataBuilder
- * @package PayU\Gateway\Gateway\Request
- */
 class VoidDataBuilder implements BuilderInterface
 {
     public const TRANSACTION = 'transaction';
