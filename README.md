@@ -1,5 +1,9 @@
 # PayU MEA Magento v2.4+ payment module #
 
+[![Packagist Downloads](https://img.shields.io/packagist/dt/payumea/gateway-magento)](https://packagist.org/packages/payumea/gateway-magento)
+[![GitHub issues](https://img.shields.io/github/issues/onahkenneth/gateway-magento)](https://github.com/onahkenneth/gateway-magento/issues)
+[![GitHub last commit](https://img.shields.io/github/last-commit/onahkenneth/gateway-magento)](https://github.com/onahkenneth/gateway-magento/commits)
+
 This guide details how to install the PayU MEA payment module for Magento v2.4+. Plugin was tested on Magento v2.4+
 
 ## Prerequisites
