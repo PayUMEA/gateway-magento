@@ -56,6 +56,10 @@ jobs:
         run: |
           composer create-project --no-progress --no-interaction \
             magento/magento-coding-standard magento-cs
+          # magento-coding-standard pulls phpcs ^3.12; force ^3.13 for native SARIF support.
+          composer --working-dir=magento-cs require --no-progress --no-interaction \
+            --update-with-all-dependencies \
+            squizlabs/php_codesniffer:^3.13
 
       - name: Run PHPCS (Magento2 standard)
         working-directory: module
@@ -111,7 +115,7 @@ jobs:
           composer config minimum-stability dev
           composer config prefer-stable true
           composer require --dev \
-            phpstan/phpstan:^1.11 \
+            phpstan/phpstan:^2.0 \
             bitexpert/phpstan-magento:^0.42
 
       - name: Write phpstan.neon
