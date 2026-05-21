@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  security-events: write
 
 jobs:
   php-lint:
@@ -65,6 +66,7 @@ jobs:
             --severity=10 \
             --report-full \
             --report-checkstyle=../phpcs-report.xml \
+            --report-sarif=../phpcs-report.sarif \
             -d memory_limit=512M \
             .
 
@@ -72,13 +74,20 @@ jobs:
         if: failure()
         run: cs2pr phpcs-report.xml
 
-      - name: Upload PHPCS report
+      - name: Upload PHPCS report (artifact)
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: phpcs-report-php${{ matrix.php }}
           path: phpcs-report.xml
           if-no-files-found: ignore
+
+      - name: Upload PHPCS SARIF to Code Scanning
+        if: always() && matrix.php == '8.3'
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: phpcs-report.sarif
+          category: phpcs-magento2
 
   phpstan:
     name: PHPStan
@@ -103,7 +112,7 @@ jobs:
           composer config prefer-stable true
           composer require --dev \
             phpstan/phpstan:^1.11 \
-            bitexpert/phpstan-magento:^0.36
+            bitexpert/phpstan-magento:^0.42
 
       - name: Write phpstan.neon
         run: |
