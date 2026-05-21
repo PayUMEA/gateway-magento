@@ -56,23 +56,36 @@ jobs:
         run: |
           composer create-project --no-progress --no-interaction \
             magento/magento-coding-standard magento-cs
-          # magento-coding-standard pulls phpcs ^3.12; force ^3.13 for native SARIF support.
+          # Install PHPCS ^3.13 along with bartlett/sarif-php-converters and symfony/console for SARIF report generation.
           composer --working-dir=magento-cs require --no-progress --no-interaction \
             --update-with-all-dependencies \
-            squizlabs/php_codesniffer:^3.13
+            squizlabs/php_codesniffer:^3.13 \
+            bartlett/sarif-php-converters:^1.6 \
+            symfony/console:^7.0
 
       - name: Run PHPCS (Magento2 standard)
         working-directory: module
         run: |
+          set +e
           ../magento-cs/vendor/bin/phpcs \
             --standard=Magento2 \
             --extensions=php,phtml \
             --severity=10 \
             --report-full \
             --report-checkstyle=../phpcs-report.xml \
-            --report-sarif=../phpcs-report.sarif \
             -d memory_limit=512M \
             .
+          PHPCS_EXIT=$?
+          set -e
+
+          if [ -f ../phpcs-report.xml ]; then
+            ../magento-cs/vendor/bartlett/sarif-php-converters/report-converter convert phpcs \
+              --input-format=checkstyle \
+              --input-file=../phpcs-report.xml \
+              --output-file=../phpcs-report.sarif || true
+          fi
+
+          exit $PHPCS_EXIT
 
       - name: Annotate PR with PHPCS findings
         if: failure()
