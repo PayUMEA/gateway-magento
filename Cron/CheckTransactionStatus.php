@@ -381,7 +381,7 @@ class CheckTransactionStatus
     {
         $payment->unsTransactionId();
         $payment->setCheckTransactionStatus(true);
-        $payment->setParentTransactionId($payment->getLastTransId() ?? $transactionInfo->getTxnId());
+        $payment->setParentTransactionId($payment->getLastTransId());
         $order->setPayment($payment);
     }
 }
