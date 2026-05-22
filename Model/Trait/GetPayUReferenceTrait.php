@@ -21,7 +21,7 @@ trait GetPayUReferenceTrait
      */
     protected function getPayUOrderReference(InfoInterface|OrderPaymentInterface $payment): ?string
     {
-        return $payment->getAdditionalInformation('payuReference') ??
+        return $payment->getAdditionalInformation('payUReference') ??
             $payment->getLastTransId();
     }
 

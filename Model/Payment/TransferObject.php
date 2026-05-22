@@ -159,12 +159,12 @@ class TransferObject extends DataObject
 
         if (is_array($paymentMethods)) {
             foreach ($paymentMethods as $method) {
-                if (property_exists($method, 'gatewayReference')) {
+                if ($this->getPropertyCaseInsensitive($method, 'gatewayReference')) {
                     return true;
                 }
             }
         } else {
-            if (property_exists($paymentMethods, 'gatewayReference')) {
+            if ($this->getPropertyCaseInsensitive($paymentMethods, 'gatewayReference')) {
                 return true;
             }
         }
@@ -208,21 +208,21 @@ class TransferObject extends DataObject
 
             if (is_array($paymentMethods)) {
                 foreach ($paymentMethods as $method) {
-                    if (property_exists($method, 'cardNumber')) {
-                        $cardData['cardNumber'] = $method->cardNumber;
-                        $cardData['owner'] = $method->nameOnCard;
-                        $cardData['txnId'] = $method->gatewayReference;
-                        $cardData['expiryYear'] = substr($method->cardExpiry, -4);
-                        $cardData['type'] = $method->information;
+                    if ($this->getPropertyCaseInsensitive($method, 'cardNumber')) {
+                        $cardData['cardNumber'] = $this->getPropertyCaseInsensitive($method, 'cardNumber');
+                        $cardData['owner'] = $this->getPropertyCaseInsensitive($method, 'nameOnCard');
+                        $cardData['txnId'] = $this->getPropertyCaseInsensitive($method, 'gatewayReference');
+                        $cardData['expiryYear'] = substr($this->getPropertyCaseInsensitive($method, 'cardExpiry'), -4);
+                        $cardData['type'] = $this->getPropertyCaseInsensitive($method, 'information');
                     }
                 }
             } else {
-                if (property_exists($paymentMethods, 'cardNumber')) {
-                    $cardData['cardNumber'] = $paymentMethods->cardNumber;
-                    $cardData['owner'] = $paymentMethods->nameOnCard;
-                    $cardData['txnId'] = $paymentMethods->gatewayReference;
-                    $cardData['expiryYear'] = substr($paymentMethods->cardExpiry, -4);
-                    $cardData['type'] = $paymentMethods->information;
+                if ($this->getPropertyCaseInsensitive($paymentMethods, 'cardNumber')) {
+                    $cardData['cardNumber'] = $this->getPropertyCaseInsensitive($paymentMethods, 'cardNumber');
+                    $cardData['owner'] = $this->getPropertyCaseInsensitive($paymentMethods, 'nameOnCard');
+                    $cardData['txnId'] = $this->getPropertyCaseInsensitive($paymentMethods, 'gatewayReference');
+                    $cardData['expiryYear'] = substr($this->getPropertyCaseInsensitive($paymentMethods, 'cardExpiry'), -4);
+                    $cardData['type'] = $this->getPropertyCaseInsensitive($paymentMethods, 'information');
                 }
             }
         }
@@ -236,8 +236,15 @@ class TransferObject extends DataObject
     public function getTotalDue(): float
     {
         $basket = $this->getBasket();
+        $totalDue = $this->getPropertyCaseInsensitive($basket, 'amountInCents');
 
-        return $basket->amountInCents / 100 ?? 0;
+        if (is_null($totalDue)) {
+            $totalDue = 0.0;
+
+            return $totalDue;
+        }
+
+        return $totalDue / 100;
     }
 
     /**
@@ -257,24 +264,15 @@ class TransferObject extends DataObject
             return $total;
         }
 
-        if (is_a($paymentMethods, \stdClass::class, true) &&
-            !property_exists($paymentMethods, 'amountInCents')
-        ) {
-            return $total;
-        }
-
-        if (is_a($paymentMethods, \stdClass::class, true) &&
-            property_exists($paymentMethods, 'amountInCents')
-        ) {
-            return ($paymentMethods->amountInCents / 100);
+        if (!is_array($paymentMethods)) {
+            $paymentMethods = [$paymentMethods];
         }
 
         foreach ($paymentMethods as $paymentMethod) {
-            $total += $paymentMethod->amountInCents;
+            $total += $this->getPropertyCaseInsensitive($paymentMethod, 'amountInCents');
         }
 
-        // Prevent division by zero
-        return (max($total, 1) / 100);
+        return $total / 100;
     }
 
     /**
@@ -433,5 +431,28 @@ class TransferObject extends DataObject
         $method = $payment->getMethodInstance();
 
         return $method->getCode() === Masterpass::CODE && ($this->isPaymentProcessing() || $this->isPaymentFailed());
+    }
+
+    /**
+     * Retrieves a property from a stdClass object in a case-insensitive manner.
+     * Normalizes all property keys to lowercase for comparison.
+     *
+     * @param \stdClass $object    The object to search.
+     * @param string   $property  The property name to find (any case).
+     * @return mixed              The property value, or null if not found.
+     */
+    function getPropertyCaseInsensitive(\stdClass $object, string $property): mixed
+    {
+        $needle = strtolower(str_replace('_', '', $property));
+
+        foreach (get_object_vars($object) as $key => $value) {
+            $normalizedKey = strtolower(str_replace('_', '', $key));
+
+            if ($normalizedKey === $needle) {
+                return $value;
+            }
+        }
+
+        return null;
     }
 }
